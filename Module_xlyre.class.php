@@ -31,7 +31,8 @@ ModulesManager::file('/inc/io/BaseIO.class.php');
 ModulesManager::file('/inc/cli/CliParser.class.php');
 ModulesManager::file('/inc/cli/CliReader.class.php');
 ModulesManager::file('/inc/model/RelRolesActions.class.php');
-ModulesManager::file('/inc/model/role.inc');
+ModulesManager::file('/inc/nodetypes/channelnode.inc');
+ModulesManager::file('/inc/model/channel.inc');
 ModulesManager::file('/inc/model/node.inc');
 ModulesManager::file('/inc/utils.inc');
 ModulesManager::file('/inc/model/orm/RelRolesStates_ORM.class.php');
@@ -47,6 +48,27 @@ class Module_xlyre extends Module {
 	function install() {
 		echo "\nModule xlyre will be installed.\n";
                	$this->loadConstructorSQL("xlyre.constructor.sql");
+		$name = "xlyre";
+                $extension = "xml";
+                $complexName = sprintf("%s.%s", $name, $extension);
+                $description = "OpenData channel";
+                $renderMode = "ximdex";
+
+                $nodeType = new NodeType();
+                $nodeType->SetByName('Channel');
+
+		$node = new Node();
+		$idNode = $node->CreateNode($complexName, 9,$nodeType->GetID(), NULL);
+
+		$ch=new Channel($idNode);
+		$result=$ch->CreateNewChannel($name, $extension, NULL, $description, $idNode, NULL, $renderMode);
+                if ($result > 0) {
+                        echo "Channel has been succesfully created\n";
+                }
+		else{
+			echo "There was a problem creating the xlyre channel\n";
+		}
+
                 parent::install();
 	}
         
