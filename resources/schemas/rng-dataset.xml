@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:xim="http://ximdex.com/schema/1.0" xmlns:xhtml="http://www.w3.org/1999/xhtml" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+	<start>
+		<element name="docxap">
+			<ref name="dataset.class"/>
+		</element>
+	</start>
+
+	<!--
+   	:dataset-001
+       a dcat:Dataset ;
+       dct:title "Imaginary dataset" ;
+       dcat:keyword "accountability","transparency" ,"payments" ;
+       dct:issued "2011-12-05"^^xsd:date ;
+       dct:modified "2011-12-05"^^xsd:date ;
+       dct:publisher :finance-ministry ;
+       dct:language <http://id.loc.gov/vocabulary/iso639-1/en>  ;
+       dcat:distribution :dataset-001-csv ;
+       .
+	-->
+	<define name="dataset.class">
+		<element name="dataset">
+			<ref name="title.class"/>
+			<oneOrMore>
+				<ref name="keyword.class"/>
+			</oneOrMore>
+			<ref name="issued.class"/>
+			<ref name="modified.class"/>
+			<ref name="publisher.class"/>
+			<ref name="language.class"/>
+			<ref name="distribution.class"/>
+			<xim:description>Dataset</xim:description>
+		</element>
+	</define>
+
+	<define name="title.class">
+		<element name="title">
+			<text/>
+			<xim:description>Title</xim:description>
+		</element>
+	</define>
+
+	<define name="keyword.class">
+		<element name="keyword">
+			<text/>
+			<xim:description>Keyword</xim:description>
+		</element>
+	</define>
+
+	<define name="issued.class" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+		<element name="issued">
+			<data type="date"/>
+			<text/>
+			<xim:description>Issued</xim:description>
+		</element>
+	</define>
+
+	<define name="modified.class" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+		<element name="modified">
+			<data type="date"/>
+			<text/>
+			<xim:description>modified</xim:description>
+		</element>
+	</define>
+
+	<define name="publisher.class">
+		<element name="publisher">
+			<text/>
+			<xim:description>publisher</xim:description>
+		</element>
+	</define>
+
+	<define name="language.class">
+		<element name="language">
+			<text/>
+			<xim:description>Language</xim:description>
+		</element>
+	</define>
+
+
+	<!--
+	:dataset-001-csv
+       a dcat:Distribution ;
+       dcat:downloadURL <http://www.example.org/files/001.csv> ;
+       dct:title "CSV distribution of imaginary dataset 001" ;
+       dcat:mediaType "text/csv" ;
+       dcat:byteSize "5120"^^xsd:decimal ;
+   	-->
+
+	<define name="distribution.class">
+		<element name="distribution">
+			<ref name="downloadURL.class"/>
+			<ref name="title.class"/>
+			<ref name="mediaType.class"/>
+			<ref name="byteSize.class"/>
+			<text/> <!--Text is the document name-->
+			<xim:description>Language</xim:description>
+		</element>
+	</define>
+
+</grammar>
