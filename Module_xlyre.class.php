@@ -48,7 +48,7 @@ class Module_xlyre extends Module {
 	function install() {
 		echo "\nModule xlyre will be installed.\n";
                	$this->loadConstructorSQL("xlyre.constructor.sql");
-		$name = "xlyre";
+		/*$name = "xlyre";
                 $extension = "xml";
                 $complexName = sprintf("%s.%s", $name, $extension);
                 $description = "OpenData channel";
@@ -67,7 +67,7 @@ class Module_xlyre extends Module {
                 }
 		else{
 			echo "There was a problem creating the xlyre channel\n";
-		}
+		}*/
 
                 parent::install();
 	}
