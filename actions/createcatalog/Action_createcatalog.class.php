@@ -31,8 +31,9 @@ class Action_createcatalog extends Action_addsectionnode {
 
 	function index(){
 		$this->loadResources();
-		$values = array('nodeID' => $nodeID
-       /*                         'nodeURL' => Config::getValue('UrlRoot').'/xmd/loadaction.php?action='.$action.'&nodeid='.$nodeID,
+		$values=$this->loadValues();
+/*		$values = array('nodeID' => $nodeID
+                                'nodeURL' => Config::getValue('UrlRoot').'/xmd/loadaction.php?action='.$action.'&nodeid='.$nodeID,
                                 'sectionTypeOptions' => $sectionTypeOptions,
                                 'sectionTypeCount' => $sectionTypeCount,
                                 'selectedsectionType' => $type_sec,
@@ -40,9 +41,75 @@ class Action_createcatalog extends Action_addsectionnode {
                                 'languageCount' => $languageCount,
                                 'subfolders' => $subfolders,
                                 'go_method' => 'addsectionnode',*/
-                                );
+                               // );
+                $values['go_method']='addcatalog';
+//error_log(print_r($values,true));
                 $this->render($values, null, 'default-3.0.tpl');
 	}
 
+	function addcatalog(){
+		$nodeID = $this->request->getParam('nodeid');
+		$folderlst = $this->request->getParam('folderlst');
+		$name = $this->request->getParam('name');
+		$langidlst = $this->request->getParam('langidlst');
+
+		$nt = new NodeType(4000);
+                $ntName = $nt->get('Name');
+
+		$data = array(
+                    'NODETYPENAME' => $ntName,
+                    'NAME' => $name,
+                    'SUBFOLDERS' => $folderlst,
+                    'PARENTID' => $nodeID,
+                    'FORCENEW' => true
+                    );  
+
+                $baseio = new baseIO();
+                $id = $baseio->build($data);
+
+                if ($id > 0) {
+			$aliasLangArray = array();
+        	        if($langidlst) {
+                	        foreach ($langidlst as $key) {
+                        	        $aliasLangArray[$key] = $namelst[$key];
+                        	}
+                	}
+			
+
+                        $section = new Node($id);
+                        if($aliasLangArray) {
+                                foreach ($aliasLangArray as $langID => $longName) {
+                                $section->SetAliasForLang($langID, $longName);
+                                }   
+                        }   
+                        $this->reloadNode($nodeID);
+                }
+
+		if (!($id > 0)) {
+                        $this->messages->mergeMessages($baseio->messages);
+                        $this->messages->add(_('Operation could not be successfully completed'), MSG_TYPE_ERROR);
+                }else{
+                        $this->messages->add(sprintf(_('%s has been successfully created'), $name), MSG_TYPE_NOTICE);
+                }
+
+                $values = array(
+                        'action_with_no_return' => $id > 0,
+                        'messages' => $this->messages->messages
+                );
+
+                $this->render($values, NULL, 'messages.tpl');
+	}
+
+	function loadResources(){
+                $this->addJs('/modules/xlyre/actions/createcatalog/resources/js/index.js');
+                //$this->addCss('/modules/xlyre/actions/createcatalog/resources/css/style.css');
+                $this->addCss('/actions/addsectionnode/resources/css/style.css');
+        }
+
+	function _getDescription($nodetype){
+                switch($nodetype){
+                        case "4001": return "A dataset should be for a single data in several formats.";
+		}
+	}
 }
 ?>

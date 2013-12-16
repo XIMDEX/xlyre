@@ -35,10 +35,11 @@
 
         <div class="action_content section-properties">
 
-                {include file="`$_APP_ROOT`/actions/addsectionnode/template/Smarty/sectiontype.tpl"}
+                {*include file="`$_APP_ROOT`/actions/addsectionnode/template/Smarty/sectiontype.tpl"*}
+                {include file="`$_APP_ROOT`/modules/xlyre/actions/createcatalog/template/Smarty/sectiontype.tpl"}
 
                 {include file="`$_APP_ROOT`/actions/addsectionnode/template/Smarty/languages.tpl"}
+                {include file="`$_APP_ROOT`/modules/xlyre/actions/createcatalog/template/Smarty/datasets.tpl"}
 
-		<h1>HOLA!!</h1>
         </div>      
 </form> 
