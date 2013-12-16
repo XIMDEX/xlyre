@@ -15,10 +15,15 @@ DELETE FROM NodeAllowedContents where NodeType in (4000,4001);
 
 -- DROP TABLE IF EXISTS `Namespaces`;
 
--- DELETE FROM NodeDefaultContents where IdNodeType in (4000);
+DELETE FROM NodeDefaultContents where IdNodeType in (4000);
 
-DELETE FROM Actions where IdAction in (7500);
--- DELETE FROM Actions where IdAction in (7500,7501,7502,7503);
+DELETE FROM Actions where IdAction in (7501,7502);
 
-DELETE FROM RelRolesActions where IdAction in (7500);
--- DELETE FROM RelRolesActions where IdAction in (7500,7501,7502,7503);
+DELETE FROM RelRolesActions where IdAction in (7501, 7502);
+
+DROP TABLE IF EXISTS `XlyreCatalog`;
+DROP TABLE IF EXISTS `XlyreDataset`;
+DROP TABLE IF EXISTS `XlyreDistribution`;
+DROP TABLE IF EXISTS `XlyreRelMetaLangs`;
+DROP TABLE IF EXISTS `XlyreRelMetaTags`;
+

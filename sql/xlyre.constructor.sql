@@ -65,3 +65,76 @@ INSERT INTO RelRolesActions VALUES (NULL,201,7502,0,1,3);
 -- INSERT INTO RelRolesActions VALUES (NULL,201,7503,0,1,3);
 UNLOCK TABLES;
 
+-- XlyreCatalog Table
+DROP TABLE IF EXISTS `XlyreCatalog`;
+CREATE TABLE `XlyreCatalog` (
+  `IdCatalog` int(11) unsigned NOT NULL COMMENT 'Ximdex NodeId',
+  `Identifier` varchar(100) NOT NULL UNIQUE,
+  `Theme` varchar(100) NOT NULL DEFAULT '',
+  `Issued` int(12) unsigned DEFAULT '0',
+  `Modified` int(12) unsigned DEFAULT '0',
+  `Publisher` int(12) unsigned NOT NULL DEFAULT '0' COMMENT 'Ximdex User',
+  `License` varchar(100) NOT nULL DEFAULT '',
+  `Spatial` varchar(100) NOT NULL DEFAULT '',
+  `Homepage` varchar(255) NOT NULL DEFAULT 'http://www.example.com',
+  PRIMARY KEY (`IdCatalog`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Catalog - XLyre Module';
+
+-- XlyreDataset Table
+DROP TABLE IF EXISTS `XlyreDataset`;
+CREATE TABLE `XlyreDataset` (
+  `IdDataset` int(11) unsigned NOT NULL COMMENT 'Ximdex NodeId',
+  `IdCatalog` int(11) unsigned NOT NULL,
+  `Identifier` varchar(100) NOT NULL UNIQUE,
+  `Theme` varchar(100) NOT NULL DEFAULT '',
+  `Issued` int(12) unsigned DEFAULT '0',
+  `Modified` int(12) unsigned DEFAULT '0',
+  `Publisher` int(12) unsigned NOT NULL DEFAULT '0' COMMENT 'Ximdex User',
+  `Periodicity` mediumint(6) unsigned NOT NULL DEFAULT '12' COMMENT 'Units in Month',
+  `License` varchar(100) NOT nULL DEFAULT '',
+  `Spatial` varchar(100) NOT NULL DEFAULT '',
+  `Reference` varchar(255) NOT NULL DEFAULT 'http://www.example.com' COMMENT 'Reference webpage for more information about the dataset',
+  PRIMARY KEY (`IdDataset`),
+  KEY `IdCatalog` (`IdCatalog`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Dataset - XLyre Module';
+
+-- XlyreDistribution table
+DROP TABLE IF EXISTS `XlyreDistribution`;
+CREATE TABLE `XlyreDistribution` (
+  `IdDistribution` int(11) unsigned NOT NULL COMMENT 'Ximdex NodeId',
+  `IdDataset` int(11) unsigned NOT NULL,
+  `AccessURL` varchar(255) NOT NULL DEFAULT 'http://example.com',
+  `Identifier` varchar(255) NOT NULL,
+  `Filename` varchar(100) NOT NULL COMMENT 'Distribution Filename',
+  `Issued` int(12) unsigned DEFAULT '0',
+  `Modified` int(12) unsigned DEFAULT '0',
+  `MediaType` varchar(50) DEFAULT '',
+  `ByteSize` int(12) unsigned DEFAULT '0',
+  PRIMARY KEY (`IdDistribution`),
+  KEY `IdDataset` (`IdDataset`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Distribution - XLyre Module';
+
+-- XlyreRelMetaLangs Table - it implements I18n for title and description in XLyre objects
+DROP TABLE IF EXISTS `XlyreRelMetaLangs`;
+CREATE TABLE `XlyreRelMetaLangs` (
+  `IdRel` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `IdNode` int(11) unsigned NOT NULL COMMENT 'NodeIds for XLyre elements',
+  `IdLanguage` int(11) unsigned NOT NULL COMMENT 'Language Id on Ximdex',
+  `Title` varchar(255) DEFAULT '',
+  `Description` varchar(500) DEFAULT '',
+  PRIMARY KEY (`IdRel`),
+  KEY `IdNode` (`IdNode`),
+  KEY `IdLanguage` (`IdLanguage`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='I18n fields for Catalog, Dataset and Distribution - XLyre Module';
+
+-- XlyreRelMetaTags Table - it implements tags for XLyre objects (datasets)
+DROP TABLE IF EXISTS `XlyreRelMetaTags`;
+CREATE TABLE `XlyreRelMetaTags` (
+  `IdRel` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `IdNode` int(11) unsigned NOT NULL COMMENT 'NodeIds for XLyre elements',
+  `IdTag` int(11) unsigned NOT NULL COMMENT 'Tag Id on Ximdex',
+  PRIMARY KEY (`IdRel`),
+  KEY `IdNode` (`IdNode`),
+  KEY `IdTag` (`IdTag`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Tags for Dataset (it could also be tags for Catalog and Distribution) - XLyre Module';
+
