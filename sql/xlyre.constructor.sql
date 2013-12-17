@@ -69,15 +69,16 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `XlyreCatalog`;
 CREATE TABLE `XlyreCatalog` (
   `IdCatalog` int(11) unsigned NOT NULL COMMENT 'Ximdex NodeId',
-  `Identifier` varchar(100) NOT NULL UNIQUE,
+  `Identifier` varchar(100) NOT NULL,
   `Theme` varchar(100) NOT NULL DEFAULT '',
-  `Issued` int(12) unsigned DEFAULT '0',
-  `Modified` int(12) unsigned DEFAULT '0',
+  `Issued` int(12) unsigned NOT NULL DEFAULT '0',
+  `Modified` int(12) unsigned NOT NULL DEFAULT '0',
   `Publisher` int(12) unsigned NOT NULL DEFAULT '0' COMMENT 'Ximdex User',
-  `License` varchar(100) NOT nULL DEFAULT '',
+  `License` varchar(100) NOT NULL DEFAULT '',
   `Spatial` varchar(100) NOT NULL DEFAULT '',
-  `Homepage` varchar(255) NOT NULL DEFAULT 'http://www.example.com',
-  PRIMARY KEY (`IdCatalog`)
+  `Homepage` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`IdCatalog`),
+  UNIQUE KEY `Identifier` (`Identifier`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Catalog - XLyre Module';
 
 -- XlyreDataset Table
@@ -85,16 +86,17 @@ DROP TABLE IF EXISTS `XlyreDataset`;
 CREATE TABLE `XlyreDataset` (
   `IdDataset` int(11) unsigned NOT NULL COMMENT 'Ximdex NodeId',
   `IdCatalog` int(11) unsigned NOT NULL,
-  `Identifier` varchar(100) NOT NULL UNIQUE,
+  `Identifier` varchar(100) NOT NULL,
   `Theme` varchar(100) NOT NULL DEFAULT '',
-  `Issued` int(12) unsigned DEFAULT '0',
-  `Modified` int(12) unsigned DEFAULT '0',
+  `Issued` int(12) unsigned NOT NULL DEFAULT '0',
+  `Modified` int(12) unsigned NOT NULL DEFAULT '0',
   `Publisher` int(12) unsigned NOT NULL DEFAULT '0' COMMENT 'Ximdex User',
   `Periodicity` mediumint(6) unsigned NOT NULL DEFAULT '12' COMMENT 'Units in Month',
-  `License` varchar(100) NOT nULL DEFAULT '',
+  `License` varchar(100) NOT NULL DEFAULT '',
   `Spatial` varchar(100) NOT NULL DEFAULT '',
-  `Reference` varchar(255) NOT NULL DEFAULT 'http://www.example.com' COMMENT 'Reference webpage for more information about the dataset',
+  `Reference` varchar(255) NOT NULL DEFAULT '' COMMENT 'Reference webpage for more information about the dataset',
   PRIMARY KEY (`IdDataset`),
+  UNIQUE KEY `Identifier` (`Identifier`),
   KEY `IdCatalog` (`IdCatalog`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Dataset - XLyre Module';
 
@@ -103,14 +105,15 @@ DROP TABLE IF EXISTS `XlyreDistribution`;
 CREATE TABLE `XlyreDistribution` (
   `IdDistribution` int(11) unsigned NOT NULL COMMENT 'Ximdex NodeId',
   `IdDataset` int(11) unsigned NOT NULL,
-  `AccessURL` varchar(255) NOT NULL DEFAULT 'http://example.com',
-  `Identifier` varchar(255) NOT NULL,
+  `AccessURL` varchar(255) NOT NULL DEFAULT '',
+  `Identifier` varchar(100) NOT NULL,
   `Filename` varchar(100) NOT NULL COMMENT 'Distribution Filename',
-  `Issued` int(12) unsigned DEFAULT '0',
-  `Modified` int(12) unsigned DEFAULT '0',
+  `Issued` int(12) unsigned NOT NULL DEFAULT '0',
+  `Modified` int(12) unsigned NOT NULL DEFAULT '0',
   `MediaType` varchar(50) DEFAULT '',
   `ByteSize` int(12) unsigned DEFAULT '0',
   PRIMARY KEY (`IdDistribution`),
+  UNIQUE KEY `Identifier` (`Identifier`),
   KEY `IdDataset` (`IdDataset`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Distribution - XLyre Module';
 
