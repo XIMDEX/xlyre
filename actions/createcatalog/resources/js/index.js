@@ -43,7 +43,7 @@ X.actionLoaded(function(event, fn, params) {
 
         fn("a.add-dataset").click(function(){
 		var $ds=$(".subfolder:last");
-		$ds.after('<div class="subfolder box-col1-1"><input type="text" class="" name="namelst[]" placeholder="New Dataset"><label for="4001" class="icon"><strong class="icon Dataset"></strong></label><span class="info">A dataset should be for a single data in several formats.</span></div>');
+		$ds.before('<div class="subfolder box-col1-1"><label for="4001" class="icon"><input type="text" class="text_label" name="namelst[]" placeholder="New Dataset"><strong class="icon dataset"></strong></label><span class="info">A dataset should be for a single data in several formats.</span></div>');
                 
         }); 
 });

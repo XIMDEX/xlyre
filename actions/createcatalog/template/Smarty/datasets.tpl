@@ -1,14 +1,11 @@
-<div class="subfolders-available col2-3">
+<div class="subfolders-available datasets  col2-3">
 	<h3>{t}Create one or more datasets{/t}</h3>
         {if $subfolders|@count != 0}
         	{foreach from=$subfolders key=nt item=foldername}
-                <div class="subfolder box-col1-1">
-                	<input name="folderlst[]" type="checkbox" value="{$nt}" {if $nt eq 5018 || $nt eq 5016 || $nt eq 5022 || $nt eq 5301 || $nt eq 5304} checked{/if} {if $nt eq 5301 || $nt eq 5304} readonly {/if} class="hidden-focus" id="{$nt}"/>
-                        <label class="icon" for="{$nt}"><strong class="icon {$foldername[0]}">{$foldername[0]}</strong></label>
-                        <span class="info">{t}{$foldername[1]}{/t}</span>
-                </div>      
+                <div class="subfolder box-col1-1"><label for="4001" class="icon"><input type="text" class="text_label" name="namelst[]" placeholder="New Dataset" id="4001"><strong class="icon dataset"></strong></label><span class="info">A dataset should be for a single data in several formats.</span></div>  
         	{/foreach}  
-		<span><a class="add-dataset" href="#">Add</a></span>
+		 <div class="subfolder box-col1-1 add_element"><a class="add-dataset" href="#"><strong class="icon add">Add</strong></a>
+                 </div>
 	{else}      
         	<p>{t}There aren't any avaliable subfolders for this section.{/t}</p>
 	{/if}       

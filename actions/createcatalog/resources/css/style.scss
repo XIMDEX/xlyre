@@ -22,43 +22,63 @@
  *  @author Ximdex DevTeam <dev@ximdex.com>
  *  @version $Revision$
  */
-/* NO Extends because they are inserted at the beggining of each CSS file */
-.add_element {
-  background: #c4e7e2;
-  border: 1px dashed #cccccc;
-  text-align: center; }
-  .add_element:hover {
-    background: #8dd1c8; }
-    .add_element:hover strong::before {
-      background: #fff; }
-  .add_element a {
-    line-height: 11.5;
-    display: block;
-    height: 100%;
-    width: 100%; }
-  .add_element strong::before {
-    background: #fff; }
-  .add_element .add::after {
-    position: absolute;
-    font-size: 2.7rem;
-    top: 1.33em;
-    left: 1.85em;
-    color: #7bcabf; }
 
-.text_label {
-  position: absolute;
-  bottom: .5em;
-  width: 90%;
-  margin-left: 5%;
-  border: none;
-  text-transform: uppercase;
-  font-weight: bold;
-  text-align: center;
-  font-size: 1.4rem !important;
-  color: #464646; }
 
-.subfolder strong.dataset::before {
-  background: #c2d43b; }
+ @import "../../../../../../xmd/style/jquery/ximdex_theme/widgets/themes/ximdex_theme";
+ @import "../../../../../../xmd/style/jquery/ximdex_theme/widgets/themes/extends";
 
-.input-select.folder-data::before {
-  color: #c2d43b; }
+
+
+.add_element{
+		background:lighten($c_mainlight, 20%);
+	border: 1px dashed $c_grey-pp;
+	text-align: center;
+	&:hover{
+		background:lighten($c_mainlight, 5%);
+		strong::before{
+		background:#fff;
+		}
+	}
+	a{
+		line-height: 11.5;
+		display: block;
+		height: 100%;
+		width: 100%;
+	}
+
+	strong::before{
+		background:#fff;
+		
+	}
+	.add::after{
+		position: absolute;
+		font-size: 2.7rem;
+		top: 1.33em;
+		left: 1.85em;
+		color: $c_mainlight;
+	}
+}
+
+
+.text_label{
+	position: absolute;
+	bottom: .5em;
+	width: 90%;
+	margin-left: 5%;
+	border: none;
+	text-transform: uppercase;
+	font-weight: bold;
+	text-align: center;
+	font-size: 1.4rem !important;
+	color: $c_grey-l;
+}
+
+.subfolder strong.dataset{
+	&::before{
+		background:#c2d43b;
+	}
+}
+
+.input-select.folder-data::before{
+	color:#c2d43b;
+}

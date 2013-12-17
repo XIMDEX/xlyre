@@ -31,6 +31,7 @@ class Action_createcatalog extends Action_addsectionnode {
 
 	function index(){
 		$this->loadResources();
+        $this->addCss('/xmd/style/jquery/ximdex_theme/widgets/tagsinput/tagsinput.css');
 		$values=$this->loadValues();
 /*		$values = array('nodeID' => $nodeID
                                 'nodeURL' => Config::getValue('UrlRoot').'/xmd/loadaction.php?action='.$action.'&nodeid='.$nodeID,
@@ -102,8 +103,8 @@ class Action_createcatalog extends Action_addsectionnode {
 
 	function loadResources(){
                 $this->addJs('/modules/xlyre/actions/createcatalog/resources/js/index.js');
-                //$this->addCss('/modules/xlyre/actions/createcatalog/resources/css/style.css');
                 $this->addCss('/actions/addsectionnode/resources/css/style.css');
+                $this->addCss('/modules/xlyre/actions/createcatalog/resources/css/style.css');
         }
 
 	function _getDescription($nodetype){
