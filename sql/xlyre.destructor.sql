@@ -19,7 +19,7 @@ DELETE FROM NodeDefaultContents where IdNodeType in (4000);
 
 DELETE FROM Actions where IdAction in (7501,7502);
 
-DELETE FROM RelRolesActions where IdAction in (7501, 7502);
+DELETE FROM RelRolesActions where IdAction in (7501,7502);
 
 DROP TABLE IF EXISTS `XlyreCatalog`;
 DROP TABLE IF EXISTS `XlyreDataset`;
