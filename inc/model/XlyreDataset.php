@@ -28,7 +28,18 @@ ModulesManager::file('/inc/model/orm/XlyreDataset_ORM.class.php', 'xlyre');
 
 class XlyreDataset extends XlyreDataset_ORM {
     
-    // Add methods here
-    
+    /**
+     * Get all the datasets for a Catalog
+     * @param  int $IdCatalog Catalog id.
+     * @return array Array with dataset object for every dataset in the current Catalog.
+     */
+    public function getByCatalog($IdCatalog){
+    	$result = array();
+		$datasets = $this->find("IdDataset", "IdCatalog=%s", array($IdCatalog), MONO);
+    	foreach ($datasets as $idDataset) {
+    		$result[$idDataset] = new XlyreDataset($idDataset);
+    	}
+    	return $result;
+    }
 }
 ?>

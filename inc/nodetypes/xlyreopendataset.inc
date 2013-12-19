@@ -24,11 +24,11 @@
  *  @version $Revision$
  */
 
-ModulesManager::file('/inc/model/XlyreDataset.class.php', 'xlyre');
+ModulesManager::file('/inc/model/XlyreDataset.php', 'xlyre');
 
 class XlyreOpenDataSet extends FolderNode{
 
-	public const IDNODETYPE = 4001;
+	const IDNODETYPE = 4001;
 
 	/**
 	 * Specific delete for the current nodetype.
