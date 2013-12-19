@@ -25,42 +25,30 @@
  */
 
 ModulesManager::file('/actions/addsectionnode/Action_addsectionnode.class.php');
-
+ModulesManager::file('/inc/nodetypes/xlyreopendatasection.inc','xlyre');
 
 class Action_createcatalog extends Action_addsectionnode {
 
 	function index(){
 		$this->loadResources();
-        $this->addCss('/xmd/style/jquery/ximdex_theme/widgets/tagsinput/tagsinput.css');
 		$values=$this->loadValues();
-/*		$values = array('nodeID' => $nodeID
-                                'nodeURL' => Config::getValue('UrlRoot').'/xmd/loadaction.php?action='.$action.'&nodeid='.$nodeID,
-                                'sectionTypeOptions' => $sectionTypeOptions,
-                                'sectionTypeCount' => $sectionTypeCount,
-                                'selectedsectionType' => $type_sec,
-                                'languageOptions' => $languageOptions,
-                                'languageCount' => $languageCount,
-                                'subfolders' => $subfolders,
-                                'go_method' => 'addsectionnode',*/
-                               // );
                 $values['go_method']='addcatalog';
-//error_log(print_r($values,true));
                 $this->render($values, null, 'default-3.0.tpl');
 	}
 
 	function addcatalog(){
 		$nodeID = $this->request->getParam('nodeid');
-		$folderlst = $this->request->getParam('folderlst');
-		$name = $this->request->getParam('name');
+		$datasets = $this->request->getParam('datasets[]');
+		$namelst = $this->request->getParam('namelst');
+		$name = $this->request->getParam('catalogName');
 		$langidlst = $this->request->getParam('langidlst');
 
-		$nt = new NodeType(4000);
-                $ntName = $nt->get('Name');
+		$catalog = new Node();
 
 		$data = array(
-                    'NODETYPENAME' => $ntName,
+                    'NODETYPENAME' => 'OpenDataSection',
                     'NAME' => $name,
-                    'SUBFOLDERS' => $folderlst,
+//                    'SUBFOLDERS' => $lst,
                     'PARENTID' => $nodeID,
                     'FORCENEW' => true
                     );  
@@ -68,7 +56,7 @@ class Action_createcatalog extends Action_addsectionnode {
                 $baseio = new baseIO();
                 $id = $baseio->build($data);
 
-                if ($id > 0) {
+                /*if ($id > 0) {
 			$aliasLangArray = array();
         	        if($langidlst) {
                 	        foreach ($langidlst as $key) {
@@ -84,7 +72,7 @@ class Action_createcatalog extends Action_addsectionnode {
                                 }   
                         }   
                         $this->reloadNode($nodeID);
-                }
+                }*/
 
 		if (!($id > 0)) {
                         $this->messages->mergeMessages($baseio->messages);

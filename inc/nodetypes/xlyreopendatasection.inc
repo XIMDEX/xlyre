@@ -28,7 +28,7 @@ ModulesManager::file('/inc/model/XlyreCatalog.class.php', 'xlyre');
 
 class XlyreOpenDataSection extends SectionNode{
 
-	public const IDNODETYPE = 4000;
+	const IDNODETYPE = 4000;
 
 
 	/**
@@ -47,7 +47,7 @@ class XlyreOpenDataSection extends SectionNode{
 	 * Create node for the current nodetype
 	 * It must create the catalog
 	 */		
-	public function createNode()
+	public function createNode(){
 
 		//Adding a new Catalog
 		$catalog = new XlyreCatalog();
