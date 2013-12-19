@@ -43,6 +43,23 @@ class XlyreOpenDataSection extends SectionNode{
 		return $catalog->delete();
 	}
 
+	/**
+	 * Create node for the current nodetype
+	 * It must create the catalog
+	 */		
+	public function createNode()
+
+		//Adding a new Catalog
+		$catalog = new XlyreCatalog();
+		
+
+		//Settings properties for the catalog.
+		$catalog->set("idCatalog", $this->nodeID);
+		//...
+
+		return $catalog->add();
+	}
+
 }
 
 ?>

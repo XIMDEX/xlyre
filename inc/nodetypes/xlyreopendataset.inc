@@ -41,6 +41,23 @@ class XlyreOpenDataSet extends FolderNode{
 		$dataset = new XlyreDataset($idNode);
 		return $dataset->delete();
 	}
+
+	/**
+	 * Create node for the current nodetype.
+	 * It must create the Dataset.
+	 */		
+	public function createNode()
+
+		//Adding a new Dataset
+		$dataset = new XlyreDataset();
+		
+
+		//Settings properties for the catalog.
+		$dataset->set("idDataset", $this->nodeID);
+		//...
+
+		return $dataset->add();
+	}
 }
 
 ?>
