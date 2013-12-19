@@ -26,6 +26,7 @@
 
 ModulesManager::file('/actions/addsectionnode/Action_addsectionnode.class.php');
 ModulesManager::file('/inc/nodetypes/xlyreopendatasection.inc','xlyre');
+ModulesManager::file('/inc/io/XlyreBaseIO.class.php','xlyre');
 
 class Action_createcatalog extends Action_addsectionnode {
 
@@ -53,10 +54,15 @@ class Action_createcatalog extends Action_addsectionnode {
                     'FORCENEW' => true
                     );  
 
-                $baseio = new baseIO();
-                $id = $baseio->build($data);
+        $baseio = new XlyreBaseIO();
+        $id = $baseio->build($data);
+        
+                if ($id > 0) {
+                    foreach ($datasets as $datasetName) {
+                        
+                    }
 
-                /*if ($id > 0) {
+                    /*
 			$aliasLangArray = array();
         	        if($langidlst) {
                 	        foreach ($langidlst as $key) {
@@ -70,9 +76,9 @@ class Action_createcatalog extends Action_addsectionnode {
                                 foreach ($aliasLangArray as $langID => $longName) {
                                 $section->SetAliasForLang($langID, $longName);
                                 }   
-                        }   
+                        }   */
                         $this->reloadNode($nodeID);
-                }*/
+                }
 
 		if (!($id > 0)) {
                         $this->messages->mergeMessages($baseio->messages);

@@ -29,7 +29,7 @@ UNLOCK TABLES;
 
 -- Default Contents
 LOCK TABLES `NodeDefaultContents` WRITE;
--- INSERT INTO `NodeDefaultContents` VALUES (NULL,4000,4001,'Dataset',NULL,NULL);
+INSERT INTO `NodeDefaultContents` VALUES (NULL,4000,4001,'Dataset',NULL,NULL);
 -- INSERT INTO `NodeDefaultContents` VALUES (NULL,4000,4001,'RawData',NULL,NULL);
 -- INSERT INTO `NodeDefaultContents` VALUES (NULL,4000,4003,'catalogs',NULL,NULL);
 UNLOCK TABLES;

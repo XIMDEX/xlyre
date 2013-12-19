@@ -54,9 +54,17 @@ class XlyreOpenDataSection extends SectionNode{
 		
 
 		//Settings properties for the catalog.
-		$catalog->set("idCatalog", $this->nodeID);
-		//...
-
+		$catalog->set("IdCatalog", $this->nodeID);
+		$catalog->set("Identifier", $name);
+		$catalog->set("Theme", "NULL");
+		$catalog->set("License", "NULL");
+		$catalog->set("Spatial", "NULL");
+		$catalog->set("Homepage", "NULL");
+		$time = time();
+		$catalog->set("Modified",$time);
+		$catalog->set("Issued",$time);
+		
+		error_log("AQUII");
 		return $catalog->add();
 	}
 
