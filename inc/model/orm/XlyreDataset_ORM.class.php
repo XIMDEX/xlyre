@@ -56,7 +56,7 @@ class XlyreDataset_ORM extends GenericData   {
     var $Issued = 0;
     var $Modified = 0;
     var $Publisher = 0;
-    var $Periodicity = 12,
+    var $Periodicity = 12;
     var $License = '';
     var $Spatial = '';
     var $Reference = '';
