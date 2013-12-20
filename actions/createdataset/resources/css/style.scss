@@ -1,0 +1,84 @@
+/**
+ *  \details &copy; 2011  Open Ximdex Evolution SL [http://www.ximdex.org]
+ *
+ *  Ximdex a Semantic Content Management System (CMS)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as published
+ *  by the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  See the Affero GNU General Public License for more details.
+ *  You should have received a copy of the Affero GNU General Public License
+ *  version 3 along with Ximdex (see LICENSE file).
+ *
+ *  If not, visit http://gnu.org/licenses/agpl-3.0.html.
+ *
+ *  @author Ximdex DevTeam <dev@ximdex.com>
+ *  @version $Revision$
+ */
+
+
+ @import "../../../../../../xmd/style/jquery/ximdex_theme/widgets/themes/ximdex_theme";
+ @import "../../../../../../xmd/style/jquery/ximdex_theme/widgets/themes/extends";
+
+
+
+.add_element{
+		background:lighten($c_mainlight, 20%);
+	border: 1px dashed $c_grey-pp;
+	text-align: center;
+	&:hover{
+		background:lighten($c_mainlight, 5%);
+		strong::before{
+		background:#fff;
+		}
+	}
+	a{
+		line-height: 11.5;
+		display: block;
+		height: 100%;
+		width: 100%;
+	}
+
+	strong::before{
+		background:#fff;
+		
+	}
+	.add::after{
+		position: absolute;
+		font-size: 2.7rem;
+		top: 1.33em;
+		left: 1.85em;
+		color: $c_mainlight;
+	}
+}
+
+
+.text_label{
+	position: absolute;
+	bottom: .5em;
+	width: 90%;
+	margin-left: 5%;
+	border: none;
+	text-transform: uppercase;
+	font-weight: bold;
+	text-align: center;
+	font-size: 1.4rem !important;
+	color: $c_grey-l;
+}
+
+.subfolder strong.dataset{
+	&::before{
+		background:#c2d43b;
+	}
+}
+
+.input-select.folder-data::before{
+	color:#c2d43b;
+}

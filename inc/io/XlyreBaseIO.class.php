@@ -42,7 +42,6 @@ class XlyreBaseIO extends BaseIO{
 	 * @return identifier of the inserted node or a state specifying why it was not inserted
 	 */
 	protected function createNode($data, $metaType, $nodeTypeClass, $nodeTypeName){
-
 		if (array_key_exists($nodeTypeClass, XlyreBaseIOConstants::$metaTypesArray)) {
 			$metaTypesArray = XlyreBaseIOConstants::$metaTypesArray;
 			$metaType = $metaTypesArray[$nodeTypeClass];
@@ -63,7 +62,7 @@ class XlyreBaseIO extends BaseIO{
 				$nodeType = new NodeType();
 				$nodeType->setId(XlyreOpenDataSet::IDNODETYPE);
 				$dataset = new Node();
-				$idNode = $dataset->CreateNode($data['NAME'], $data['PARENTID'],$nodeType->GetID(), NULL,array(false));
+				$idNode = $dataset->CreateNode($data['NAME'], $data['PARENTID'],$nodeType->GetID(), NULL,array(false), $data["THEME"], $data["PERIODICITY"], $data["LICENSE"], $data["SPATIAL"], $data["REFERENCE"]);
 				if (!($idNode > 0)) {
 					return ERROR_INCORRECT_DATA;
 				}
