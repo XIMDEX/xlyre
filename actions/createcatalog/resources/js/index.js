@@ -46,7 +46,7 @@ X.actionLoaded(function(event, fn, params) {
 		var last_id=parseInt($(".subfolder > label").last().attr("data-cont"));
 		last_id=last_id+1;
 		var ident= fn("input[name='nodeid']").val()+'_dataset'+last_id;
-		$ds.before('<div class="subfolder box-col1-1"><label for="'+ident+'" class="icon" data-cont="'+last_id+'"><input id="'+ident+'" type="text" class="text_label" name="namelst[]" placeholder="New Dataset"><strong class="icon dataset"></strong><a class="xim-tagsinput-tag-remove icon" href="#"> × </a></label><span class="info">A dataset should be for a single data in several formats.</span></div>');
+		$ds.before('<div class="subfolder box-col1-1"><label for="'+ident+'" class="icon" data-cont="'+last_id+'"><input id="'+ident+'" type="text" class="text_label" name="datasets[]" placeholder="New Dataset"><strong class="icon dataset"></strong><a class="xim-tagsinput-tag-remove icon" href="#"> × </a></label><span class="info">A dataset should be for a single data in several formats.</span></div>');
                 
         }); 
 

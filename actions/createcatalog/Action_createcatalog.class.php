@@ -26,6 +26,7 @@
 
 ModulesManager::file('/actions/addsectionnode/Action_addsectionnode.class.php');
 ModulesManager::file('/inc/nodetypes/xlyreopendatasection.inc','xlyre');
+ModulesManager::file('/inc/nodetypes/xlyreopendataset.inc','xlyre');
 ModulesManager::file('/inc/io/XlyreBaseIO.class.php','xlyre');
 
 class Action_createcatalog extends Action_addsectionnode {
@@ -39,8 +40,7 @@ class Action_createcatalog extends Action_addsectionnode {
 
 	function addcatalog(){
 		$nodeID = $this->request->getParam('nodeid');
-		$datasets = $this->request->getParam('datasets[]');
-		$namelst = $this->request->getParam('namelst');
+		$datasets = $this->request->getParam('datasets');        
 		$name = $this->request->getParam('catalogName');
 		$langidlst = $this->request->getParam('langidlst');
 
@@ -59,8 +59,14 @@ class Action_createcatalog extends Action_addsectionnode {
         
                 if ($id > 0) {
                     foreach ($datasets as $datasetName) {
-                        
-                    }
+                        $datasetData = array(
+                            'NODETYPENAME' => 'OpenDataDataset',
+                            'NAME' => $datasetName,
+                            'PARENTID' => $id,
+                            'FORCENEW' => true
+                    ); 
+                        $baseio->build($datasetData); 
+                }
 
                     /*
 			$aliasLangArray = array();
