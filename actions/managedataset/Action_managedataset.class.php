@@ -26,10 +26,11 @@
 
 ModulesManager::file('/inc/io/XlyreBaseIO.class.php','xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendataset.inc', 'xlyre');
+ModulesManager::file('/inc/nodetypes/xlyreopendatasection.inc', 'xlyre');
 ModulesManager::file('/inc/io/XlyreBaseIOConstants.class.php', "xlyre");
 
 
-class Action_createdataset extends ActionAbstract {
+class Action_managedataset extends ActionAbstract {
 
 	function index(){
 		$this->loadResources();
@@ -38,7 +39,17 @@ class Action_createdataset extends ActionAbstract {
 
         $idNode = $this->request->getParam("nodeid");
         $node = new Node($idNode);
-        // $nt = $node->GetNodeType();
+        $nt = $node->GetNodeType();
+        if ($nt == XlyreOpenDataSection::IDNODETYPE) {
+            var_dump("Add Dataset to Catalog");
+            var_dump($idNode);
+            $values['go_method'] = 'createdataset';
+        }
+        elseif ($nt == XlyreOpenDataDataset::IDNODETYPE) {
+            var_dump("Edit Dataset");
+            var_dump($idNode);
+            $values['go_method'] = 'updatedataset';
+        }
         $idNode = $node->get('IdNode');
 
         // Getting channels
@@ -52,12 +63,11 @@ class Action_createdataset extends ActionAbstract {
         $value['id_node'] = $idNode;
         $values['channels'] = $channels;
         $values['languages'] = $languages;
-        $values['go_method'] = 'createdataset';
         
         $this->render($values, null, 'default-3.0.tpl');
 	}
 
-	function createdataset(){
+	function createdataset() {
 
         $parentID = $this->request->getParam('nodeid');
          $name = $this->request->getParam('name');
@@ -100,15 +110,20 @@ class Action_createdataset extends ActionAbstract {
 
     }
 
-	function loadResources(){
+    function updatedataset() {
+
+    }
+
+	function loadResources() {
                 $this->addJs('/modules/xlyre/actions/createdataset/resources/js/index.js');
                 $this->addCss('/modules/xlyre/actions/createdataset/resources/css/style.css');
         }
 
-	function _getDescription($nodetype){
+	function _getDescription($nodetype) {
                 switch($nodetype){
                         case "4001": return "A dataset should be for a single data in several formats.";
 		}
 	}
 }
+
 ?>
