@@ -41,13 +41,13 @@ class Action_managedataset extends ActionAbstract {
         $node = new Node($idNode);
         $nt = $node->GetNodeType();
         if ($nt == XlyreOpenDataSection::IDNODETYPE) {
-            var_dump("Add Dataset to Catalog");
-            var_dump($idNode);
+            // var_dump("Add Dataset to Catalog");
+            // var_dump($idNode);
             $values['go_method'] = 'createdataset';
         }
-        elseif ($nt == XlyreOpenDataDataset::IDNODETYPE) {
-            var_dump("Edit Dataset");
-            var_dump($idNode);
+        elseif ($nt == XlyreOpenDataset::IDNODETYPE) {
+            // var_dump("Edit Dataset");
+            // var_dump($idNode);
             $values['go_method'] = 'updatedataset';
         }
         $idNode = $node->get('IdNode');
@@ -115,8 +115,8 @@ class Action_managedataset extends ActionAbstract {
     }
 
 	function loadResources() {
-                $this->addJs('/modules/xlyre/actions/createdataset/resources/js/index.js');
-                $this->addCss('/modules/xlyre/actions/createdataset/resources/css/style.css');
+                $this->addJs('/modules/xlyre/actions/managedataset/resources/js/index.js');
+                $this->addCss('/modules/xlyre/actions/managedataset/resources/css/style.css');
         }
 
 	function _getDescription($nodetype) {
