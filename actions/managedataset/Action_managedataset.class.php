@@ -41,14 +41,16 @@ class Action_managedataset extends ActionAbstract {
         $node = new Node($idNode);
         $nt = $node->GetNodeType();
         if ($nt == XlyreOpenDataSection::IDNODETYPE) {
-            // var_dump("Add Dataset to Catalog");
-            // var_dump($idNode);
+            $this->loadValues($values);
             $values['go_method'] = 'createdataset';
+            $values['title'] = 'Create Dataset';
+            $values['button'] = 'Create';
         }
         elseif ($nt == XlyreOpenDataset::IDNODETYPE) {
-            // var_dump("Edit Dataset");
-            // var_dump($idNode);
+            $this->loadValues($values, $idNode);
             $values['go_method'] = 'updatedataset';
+            $values['title'] = 'Edit Dataset';
+            $values['button'] = 'Update';
         }
         $idNode = $node->get('IdNode');
 
@@ -60,7 +62,7 @@ class Action_managedataset extends ActionAbstract {
         $language = new Language();
         $languages = $language->getLanguagesForNode($idNode);
 
-        $value['id_node'] = $idNode;
+        $values['id_node'] = $idNode;
         $values['channels'] = $channels;
         $values['languages'] = $languages;
         
@@ -111,19 +113,40 @@ class Action_managedataset extends ActionAbstract {
     }
 
     function updatedataset() {
-
+        // Add code here
     }
 
 	function loadResources() {
-                $this->addJs('/modules/xlyre/actions/managedataset/resources/js/index.js');
-                $this->addCss('/modules/xlyre/actions/managedataset/resources/css/style.css');
+        $this->addJs('/modules/xlyre/actions/managedataset/resources/js/index.js');
+        $this->addCss('/modules/xlyre/actions/managedataset/resources/css/style.css');
+    }
+
+    function loadValues(&$values, $idNode = 0) {
+        if ($idNode > 0) {
+            $dsmeta = new XlyreDataset($idNode);
+            $values['name'] = $dsmeta->get("Identifier");
+            $values['theme'] = $dsmeta->get("Theme");
+            $values['periodicity'] = $dsmeta->get("Periodicity");
+            $values['license'] = $dsmeta->get("License");
+            $values['spatial'] = $dsmeta->get("Spatial");
+            $values['reference'] = $dsmeta->get("Reference");
         }
+        else {
+            $values['name'] = "";
+            $values['theme'] = "";
+            $values['periodicity'] = "";
+            $values['license'] = "";
+            $values['spatial'] = "";
+            $values['reference'] = "";
+        }
+    }
 
 	function _getDescription($nodetype) {
-                switch($nodetype){
-                        case "4001": return "A dataset should be for a single data in several formats.";
-		}
-	}
+        switch($nodetype){
+            case "4001": return "A dataset should be for a single data in several formats.";
+        }
+    }
+
 }
 
 ?>

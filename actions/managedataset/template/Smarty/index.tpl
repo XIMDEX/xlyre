@@ -26,31 +26,31 @@
                 <input type="hidden" name="nodeid" value="{$id_node}">
                 <input type="hidden" name="id" value="{if (!$dataset.id)}{$id_dataset}{else}none{/if}">
                 <div class="action_header">
-                        <h2>{t}Create Dataset{/t}</h2>
+                        <h2>{t}{$title}{/t}</h2>
                         <fieldset class="buttons-form">
-                        {button label="{t}Create dataset{/t}" class='validate btn main_action' }<!--message="Would you like to add this dataset?"-->
-                </fieldset>
+                            {button label="{t}{$button}{/t}" class='validate btn main_action' }<!--message="Would you like to add this dataset?"-->
+                        </fieldset>
                 </div>
 
                 <div class="action_content">
 
                         <div class="folder-name folder-normal icon input-select">
-                        <input type="text" name="name" id="name" maxlength="100" class="cajaxg validable not_empty full-size" placeholder="{t}Name of your dataset{/t}">
+                        <input type="text" name="name" id="name" maxlength="100" class="cajaxg validable not_empty full-size" placeholder="{t}Name of your dataset{/t}" value="{$name}">
                         </div>
                         <div class="input-select">
-                        <input type="text" name="theme" id="theme" maxlength="50" class="caja validable not_empty" placeholder="{t}Theme{/t}">
+                        <input type="text" name="theme" id="theme" maxlength="50" class="caja validable not_empty" placeholder="{t}Theme{/t}" value="{$theme}">
                         </div>
                         <div class="input-select">
-                        <input type="text" name="periodicity" id="periodicity" maxlength="50" class="caja validable not_empty" placeholder="{t}Periodicity{/t}">
+                        <input type="text" name="periodicity" id="periodicity" maxlength="50" class="caja validable not_empty" placeholder="{t}Periodicity{/t}" value="{$periodicity}">
                         </div>
                         <div class="input-select">
-                        <input type="text" name="license" id="license" maxlength="50" class="caja validable not_empty" placeholder="{t}License{/t}">
+                        <input type="text" name="license" id="license" maxlength="50" class="caja validable not_empty" placeholder="{t}License{/t}" value="{$license}">
                         </div>
                         <div class="input-select">
-                        <input type="text" name="spatial" id="spatial" maxlength="50" class="caja validable not_empty" placeholder="{t}Spatial{/t}">
+                        <input type="text" name="spatial" id="spatial" maxlength="50" class="caja validable not_empty" placeholder="{t}Spatial{/t}" value="{$spatial}">
                         </div>
                         <div class="input-select">
-                        <input type="text" name="reference" id="reference" maxlength="50" class="caja validable not_empty" placeholder="{t}Reference{/t}">
+                        <input type="text" name="reference" id="reference" maxlength="50" class="caja validable not_empty" placeholder="{t}Reference{/t}" value="{$reference}">
                         </div>
                         
                         {*<select class="" name='per' id="per">
