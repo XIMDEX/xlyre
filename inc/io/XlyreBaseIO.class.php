@@ -73,6 +73,48 @@ class XlyreBaseIO extends BaseIO{
 				break;
 		}
 	}
+
+
+	/**
+	 * Updates an object desribed in data array
+	 *
+	 * @param array $data Data of the object to update
+	 * @param int $idUser Optional param, if it is not specified, the identifier is obtained from the session user identifier
+	 * @return identifier of the updated node or a state specifying why it was not updated
+	 */
+	public function updateNode($data, $nodeTypeClass){
+		if (array_key_exists($nodeTypeClass, XlyreBaseIOConstants::$metaTypesArray)) {
+			$metaTypesArray = XlyreBaseIOConstants::$metaTypesArray;
+			$metaType = $metaTypesArray[$nodeTypeClass];
+		}
+
+		switch ($metaType) {
+			case 'OPENDATASECTION':
+				# code...
+				break;
+			case 'OPENDATASET':
+				$nodeDataset= new Node($data["IDNODE"]);
+				$nodeDataset->set("Name", $data['NAME']);
+				$nodeDataset->set("ModificationDate", time());
+				$ok = $nodeDataset->update();
+				if ($ok) {
+					$idNode = $nodeDataset->class->updateNode($data["IDNODE"], $data['NAME'], $data["THEME"], $data["PERIODICITY"], $data["LICENSE"], $data["SPATIAL"], $data["REFERENCE"]);
+					if (!($idNode > 0)) {
+						return ERROR_INCORRECT_DATA;
+					}
+					return $idNode;
+				}
+				else {
+					return ERROR_INCORRECT_DATA;
+				}
+				break;
+			default:
+				# code...
+				break;
+		}
+	}
+
+
 }
 
 ?>

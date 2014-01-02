@@ -72,7 +72,7 @@ class Action_managedataset extends ActionAbstract {
 	function createdataset() {
 
         $parentID = $this->request->getParam('nodeid');
-         $name = $this->request->getParam('name');
+        $name = $this->request->getParam('name');
 
         $nt = new NodeType(XlyreOpenDataSet::IDNODETYPE);
         $ntName = $nt->get('Name');
@@ -113,7 +113,41 @@ class Action_managedataset extends ActionAbstract {
     }
 
     function updatedataset() {
-        // Add code here
+        $nodeID = $this->request->getParam('nodeid');
+        $name = $this->request->getParam('name');
+
+        $nt = new NodeType(XlyreOpenDataSet::IDNODETYPE);
+        $ntName = $nt->get('Name');
+
+        $data = array(
+            'NODETYPENAME' => $ntName,
+            'NAME' => $name,
+            'IDNODE' => $nodeID,
+            'THEME' => $this->request->getParam('theme'),
+            'PERIODICITY' => $this->request->getParam('periodicity'),
+            'LICENSE' => $this->request->getParam('license'),
+            'SPATIAL' => $this->request->getParam('spatial'),
+            'REFERENCE' => $this->request->getParam('reference')
+            );
+
+        $baseio = new XlyreBaseIO();
+        $id = $baseio->updateNode($data, "XLYREOPENDATASET");
+
+        if (!($id > 0)) {
+            $this->messages->mergeMessages($baseio->messages);
+            $this->messages->add(_('Operation could not be successfully completed'), MSG_TYPE_ERROR);
+        }
+        else {
+            $this->messages->add(sprintf(_('%s has been successfully created'), $name), MSG_TYPE_NOTICE);
+        }
+
+        $values = array(
+                'action_with_no_return' => $id > 0,
+                'messages' => $this->messages->messages
+        );
+
+        $this->render($values, NULL, 'messages.tpl');
+
     }
 
 	function loadResources() {

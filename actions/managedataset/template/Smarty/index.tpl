@@ -69,9 +69,9 @@
 
                         <div class="col1-3">  
 
-                                <h3>{t}Data{/t}</h3>
+                                {*<h3>{t}Data{/t}</h3>
 
-                                  <uploader />
+                                  <uploader />*}
 
                                 </div>
 
