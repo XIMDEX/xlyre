@@ -35,7 +35,8 @@ class Action_managedataset extends ActionAbstract {
 	function index(){
 		$this->loadResources();
 
-        $values['periodicity'] = array(3, 6, 12);
+        $values['periodicities'] = array(3, 6, 12);
+        $values['licenses'] = array('No license', 'Creative Commons', 'Open Data license');
 
         $idNode = $this->request->getParam("nodeid");
         $node = new Node($idNode);
@@ -91,15 +92,12 @@ class Action_managedataset extends ActionAbstract {
         $baseio = new XlyreBaseIO();
         $id = $baseio->build($data);
 
-        if ($id > 0) {
-			$this->reloadNode($parentID);
-        }
-
 		if (!($id > 0)) {
             $this->messages->mergeMessages($baseio->messages);
             $this->messages->add(_('Operation could not be successfully completed'), MSG_TYPE_ERROR);
         }
         else {
+            $this->reloadNode($parentID);
             $this->messages->add(sprintf(_('%s has been successfully created'), $name), MSG_TYPE_NOTICE);
         }
 
@@ -131,18 +129,20 @@ class Action_managedataset extends ActionAbstract {
             );
 
         $baseio = new XlyreBaseIO();
-        $id = $baseio->updateNode($data, "XLYREOPENDATASET");
+        $result = $baseio->updateNode($data, "XLYREOPENDATASET");
 
-        if (!($id > 0)) {
+        if (!($result > 0)) {
             $this->messages->mergeMessages($baseio->messages);
             $this->messages->add(_('Operation could not be successfully completed'), MSG_TYPE_ERROR);
         }
         else {
-            $this->messages->add(sprintf(_('%s has been successfully created'), $name), MSG_TYPE_NOTICE);
+            $node = new Node($nodeID);
+            $this->reloadNode($node->get("IdParent"));
+            $this->messages->add(sprintf(_('%s has been successfully updated'), $name), MSG_TYPE_NOTICE);
         }
 
         $values = array(
-                'action_with_no_return' => $id > 0,
+                'action_with_no_return' => $result > 0,
                 'messages' => $this->messages->messages
         );
 

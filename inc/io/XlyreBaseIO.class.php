@@ -93,7 +93,7 @@ class XlyreBaseIO extends BaseIO{
 				# code...
 				break;
 			case 'OPENDATASET':
-				$nodeDataset= new Node($data["IDNODE"]);
+				$nodeDataset = new Node($data["IDNODE"]);
 				$nodeDataset->set("Name", $data['NAME']);
 				$nodeDataset->set("ModificationDate", time());
 				$ok = $nodeDataset->update();

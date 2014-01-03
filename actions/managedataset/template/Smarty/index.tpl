@@ -40,12 +40,26 @@
                         <div class="input-select">
                         <input type="text" name="theme" id="theme" maxlength="50" class="caja validable not_empty" placeholder="{t}Theme{/t}" value="{$theme}">
                         </div>
-                        <div class="input-select">
-                        <input type="text" name="periodicity" id="periodicity" maxlength="50" class="caja validable not_empty" placeholder="{t}Periodicity{/t}" value="{$periodicity}">
-                        </div>
-                        <div class="input-select">
-                        <input type="text" name="license" id="license" maxlength="50" class="caja validable not_empty" placeholder="{t}License{/t}" value="{$license}">
-                        </div>
+                        <label for="periodicity_label">{t}Periodicity{/t}</label>
+                        <select class="not_empty" name="periodicity" id="periodicity">
+                            {foreach from=$periodicities item=p}
+                                {if ($p|gettext == $periodicity)}
+                                    <option value='{$p}' selected>{$p|gettext}</option>
+                                {else}
+                                    <option value='{$p}'>{$p|gettext}</option>
+                                {/if}
+                            {/foreach}
+                        </select>
+                        <label for="license_label">{t}License{/t}</label>
+                        <select class="not_empty" name="license" id="license">
+                            {foreach from=$licenses item=l}
+                                {if ($l|gettext == $license)}
+                                    <option value='{$l|gettext}' selected>{$l|gettext}</option>
+                                {else}
+                                    <option value='{$l|gettext}'>{$l|gettext}</option>
+                                {/if}
+                            {/foreach}
+                        </select>
                         <div class="input-select">
                         <input type="text" name="spatial" id="spatial" maxlength="50" class="caja validable not_empty" placeholder="{t}Spatial{/t}" value="{$spatial}">
                         </div>
