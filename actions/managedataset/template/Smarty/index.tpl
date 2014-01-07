@@ -37,16 +37,23 @@
                         <div class="folder-name folder-normal icon input-select">
                         <input type="text" name="name" id="name" maxlength="100" class="cajaxg validable not_empty full-size" placeholder="{t}Name of your dataset{/t}" value="{$name}">
                         </div>
-                        <div class="input-select">
-                        <input type="text" name="theme" id="theme" maxlength="50" class="caja validable not_empty" placeholder="{t}Theme{/t}" value="{$theme}">
-                        </div>
+                        <label for="theme_label">{t}Theme{/t}</label>
+                        <select class="not_empty" name="theme" id="theme">
+                            {foreach from=$themes item=t}
+                                {if ($t|gettext == $theme)}
+                                    <option value='{$t|gettext}' selected>{$t|gettext}</option>
+                                {else}
+                                    <option value='{$t|gettext}'>{$t|gettext}</option>
+                                {/if}
+                            {/foreach}
+                        </select>
                         <label for="periodicity_label">{t}Periodicity{/t}</label>
                         <select class="not_empty" name="periodicity" id="periodicity">
                             {foreach from=$periodicities item=p}
                                 {if ($p|gettext == $periodicity)}
-                                    <option value='{$p}' selected>{$p|gettext}</option>
+                                    <option value='{$p|gettext}' selected>{$p|gettext}</option>
                                 {else}
-                                    <option value='{$p}'>{$p|gettext}</option>
+                                    <option value='{$p|gettext}'>{$p|gettext}</option>
                                 {/if}
                             {/foreach}
                         </select>
@@ -60,25 +67,20 @@
                                 {/if}
                             {/foreach}
                         </select>
-                        <div class="input-select">
-                        <input type="text" name="spatial" id="spatial" maxlength="50" class="caja validable not_empty" placeholder="{t}Spatial{/t}" value="{$spatial}">
-                        </div>
-                        <div class="input-select">
+                        <label for="spatial_label">{t}Spatial{/t}</label>
+                        <select class="not_empty" name="spatial" id="spatial">
+                            {foreach from=$spatials item=s}
+                                {if ($s|gettext == $spatial)}
+                                    <option value='{$s|gettext}' selected>{$s|gettext}</option>
+                                {else}
+                                    <option value='{$s|gettext}'>{$s|gettext}</option>
+                                {/if}
+                            {/foreach}
+                        </select>
+                        <div class="folder-name folder-normal icon input-select">
                         <input type="text" name="reference" id="reference" maxlength="50" class="caja validable not_empty" placeholder="{t}Reference{/t}" value="{$reference}">
                         </div>
                         
-                        {*<select class="" name='per' id="per">
-                                <option value='0' selected>0</option>
-                                {foreach from=$periodicity item=p}
-                                        <option  value='{$p}'>{$p|gettext}</option>
-                                {/foreach}
-                        </select>
-                        
-                        {button label="{t}Add metadata{/t}" class='btn' }
-
-                        <a class="add-dataset" href="#">Show me the code</a>*}
-                        
-
                         {include file="`$_APP_ROOT`/actions/createxmlcontainer/template/Smarty/_ximdoc_languages.tpl"}
 
                         <div class="col1-3">  

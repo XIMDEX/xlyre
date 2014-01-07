@@ -35,9 +35,6 @@ class Action_managedataset extends ActionAbstract {
 	function index(){
 		$this->loadResources();
 
-        $values['periodicities'] = array(3, 6, 12);
-        $values['licenses'] = array('No license', 'Creative Commons', 'Open Data license');
-
         $idNode = $this->request->getParam("nodeid");
         $node = new Node($idNode);
         $nt = $node->GetNodeType();
@@ -69,6 +66,7 @@ class Action_managedataset extends ActionAbstract {
         
         $this->render($values, null, 'default-3.0.tpl');
 	}
+
 
 	function createdataset() {
 
@@ -110,6 +108,7 @@ class Action_managedataset extends ActionAbstract {
 
     }
 
+
     function updatedataset() {
         $nodeID = $this->request->getParam('nodeid');
         $name = $this->request->getParam('name');
@@ -150,12 +149,21 @@ class Action_managedataset extends ActionAbstract {
 
     }
 
+
 	function loadResources() {
         $this->addJs('/modules/xlyre/actions/managedataset/resources/js/index.js');
         $this->addCss('/modules/xlyre/actions/managedataset/resources/css/style.css');
     }
 
+
     function loadValues(&$values, $idNode = 0) {
+        
+        #Default values for selectors
+        $values['themes'] = array('Undefined', '111-XXX', '222-YYY', '333-ZZZ');
+        $values['periodicities'] = array(0, 3, 6, 12);
+        $values['licenses'] = array('Undefined', 'Creative Commons', 'Open Data license');
+        $values['spatials'] = array('Undefined', 'Natial', 'Regional', 'Local');
+
         if ($idNode > 0) {
             $dsmeta = new XlyreDataset($idNode);
             $values['name'] = $dsmeta->get("Identifier");
@@ -175,11 +183,13 @@ class Action_managedataset extends ActionAbstract {
         }
     }
 
+
 	function _getDescription($nodetype) {
         switch($nodetype){
             case "4001": return "A dataset should be for a single data in several formats.";
         }
     }
+
 
 }
 

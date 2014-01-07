@@ -30,14 +30,5 @@ X.actionLoaded(function(event, fn, params) {
         var fm = form.getFormMgr();
         var submit = fn('.validate').get(0);
 
-        fn("a.add-dataset").click(function(){
-		var name = fn("#name").val();
-                var theme = fn("#theme").val();
-                var periodicity = fn("#periodicity").val();
-                var license = fn("#license").val();
-                var spatial = fn("#spatial").val();
-                var reference = fn("#reference").val();
-                alert(name + " " + theme + " " + periodicity + " " + license + " " + spatial + " " + reference);
-        }); 
 });
 
