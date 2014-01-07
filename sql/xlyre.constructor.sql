@@ -51,9 +51,10 @@ UNLOCK TABLES;
 
 -- Actions
 LOCK TABLES `Actions` WRITE;
-INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7501, 4000 ,"Delete Catalog", "deletecatalog", "delete_section.png","Deletes the current Open Data Catalog", 97, 'xlyre', 0, NULL);
-INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7502,  4000,"Create New Dataset", "managedataset", "change_next_state.png","Creates a new Dataset", 99, 'xlyre', 0, NULL);
-INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7503,  4001,"Edit Dataset", "managedataset", "change_next_state.png","Edit an existing Dataset", 99, 'xlyre', 0, NULL);
+INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7501, 4000 ,"Delete Catalog", "deletecatalog", "delete_section.png","It deletes the current Open Data Catalog", 97, 'xlyre', 0, NULL);
+INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7502,  4000,"Create New Dataset", "managedataset", "change_next_state.png","It creates a new Dataset", 99, 'xlyre', 0, NULL);
+INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7503,  4001,"Edit Dataset", "managedataset", "change_next_state.png","It edits the current Dataset", 99, 'xlyre', 0, NULL);
+INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7504,  4001,"Delete Dataset", "deletedataset", "delete_section.png","It deletes the current Dataset", 99, 'xlyre', 0, NULL);
 UNLOCK TABLES;
 
 -- Roles for these actions
@@ -61,6 +62,7 @@ LOCK TABLES `RelRolesActions` WRITE;
 INSERT INTO RelRolesActions VALUES (NULL,201,7501,0,1,3);
 INSERT INTO RelRolesActions VALUES (NULL,201,7502,0,1,3);
 INSERT INTO RelRolesActions VALUES (NULL,201,7503,0,1,3);
+INSERT INTO RelRolesActions VALUES (NULL,201,7504,0,1,3);
 UNLOCK TABLES;
 
 -- XlyreCatalog Table
