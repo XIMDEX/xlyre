@@ -61,7 +61,6 @@ class Action_deletedataset extends ActionAbstract {
 		$this->render($values, null, 'default-3.0.tpl');
 	}
 
-
 	function delete_dataset() {
 
 		$idNode	= $this->request->getParam("nodeid");
@@ -72,25 +71,25 @@ class Action_deletedataset extends ActionAbstract {
 		*/
 
 		// Deleting publication tasks
-		// $sync = new SynchroFacade();
-		// $sync->deleteAllTasksByNode($idNode);
+		$sync = new SynchroFacade();
+		$sync->deleteAllTasksByNode($idNode);
 
 		$node = new Node($idNode);
 		$parentID = $node->get('IdParent');
 
 		$node = new Node($idNode);
-		// $node->delete();
-		// $err = NULL;
-		// if($node->numErr) {
-		// 	$err = _("An error occurred while deleting:");
-		// 	$err .= '<br>' . $node->get('IdNode') . " " . $node->GetPath() . '<br>' . _("Error message: ") . $node->msgErr . "<br><br>";
-		// }
+		$node->delete();
+		$err = NULL;
+		if($node->numErr) {
+			$err = _("An error occurred while deleting:");
+			$err .= '<br>' . $node->get('IdNode') . " " . $node->GetPath() . '<br>' . _("Error message: ") . $node->msgErr . "<br><br>";
+		}
 
-		// if (strlen($err)) {
-		// 	$this->messages->add($err, MSG_TYPE_ERROR);
-		// } else {
-		// 	$this->messages->add(_("The dataset were successfully deleted"), MSG_TYPE_NOTICE);
-		// }
+		if (strlen($err)) {
+			$this->messages->add($err, MSG_TYPE_ERROR);
+		} else {
+			$this->messages->add(_("The dataset were successfully deleted"), MSG_TYPE_NOTICE);
+		}
 			
 		$this->reloadNode($parentID);
 
