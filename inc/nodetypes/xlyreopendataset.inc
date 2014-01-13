@@ -43,17 +43,21 @@ class XlyreOpenDataSet extends FolderNode{
 		//Delete Langs
 		$relMetaLang = new XlyreRelMetaLangs();
 		$results = $relMetaLang->find("IdRel", "IdNode=%s", array($this->nodeID), MONO);
-		foreach ($results as $idRel) {
-			$objectToDelete = new XlyreRelMetaLangs($idRel);
-			$objectToDelete->delete();
+		if ($results) {
+			foreach ($results as $idRel) {
+				$objectToDelete = new XlyreRelMetaLangs($idRel);
+				$objectToDelete->delete();
+			}
 		}
 
 		//Delete Tags
 		$relMetaLang = new XlyreRelMetaTags();
 		$results = $relMetaLang->find("IdRel", "IdNode=%s", array($this->nodeID), MONO);
-		foreach ($results as $idRel) {
-			$objectToDelete = new XlyreRelMetaTags($idRel);
-			$objectToDelete->delete();
+		if ($results) {
+			foreach ($results as $idRel) {
+				$objectToDelete = new XlyreRelMetaTags($idRel);
+				$objectToDelete->delete();
+			}
 		}
 
 		//Delete dataset
