@@ -63,7 +63,6 @@ class XlyreOpenDataSection extends SectionNode{
 		$catalog->set("Modified",$time);
 		$catalog->set("Issued",$time);
 		
-		error_log("AQUII");
 		return $catalog->add();
 	}
 

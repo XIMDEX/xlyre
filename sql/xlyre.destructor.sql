@@ -1,25 +1,29 @@
 -- xlyre module SQL destructor
 
 -- Deleting Xlyre NodeTypes
-DELETE FROM NodeTypes where IdNodeType in (4000,4001);
+DELETE FROM NodeTypes where IdNodeType in (4000,4001,4003);
+
+-- Deleting Xlyre Nodes
+DELETE FROM Nodes where IdNode in (14);
 
 -- Deleting Xlyre SectionType
-DELETE FROM SectionTypes where idSectionType=4;
+DELETE FROM SectionTypes where idSectionType=3;
 
 -- Deleting NodeAllowedContents for all Xlyre nodetypes
-DELETE FROM NodeAllowedContents where NodeType in (4000,4001);
+DELETE FROM NodeAllowedContents where NodeType in (4000,4001,4003);
 
 -- Deleting all Xlyre Nodes
 DELETE FROM Nodes where Idnodetype in (4000,4001);
 
 -- Deleting NodeDefaultContents for all Xlyre nodetypes
 DELETE FROM NodeDefaultContents where IdNodeType in (4000);
+DELETE FROM NodeDefaultContents where NodeType in (4003);
 
 -- Deleting all Xlyre Actions
-DELETE FROM Actions where IdAction in (7501,7502,7503,7504);
+DELETE FROM Actions where IdAction in (7501,7502,7503,7504,7505);
 
 -- Deleting all RelRolesActions (Permissions) for Xlyre Actions
-DELETE FROM RelRolesActions where IdAction in (7501,7502,7503,7504);
+DELETE FROM RelRolesActions where IdAction in (7501,7502,7503,7504,7505);
 
 -- Deleting all tables and their content related exclusively with Xlyre
 DROP TABLE IF EXISTS `XlyreCatalog`;
