@@ -61,14 +61,54 @@ X.actionLoaded(function(event, fn, params) {
 		var last_id=parseInt($(".subfolder > label").last().attr("data-cont"));
 		last_id=last_id+1;
 		var ident= fn("input[name='nodeid']").val()+'_dataset'+last_id;
-		$ds.before('<div class="subfolder box-col1-1"><label for="'+ident+'" class="icon" data-cont="'+last_id+'"><input id="'+ident+'" type="text" class="text_label" name="datasets[]" placeholder="{t}New Dataset{/t}"><strong class="icon dataset"></strong><a class="xim-tagsinput-tag-remove icon" href="#"> × </a></label><span class="info">A dataset should be for a single data in several formats.</span></div>');
-                
+
+        $infoSpan = $(document.createElement('span')).text("A dataset should be for a single data in several formats.");
+        $infoSpan.addClass("info");
+
+        $newElem = $(document.createElement('div'));
+        $newElem.addClass("subfolder box-col1-1");
+
+        $newLabel = $(document.createElement('label'));
+        $newLabel.attr("for",ident);
+        $newLabel.attr("data-cont",last_id);
+        $newLabel.addClass("icon");
+
+        $icon=$(document.createElement('strong')).addClass("icon dataset");
+
+        $newInput = $(document.createElement('input'));
+        $newInput.attr("id",ident);
+        $newInput.attr("type","text");
+        $newInput.attr("placeholder","New Dataset");
+        $newInput.attr("name","datasets[]");
+        $newInput.addClass("text_label");
+
+        $deleteLink = $(document.createElement('a')).addClass("xim-tagsinput-tag-remove icon");
+        $deleteLink.attr("href","#");
+        $deleteLink.text("×").click(function(){
+                                        $(this.parentNode.parentNode).remove();
+                                   });
+
+        $newLabel.append($newInput);
+        $newLabel.append($icon);
+        $newLabel.append($deleteLink);
+        $newElem.append($newLabel);
+        $newElem.append($infoSpan);
+
+		$ds.before($newElem);
+                    
     }); 
 
-	fn('a.xim-tagsinput-tag-remove').click(
+	$('a.xim-tagsinput-tag-remove').click(
 	    function(event) {
-            //event.preventDefault();
-			alert("borro!");
+            $(this.parentNode.parentNode).remove();
         });
+
+    submit.beforeSubmit.add(function(event, button) {
+        if(fn("input#name").val()==""){
+            fn("input#name").addClass("validable");
+            fn("input#name").addClass("not_empty");
+        }
+    });
+
 });
 
