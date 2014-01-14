@@ -6,6 +6,9 @@ DELETE FROM NodeTypes where IdNodeType in (4000,4001,4003);
 -- Deleting Xlyre Nodes
 DELETE FROM Nodes where IdNode in (14);
 
+-- Deleting Xlyre FastTraverse
+DELETE FROM FastTraverse where IdChild in (14);
+
 -- Deleting Xlyre SectionType
 DELETE FROM SectionTypes where idSectionType=3;
 

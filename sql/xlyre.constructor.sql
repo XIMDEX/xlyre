@@ -17,6 +17,13 @@ LOCK TABLES `Nodes` WRITE;
 INSERT INTO `Nodes` (`IdNode`, `IdParent`, `IdNodeType`, `Name`, `IdState`, `BlockTime`, `BlockUser`, `CreationDate`, `ModificationDate`, `Description`, `SharedWorkflow`, `Path`) VALUES (14, 2, 4003, 'Xlyre manager', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '/Ximdex/Control center');
 UNLOCK TABLES;
 
+-- Roles for these actions
+LOCK TABLES `FastTraverse` WRITE;
+INSERT INTO FastTraverse VALUES (1,14,2);
+INSERT INTO FastTraverse VALUES (2,14,1);
+INSERT INTO FastTraverse VALUES (14,14,0);
+UNLOCK TABLES;
+
 
 -- SectionTypes
 LOCK TABLES `SectionTypes` WRITE;
@@ -65,7 +72,7 @@ INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Desc
 INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7502,  4000,"Create New Dataset", "managedataset", "change_next_state.png","It creates a new Dataset", 99, 'xlyre', 0, NULL);
 INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7503,  4001,"Edit Dataset", "managedataset", "change_next_state.png","It edits the current Dataset", 99, 'xlyre', 0, NULL);
 INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7504,  4001,"Delete Dataset", "deletedataset", "delete_section.png","It deletes the current Dataset", 99, 'xlyre', 0, NULL);
-INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7505,  4003,"Configure Xlyre", "configurexlyre", "modulesconfig.png","It configures Xlyre module", 99, 'xlyre', 0, NULL);
+INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7505,  4003,"Configure Xlyre", "configure", "modulesconfig.png","It configures Xlyre module", 99, 'xlyre', 0, NULL);
 UNLOCK TABLES;
 
 -- Roles for these actions
