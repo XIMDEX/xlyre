@@ -27,6 +27,7 @@ UNLOCK TABLES;
 -- Allowed Contents
 LOCK TABLES `NodeAllowedContents` WRITE;
 INSERT INTO `NodeAllowedContents` VALUES (NULL,5014,4000,0);
+insert into `NodeAllowedContents` VALUES (NULL,5015,4000,0);
 INSERT INTO `NodeAllowedContents` VALUES (NULL,4000,4001,0);
 INSERT INTO `NodeAllowedContents` VALUES (NULL,5002,4003,1);
 -- INSERT INTO `NodeAllowedContents` VALUES (NULL,4001,4002,0);
