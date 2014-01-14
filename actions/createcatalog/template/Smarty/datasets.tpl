@@ -4,16 +4,16 @@
         	{foreach from=$subfolders key=nt item=foldername}
                 <div class="subfolder box-col1-1">
 			<label for="{$nodeID}_dataset1" class="icon" data-cont="1">
-				<input type="text" class="text_label" name="datasets[]" placeholder="New Dataset" id="{$nodeID}_dataset1">
+				<input type="text" class="text_label" name="datasets[]" placeholder="{t}New Dataset{/t}" id="{$nodeID}_dataset1">
 				<strong class="icon dataset"></strong>
 				<a class="xim-tagsinput-tag-remove icon" href="#"> × </a>
 			</label>
-			<span class="info">A dataset should be for a single data in several formats.</span>
+			<span class="info">{t}A dataset should be for a single data in several formats{/t}.</span>
 		</div>  
         	{/foreach}  
 		<div class="subfolder box-col1-1 add_element">
 			<a class="add-dataset" href="#">
-				<strong class="icon add">Add</strong>
+				<strong class="icon add">{t}Add{/t}</strong>
 			</a>
 		</div>
 	{else}      

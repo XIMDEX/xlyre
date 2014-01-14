@@ -26,35 +26,49 @@
 
 X.actionLoaded(function(event, fn, params) {
 
-        var form = params.actionView.getForm('as_form');
-        var fm = form.getFormMgr();
-        var submit = fn('.validate').get(0);
+    var form = params.actionView.getForm('as_form');
+    var fm = form.getFormMgr();
+    var submit = fn('.validate').get(0);
+	var name="";
 
-        fn('select#type_sec').change(function() {
-                var type= fn('#type_sec option:selected').val();
-                var urler = fn('#nodeURL').val() + '&type_sec=' + type;
-                if(type==4){
-                        urler=fn('#nodeURL').val().replace("addsectionnode","createcatalog") + '&type_sec=' + type + '&mod=xlyre';
-                }   
-                fn('#as_form').attr('action', urler);
-                fm.sendForm();
-                    
-        }); 
+	var url_params=fm.options.form.action.split("&");
+	$.each(url_params, function( index, value ) {
+		if(value.indexOf("name=")==0){
+			name=value.substring(5,value.length);
+		}
+	});
 
-        fn("a.add-dataset").click(function(){
+	if(name!=""){
+		fn("input#name").val(name);
+	}
+
+    fn('select#type_sec').change(function() {
+        var type= fn('#type_sec option:selected').val();
+        var urler = fn('#nodeURL').val() + '&type_sec=' + type;
+        if(type!=3){
+            urler=fn('#nodeURL').val().replace("createcatalog","addsectionnode") + '&type_sec=' + type;
+        }   
+		
+        if(fn("input#name").val()!=""){
+            urler+="&name="+fn("input#name").val();
+        }
+        fn('#as_form').attr('action', urler);
+        fm.sendForm();
+    }); 
+
+	fn("a.add-dataset").click(function(){
 		var $ds=$(".subfolder:last");
 		var last_id=parseInt($(".subfolder > label").last().attr("data-cont"));
 		last_id=last_id+1;
 		var ident= fn("input[name='nodeid']").val()+'_dataset'+last_id;
-		$ds.before('<div class="subfolder box-col1-1"><label for="'+ident+'" class="icon" data-cont="'+last_id+'"><input id="'+ident+'" type="text" class="text_label" name="datasets[]" placeholder="New Dataset"><strong class="icon dataset"></strong><a class="xim-tagsinput-tag-remove icon" href="#"> × </a></label><span class="info">A dataset should be for a single data in several formats.</span></div>');
+		$ds.before('<div class="subfolder box-col1-1"><label for="'+ident+'" class="icon" data-cont="'+last_id+'"><input id="'+ident+'" type="text" class="text_label" name="datasets[]" placeholder="{t}New Dataset{/t}"><strong class="icon dataset"></strong><a class="xim-tagsinput-tag-remove icon" href="#"> × </a></label><span class="info">A dataset should be for a single data in several formats.</span></div>');
                 
-        }); 
+    }); 
 
 	fn('a.xim-tagsinput-tag-remove').click(
-		function(event) {
-        		//event.preventDefault();
+	    function(event) {
+            //event.preventDefault();
 			alert("borro!");
-
-                });
+        });
 });
 
