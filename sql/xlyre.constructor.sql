@@ -164,7 +164,7 @@ CREATE TABLE `XlyreRelMetaTags` (
 DROP TABLE IF EXISTS `XlyreThemes`;
 CREATE TABLE `XlyreThemes` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `Name` int(11) unsigned NOT NULL,
+  `Name` varchar(100) NOT NULL,
   PRIMARY KEY (`Id`),
   KEY `Id` (`Id`),
   UNIQUE KEY `Name` (`Name`)
@@ -174,7 +174,7 @@ CREATE TABLE `XlyreThemes` (
 DROP TABLE IF EXISTS `XlyrePeriodicities`;
 CREATE TABLE `XlyrePeriodicities` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `Name` int(11) unsigned NOT NULL,
+  `Name` varchar(100) NOT NULL,
   PRIMARY KEY (`Id`),
   KEY `Id` (`Id`),
   UNIQUE KEY `Name` (`Name`)
@@ -184,7 +184,7 @@ CREATE TABLE `XlyrePeriodicities` (
 DROP TABLE IF EXISTS `XlyreSpatials`;
 CREATE TABLE `XlyreSpatials` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `Name` int(11) unsigned NOT NULL,
+  `Name` varchar(100) NOT NULL,
   PRIMARY KEY (`Id`),
   KEY `Id` (`Id`),
   UNIQUE KEY `Name` (`Name`)
