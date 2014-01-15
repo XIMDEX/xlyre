@@ -160,3 +160,32 @@ CREATE TABLE `XlyreRelMetaTags` (
   KEY `IdTag` (`IdTag`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Tags for Dataset (it could also be tags for Catalog and Distribution) - XLyre Module';
 
+-- XlyreThemes Table - it implements themes for XLyre
+DROP TABLE IF EXISTS `XlyreThemes`;
+CREATE TABLE `XlyreThemes` (
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `Name` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `Id` (`Id`),
+  UNIQUE KEY `Name` (`Name`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Themes that can be selected from Dataset UI - XLyre Module';
+
+-- XlyrePeriodicities Table - it implements periodicities for XLyre
+DROP TABLE IF EXISTS `XlyrePeriodicities`;
+CREATE TABLE `XlyrePeriodicities` (
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `Name` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `Id` (`Id`),
+  UNIQUE KEY `Name` (`Name`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Periodicities that can be selected from Dataset UI - XLyre Module';
+
+-- XlyreSpatials Table - it implements spatials for XLyre
+DROP TABLE IF EXISTS `XlyreSpatials`;
+CREATE TABLE `XlyreSpatials` (
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `Name` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `Id` (`Id`),
+  UNIQUE KEY `Name` (`Name`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Spatials that can be selected from Dataset UI - XLyre Module';

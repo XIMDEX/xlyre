@@ -34,5 +34,8 @@ DROP TABLE IF EXISTS `XlyreDataset`;
 DROP TABLE IF EXISTS `XlyreDistribution`;
 DROP TABLE IF EXISTS `XlyreRelMetaLangs`;
 DROP TABLE IF EXISTS `XlyreRelMetaTags`;
+DROP TABLE IF EXISTS `XlyreThemes`;
+DROP TABLE IF EXISTS `XlyrePeriodicities`;
+DROP TABLE IF EXISTS `XlyreSpatials`;
 
 -- DROP TABLE IF EXISTS `Namespaces`;
