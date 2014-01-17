@@ -30,5 +30,9 @@ X.actionLoaded(function(event, fn, params) {
         var fm = form.getFormMgr();
         var submit = fn('.validate').get(0);
 
+        fn('.checkbox-label').addClass('reduced_label');
+        fn('.dataset_info .col2-3').removeClass('col2-3').removeClass('left').addClass('channel_selection');
+        fn('.languages-available').removeClass('col1-3');
+
 });
 

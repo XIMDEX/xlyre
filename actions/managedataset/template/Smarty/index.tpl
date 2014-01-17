@@ -27,61 +27,109 @@
                 <input type="hidden" name="id" value="{if (!$dataset.id)}{$id_dataset}{else}none{/if}">
                 <div class="action_header">
                         <h2>{t}{$title}{/t}</h2>
-                        <fieldset class="buttons-form">
-                            {button label="{t}{$button}{/t}" class='validate btn main_action' }<!--message="Would you like to add this dataset?"-->
-                        </fieldset>
+                  
                 </div>
 
-                <div class="action_content">
-
-                        <div class="folder-name folder-normal icon input-select">
-                        <input type="text" name="name" id="name" maxlength="100" class="cajaxg validable not_empty full-size" placeholder="{t}Name of your dataset{/t}" value="{$name}">
+                <div class="action_content dataset_action">
+                    <div class="col2-3 left dataset_data">
+                        <div class="dataset icon input">
+                        <input type="text" name="name" id="name" maxlength="100" class="validable not_empty full-size" placeholder="{t}Name of your dataset{/t}" value="{$name}">
                         </div>
-                        <label for="theme_label">{t}Theme{/t}</label>
-                        <select class="not_empty" name="theme" id="theme">
-                            {foreach from=$themes item=t}
-                                {if ($t|gettext == $theme)}
-                                    <option value='{$t|gettext}' selected>{$t|gettext}</option>
-                                {else}
-                                    <option value='{$t|gettext}'>{$t|gettext}</option>
-                                {/if}
-                            {/foreach}
-                        </select>
-                        <label for="periodicity_label">{t}Periodicity{/t}</label>
-                        <select class="not_empty" name="periodicity" id="periodicity">
-                            {foreach from=$periodicities item=p}
-                                {if ($p|gettext == $periodicity)}
-                                    <option value='{$p|gettext}' selected>{$p|gettext}</option>
-                                {else}
-                                    <option value='{$p|gettext}'>{$p|gettext}</option>
-                                {/if}
-                            {/foreach}
-                        </select>
-                        <label for="license_label">{t}License{/t}</label>
-                        <select class="not_empty" name="license" id="license">
-                            {foreach from=$licenses item=l}
-                                {if ($l|gettext == $license)}
-                                    <option value='{$l|gettext}' selected>{$l|gettext}</option>
-                                {else}
-                                    <option value='{$l|gettext}'>{$l|gettext}</option>
-                                {/if}
-                            {/foreach}
-                        </select>
-                        <label for="spatial_label">{t}Spatial{/t}</label>
-                        <select class="not_empty" name="spatial" id="spatial">
-                            {foreach from=$spatials item=s}
-                                {if ($s|gettext == $spatial)}
-                                    <option value='{$s|gettext}' selected>{$s|gettext}</option>
-                                {else}
-                                    <option value='{$s|gettext}'>{$s|gettext}</option>
-                                {/if}
-                            {/foreach}
-                        </select>
-                        <div class="folder-name folder-normal icon input-select">
-                        <input type="text" name="reference" id="reference" maxlength="50" class="caja validable not_empty" placeholder="{t}Reference{/t}" value="{$reference}">
+
+                        <h3>Metadatos</h3>
+                        <div class="editable_data col1_2">
+                            <p>
+                                <label for="" class="label_title">{t}Dataset title{/t}</label>
+                                <select name="" id="" class="language_selector">
+                                    <option value="">Español</option>
+                                    <option value="">Inglés</option>
+                                    <option value="">Francés</option>
+                                </select>
+                                <input type="text" class="full_size">
+                            </p>
+                            <p>
+                                <label for=""  class="label_title">{t}Dataset description{/t}</label>
+                                <textarea name="" id="" cols="30" rows="9" class="full_size"></textarea>
+                            </p>
+                        </div>
+                        <div class="non_editable_data col1_2">
+                            <p>
+                                <label for="theme_label"  class="label_title">{t}Theme{/t}</label>
+                                <select class="not_empty full_size" name="theme" id="theme">
+                                    {foreach from=$themes item=t}
+                                        {if ($t|gettext == $theme)}
+                                            <option value='{$t|gettext}' selected>{$t|gettext}</option>
+                                        {else}
+                                            <option value='{$t|gettext}'>{$t|gettext}</option>
+                                        {/if}
+                                    {/foreach}
+                                </select>
+                            </p>
+                            <p>
+                                <label for="periodicity_label"  class="label_title">{t}Periodicity{/t}</label>
+                                <select class="not_empty full_size" name="periodicity" id="periodicity">
+                                    {foreach from=$periodicities item=p}
+                                        {if ($p|gettext == $periodicity)}
+                                            <option value='{$p|gettext}' selected>{$p|gettext}</option>
+                                        {else}
+                                            <option value='{$p|gettext}'>{$p|gettext}</option>
+                                        {/if}
+                                    {/foreach}
+                                </select>
+                            </p>
+                            <p>
+                                <label for="license_label"  class="label_title">{t}License{/t}</label>
+                                <select class="not_empty full_size" name="license" id="license">
+                                    {foreach from=$licenses item=l}
+                                        {if ($l|gettext == $license)}
+                                            <option value='{$l|gettext}' selected>{$l|gettext}</option>
+                                        {else}
+                                            <option value='{$l|gettext}'>{$l|gettext}</option>
+                                        {/if}
+                                    {/foreach}
+                                </select>
+                            </p>
+                            <label for="spatial_label"  class="label_title">{t}Spatial{/t}</label>
+                            <select class="not_empty full_size" name="spatial" id="spatial">
+                                {foreach from=$spatials item=s}
+                                    {if ($s|gettext == $spatial)}
+                                        <option value='{$s|gettext}' selected>{$s|gettext}</option>
+                                    {else}
+                                        <option value='{$s|gettext}'>{$s|gettext}</option>
+                                    {/if}
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col1-3 right dataset_info">
+                        <h4>{t}Dataset info{/t}</h4>
+                           {include file="`$_APP_ROOT`/actions/createxmlcontainer/template/Smarty/_ximdoc_languages.tpl"}                        
+
+                        <div class="reference_url">
+                            <h3>
+                                <label for="reference">{t}Url más información{/t}</label>
+                            </h3>
+                        <input type="text" name="reference" id="reference" maxlength="50" class="full_size validable not_empty" placeholder="{t}Reference{/t}" value="{$reference}">
+                        </div>
+
+                        <div class="creation_date">
+                            <h3>{t}Creation date{/t}</h3>
+                            <p>09/01/2014</p>
+                        </div>
+                        <div class="modification_date">
+                            <h3>{t}Modification date{/t}</h3>
+                            <p>--/--/--</p>
+                        </div>
+                        <div class="publicator">
+                            <h3>{t}Publicated by $user{/t}</h3>
+                            <p>Ximdex</p>
                         </div>
                         
-                        {include file="`$_APP_ROOT`/actions/createxmlcontainer/template/Smarty/_ximdoc_languages.tpl"}
+                     
+                    </div>
+                       
+                      
 
                         <div class="col1-3">  
 
@@ -93,5 +141,8 @@
 
                 
                 </div>
+      <fieldset class="buttons-form positioned_btn">
+                            {button label="{t}{$button}{/t}" class='validate btn main_action' }<!--message="Would you like to add this dataset?"-->
+                        </fieldset>                
 
         </form>
