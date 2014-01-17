@@ -27,28 +27,30 @@
 	<div class="action_header">
 		<h2>{t}Xlyre Settings{/t}</h2>
 		<fieldset class="buttons-form">
-			{button label="Save" class="validate focus  btn main_action"}
+			{button label="Update" class="validate focus  btn main_action"}
 		</fieldset>
 	</div>
 	<div class="action_content">
         <fieldset>
             <div class="input-select">
-                <label class="label_title" for="theme">{t}Themes{/t}</label>
-                <input type="text" name="theme" id="theme" maxlength="100" class="cajaxg validable not_empty full-size" value="{$themes}">
+                <label class="label_title" for="themes">{t}Themes{/t}*</label>
+                <input type="text" name="themes" id="themes" maxlength="100" class="cajaxg full-size" value="{$themes}">
             </div>
     		<div class="input-select">
-                <label class="label_title" for="periodicity">{t}Periodicities{/t}</label>
-                <input type="text" name="periodicity" id="periodicity" maxlength="100" class="cajaxg validable not_empty full-size" value="{$periodicities}">
+                <label class="label_title" for="periodicities">{t}Periodicities{/t}*</label>
+                <input type="text" name="periodicities" id="periodicities" maxlength="100" class="cajaxg full-size" value="{$periodicities}">
             </div>
+            {*<div class="input-select">
+                <label class="label_title" for="licenses">{t}Licenses{/t}</label>
+                <input type="text" name="licenses" id="licenses" maxlength="100" class="cajaxg full-size" value="{$licenses}">
+            </div>*}
             <div class="input-select">
-                <label class="label_title" for="license">{t}Licenses{/t}</label>
-                <input type="text" name="license" id="license" maxlength="100" class="cajaxg validable not_empty full-size" value="{$xlyrelicenses}">
-                <small class="right">{t}This field uses Ximdex links{/t}</small>
+                <label class="label_title" for="spatials">{t}Spatials{/t}*</label>
+                <input type="text" name="spatials" id="spatials" maxlength="100" class="cajaxg full-size" value="{$spatials}">
             </div>
-            <div class="input-select">
-                <label class="label_title" for="spatial">{t}Spatials{/t}</label>
-                <input type="text" name="spatial" id="spatial" maxlength="100" class="cajaxg validable not_empty full-size" value="{$spatials}">
-            </div>
+            <strong><small class="right">{t}Licenses can be managed using Ximdex links{/t}</small></strong>
+            <br>
+            <br>
             <small class="right">(*) {t}Please enter comma separated values in all fields{/t}</small>
         </fieldset>
 	</div>
