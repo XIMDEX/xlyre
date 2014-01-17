@@ -4,6 +4,7 @@
 LOCK TABLES `NodeTypes` WRITE;
 INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4000, 'OpenDataSection', 'xlyreopendatasection', 'catalog_xlyre.png', 'Open Data Section', 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, "xlyre");
 INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4001, 'OpenDataDataset', 'xlyreopendataset', 'dataset_xlyre.png', 'Dataset', 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, "xlyre");
+INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4003, 'OpenDataConfig', 'root', 'modulesconfig.png', 'Xlyre Configuration', 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, NULL);
 -- INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4001, 'OpenDataDatasetSection', 'sectionnode', 'folder_xlyre.png', 'Dataset Section', 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, NULL);
 -- INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4002, 'OpenDataDataset', 'foldernode', 'folder_xlyre.png', 'Dataset', 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, NULL);
 -- INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4003, 'OpenDataCatalogSection', 'sectionnode', 'folder_xlyre.png', 'Open Data Catalog Section', 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, NULL);
@@ -11,16 +12,31 @@ INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `
 UNLOCK TABLES;
 
 
+-- New Nodes
+LOCK TABLES `Nodes` WRITE;
+INSERT INTO `Nodes` (`IdNode`, `IdParent`, `IdNodeType`, `Name`, `IdState`, `BlockTime`, `BlockUser`, `CreationDate`, `ModificationDate`, `Description`, `SharedWorkflow`, `Path`) VALUES (14, 2, 4003, 'Xlyre manager', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '/Ximdex/Control center');
+UNLOCK TABLES;
+
+-- Roles for these actions
+LOCK TABLES `FastTraverse` WRITE;
+INSERT INTO FastTraverse VALUES (1,14,2);
+INSERT INTO FastTraverse VALUES (2,14,1);
+INSERT INTO FastTraverse VALUES (14,14,0);
+UNLOCK TABLES;
+
+
 -- SectionTypes
 LOCK TABLES `SectionTypes` WRITE;
-INSERT INTO `SectionTypes` ( `idSectionType` , `sectionType` , `idNodeType`  , `module` ) VALUES (4, 'OpenData Section', 4000, 'xlyre');
+INSERT INTO `SectionTypes` ( `idSectionType` , `sectionType` , `idNodeType`  , `module` ) VALUES (3, 'OpenData Section', 4000, 'xlyre');
 UNLOCK TABLES;
 
 
 -- Allowed Contents
 LOCK TABLES `NodeAllowedContents` WRITE;
 INSERT INTO `NodeAllowedContents` VALUES (NULL,5014,4000,0);
+insert into `NodeAllowedContents` VALUES (NULL,5015,4000,0);
 INSERT INTO `NodeAllowedContents` VALUES (NULL,4000,4001,0);
+INSERT INTO `NodeAllowedContents` VALUES (NULL,5002,4003,1);
 -- INSERT INTO `NodeAllowedContents` VALUES (NULL,4001,4002,0);
 -- INSERT INTO `NodeAllowedContents` VALUES (NULL,4000,4003,0);
 -- INSERT INTO `NodeAllowedContents` VALUES (NULL,4003,4004,0);
@@ -30,6 +46,7 @@ UNLOCK TABLES;
 -- Default Contents
 LOCK TABLES `NodeDefaultContents` WRITE;
 INSERT INTO `NodeDefaultContents` VALUES (NULL,4000,4001,'Dataset',NULL,NULL);
+INSERT INTO `NodeDefaultContents` VALUES (NULL,5002,4003,'Xlyre config',NULL,NULL);
 -- INSERT INTO `NodeDefaultContents` VALUES (NULL,4000,4001,'RawData',NULL,NULL);
 -- INSERT INTO `NodeDefaultContents` VALUES (NULL,4000,4003,'catalogs',NULL,NULL);
 UNLOCK TABLES;
@@ -55,6 +72,7 @@ INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Desc
 INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7502,  4000,"Create New Dataset", "managedataset", "change_next_state.png","It creates a new Dataset", 99, 'xlyre', 0, NULL);
 INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7503,  4001,"Edit Dataset", "managedataset", "change_next_state.png","It edits the current Dataset", 99, 'xlyre', 0, NULL);
 INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7504,  4001,"Delete Dataset", "deletedataset", "delete_section.png","It deletes the current Dataset", 99, 'xlyre', 0, NULL);
+INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7505,  4003,"Configure Xlyre", "configure", "modulesconfig.png","It configures Xlyre module", 99, 'xlyre', 0, NULL);
 UNLOCK TABLES;
 
 -- Roles for these actions
@@ -63,6 +81,7 @@ INSERT INTO RelRolesActions VALUES (NULL,201,7501,0,1,3);
 INSERT INTO RelRolesActions VALUES (NULL,201,7502,0,1,3);
 INSERT INTO RelRolesActions VALUES (NULL,201,7503,0,1,3);
 INSERT INTO RelRolesActions VALUES (NULL,201,7504,0,1,3);
+INSERT INTO RelRolesActions VALUES (NULL,201,7505,0,1,3);
 UNLOCK TABLES;
 
 -- XlyreCatalog Table
@@ -141,3 +160,32 @@ CREATE TABLE `XlyreRelMetaTags` (
   KEY `IdTag` (`IdTag`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Tags for Dataset (it could also be tags for Catalog and Distribution) - XLyre Module';
 
+-- XlyreThemes Table - it implements themes for XLyre
+DROP TABLE IF EXISTS `XlyreThemes`;
+CREATE TABLE `XlyreThemes` (
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `Name` varchar(100) NOT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `Id` (`Id`),
+  UNIQUE KEY `Name` (`Name`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Themes that can be selected from Dataset UI - XLyre Module';
+
+-- XlyrePeriodicities Table - it implements periodicities for XLyre
+DROP TABLE IF EXISTS `XlyrePeriodicities`;
+CREATE TABLE `XlyrePeriodicities` (
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `Name` varchar(100) NOT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `Id` (`Id`),
+  UNIQUE KEY `Name` (`Name`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Periodicities that can be selected from Dataset UI - XLyre Module';
+
+-- XlyreSpatials Table - it implements spatials for XLyre
+DROP TABLE IF EXISTS `XlyreSpatials`;
+CREATE TABLE `XlyreSpatials` (
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `Name` varchar(100) NOT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `Id` (`Id`),
+  UNIQUE KEY `Name` (`Name`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Spatials that can be selected from Dataset UI - XLyre Module';

@@ -25,6 +25,8 @@
  */
 
 ModulesManager::file('/inc/model/XlyreDataset.php', 'xlyre');
+ModulesManager::file('/inc/model/XlyreRelMetaLangs.php', 'xlyre');
+ModulesManager::file('/inc/model/XlyreRelMetaTags.php', 'xlyre');
 
 class XlyreOpenDataSet extends FolderNode{
 
@@ -36,9 +38,30 @@ class XlyreOpenDataSet extends FolderNode{
 	 * @return  boolean True if delete something.
 	 */
 	public function deleteNode(){
-		$idNode = $this->nodeID;
 		parent::deleteNode();
-		$dataset = new XlyreDataset($idNode);
+
+		//Delete Langs
+		$relMetaLang = new XlyreRelMetaLangs();
+		$results = $relMetaLang->find("IdRel", "IdNode=%s", array($this->nodeID), MONO);
+		if ($results) {
+			foreach ($results as $idRel) {
+				$objectToDelete = new XlyreRelMetaLangs($idRel);
+				$objectToDelete->delete();
+			}
+		}
+
+		//Delete Tags
+		$relMetaLang = new XlyreRelMetaTags();
+		$results = $relMetaLang->find("IdRel", "IdNode=%s", array($this->nodeID), MONO);
+		if ($results) {
+			foreach ($results as $idRel) {
+				$objectToDelete = new XlyreRelMetaTags($idRel);
+				$objectToDelete->delete();
+			}
+		}
+
+		//Delete dataset
+		$dataset = new XlyreDataset($this->nodeID);
 		return $dataset->delete();
 	}
 

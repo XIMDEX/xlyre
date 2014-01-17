@@ -24,22 +24,18 @@
 *}
 
 <form method="post" name="cc_form" id="as_form" action="{$action_url}">
-        <input type="hidden" name="nodeid" VALUE="{$nodeID}">
-        <input type="hidden" id="nodeURL" name="nodeURL" value="{$nodeURL}">
-        <div class="action_header">
-                <h2>{t}Create a new Open Data Catalog{/t}</h2>
-                <fieldset class="buttons-form">
-                        {button label="Create Catalog" class='validate btn main_action' }<!--message="Would you like to add this section?"-->
-                </fieldset>
-        </div>      
+    <input type="hidden" name="nodeid" VALUE="{$nodeID}">
+    <input type="hidden" id="nodeURL" name="nodeURL" value="{$nodeURL}">
+    <div class="action_header">
+        <h2>{t}Create a new Open Data Catalog{/t}</h2>
+            <fieldset class="buttons-form">
+                {button label="Create Catalog" class='validate btn main_action' } {*message="Would you like to add this section?"*}
+            </fieldset>
+    </div>      
 
-        <div class="action_content section-properties">
-
-                {*include file="`$_APP_ROOT`/actions/addsectionnode/template/Smarty/sectiontype.tpl"*}
-                {include file="`$_APP_ROOT`/modules/xlyre/actions/createcatalog/template/Smarty/sectiontype.tpl"}
-
-                {include file="`$_APP_ROOT`/actions/addsectionnode/template/Smarty/languages.tpl"}
-                {include file="`$_APP_ROOT`/modules/xlyre/actions/createcatalog/template/Smarty/datasets.tpl"}
-
-        </div>      
+    <div class="action_content section-properties">
+        {include file="`$_APP_ROOT`/modules/xlyre/actions/createcatalog/template/Smarty/sectiontype.tpl"}
+        {include file="`$_APP_ROOT`/actions/addsectionnode/template/Smarty/languages.tpl"}
+        {include file="`$_APP_ROOT`/modules/xlyre/actions/createcatalog/template/Smarty/datasets.tpl"}
+    </div>      
 </form> 

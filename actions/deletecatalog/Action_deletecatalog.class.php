@@ -28,8 +28,10 @@
 
 ModulesManager::file('/inc/sync/SynchroFacade.class.php');
 ModulesManager::file('/actions/browser3/inc/GenericDatasource.class.php');
+ModulesManager::file('/actions/deletedataset/Action_deletedataset.class.php', "xlyre");
 
-class Action_deletedataset extends ActionAbstract {
+
+class Action_deletecatalog extends ActionAbstract {
 
 	function index () {
 
@@ -41,10 +43,19 @@ class Action_deletedataset extends ActionAbstract {
 			$idNode = $this->request->getParam('nodeid');
 		}
 		$node = new Node($idNode);
+		$datasets = $node->GetChildren();
+		$dtsList = array();
+		if ($datasets) {
+			foreach ($datasets as $dataset) {
+				$tmpNode = new Node($dataset);
+				$dtsList[] = array('id' => $dataset, "name" => $tmpNode->get("Name"));
+				unset($tmpNode);
+			}
+		}
 
 		/*
 		 * TODO:
-		 * We need to get all dependencies (distributions)
+		 * We need to get all dependencies (datasts and distributions)
 		 * and inform to the user that those dependencies will be removed 
 		*/
 
@@ -55,24 +66,36 @@ class Action_deletedataset extends ActionAbstract {
 			'id_node' => $idNode,
 			'nameNode' => $node->get('Name'),
 			'formType' => $formType,
-			"go_method" => "delete_dataset",
+			'dtsList' => $dtsList,
+			'go_method' => 'delete_catalog',
 		);
 
 		$this->render($values, null, 'default-3.0.tpl');
 	}
 
+	function delete_catalog() {
 
-	/*
-	 * If the function receives a $dataset, this action will not use $this->request
-	 * and it will not render any template
-	 */
-	function delete_dataset($dataset = -1) {
+		$idNode	= $this->request->getParam("nodeid");
+		$node = new Node($idNode);
 
-		$idNode	= ($dataset != -1) ? $dataset : $this->request->getParam("nodeid");
-	 
+		$datasets = $node->GetChildren();
+
+		$action_deletedataset = new Action_deletedataset();
+
+		if ($datasets) {
+			foreach ($datasets as $dataset) {
+				if (! $action_deletedataset->delete_dataset($dataset)) {
+					$this->messages->add(_("An error occurred while deleting dataset"), MSG_TYPE_ERROR);
+				}
+				else {
+					$this->messages->add(_("The dataset were successfully deleted"), MSG_TYPE_NOTICE);
+				}
+			}
+		}
+	    
 	    /*
 		 * TODO:
-		 * Delete all dependencies (distributions)
+		 * Delete all dependencies (datasets and distributions)
 		*/
 
 		// Deleting publication tasks
@@ -81,36 +104,27 @@ class Action_deletedataset extends ActionAbstract {
 
 		$node = new Node($idNode);
 		$parentID = $node->get('IdParent');
-
-		$node = new Node($idNode);
-		$result = $node->delete();
-
-		if ($dataset == -1) {
-			$err = NULL;
-			if($node->numErr) {
-				$err = _("An error occurred while deleting:");
-				$err .= '<br>' . $node->get('IdNode') . " " . $node->GetPath() . '<br>' . _("Error message: ") . $node->msgErr . "<br><br>";
-			}
-
-			if (strlen($err)) {
-				$this->messages->add($err, MSG_TYPE_ERROR);
-			} else {
-				$this->messages->add(_("The dataset were successfully deleted"), MSG_TYPE_NOTICE);
-			}
-				
-			$this->reloadNode($parentID);
-
-			$values = array(
-				'messages' => $this->messages->messages,
-				'action_with_no_return' => true,
-			);
-
-			$this->render($values, NULL, 'messages.tpl');
-		}
-		else {
-			return $result;
+		$node->delete();
+		$err = NULL;
+		if($node->numErr) {
+			$err = _("An error occurred while deleting:");
+			$err .= '<br>' . $node->get('IdNode') . " " . $node->GetPath() . '<br>' . _("Error message: ") . $node->msgErr . "<br><br>";
 		}
 
+		if (strlen($err)) {
+			$this->messages->add($err, MSG_TYPE_ERROR);
+		} else {
+			$this->messages->add(_("The catalog were successfully deleted"), MSG_TYPE_NOTICE);
+		}
+			
+		$this->reloadNode($parentID);
+
+		$values = array(
+			'messages' => $this->messages->messages,
+			'action_with_no_return' => true,
+		);
+
+		$this->render($values, NULL, 'messages.tpl');
 	}
 
 }
