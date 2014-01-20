@@ -37,13 +37,13 @@ class XlyreDataset_ORM extends GenericData   {
                 'IdDataset' => array('type' => 'int(11)', 'not_null' => 'true', 'primary_key' => 'true'),
                 'IdCatalog' => array('type' => 'int(11)', 'not_null' => 'true'),
                 'Identifier' => array('type' => 'varchar(100)', 'not_null' => 'true'),
-                'Theme' => array('type' => 'varchar(100)', 'not_null' => 'true'),
+                'Theme' => array('type' => 'int(11)', 'not_null' => 'true'),
                 'Issued' => array('type' => 'int(12)', 'not_null' => 'true'),
                 'Modified' => array('type' => 'int(12)', 'not_null' => 'true'),
                 'Publisher' => array('type' => 'int(12)', 'not_null' => 'true'),
-                'Periodicity' => array('type' => 'mediumint(6)', 'not_null' => 'true'),
-                'License' => array('type' => 'varchar(100)', 'not_null' => 'true'),
-                'Spatial' => array('type' => 'varchar(100)', 'not_null' => 'true'),
+                'Periodicity' => array('type' => 'int(11)', 'not_null' => 'true'),
+                'License' => array('type' => 'int(11)', 'not_null' => 'true'),
+                'Spatial' => array('type' => 'int(11)', 'not_null' => 'true'),
                 'Reference' => array('type' => 'varchar(255)', 'not_null' => 'true')
                 );
     var $_uniqueConstraints = array('Identifier');
@@ -52,13 +52,13 @@ class XlyreDataset_ORM extends GenericData   {
     var $IdDataset;
     var $IdCatalog;
     var $Identifier;
-    var $Theme = '';
+    var $Theme;
     var $Issued = 0;
     var $Modified = 0;
     var $Publisher = 0;
-    var $Periodicity = 12;
-    var $License = '';
-    var $Spatial = '';
+    var $Periodicity;
+    var $License;
+    var $Spatial;
     var $Reference = '';
 
 }
