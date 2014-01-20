@@ -62,3 +62,78 @@
 
 .input-select.folder-data::before {
   color: #c2d43b; }
+
+.dataset_action .language_selector {
+  float: right;
+  border: none;
+  background: none;
+  padding: 0;
+  margin-top: -1.5em; }
+
+.dataset_data {
+  width: 63%; }
+
+.dataset::after {
+  color: #c2d43b; }
+
+.dataset_info {
+  background: #464646;
+  padding: 1em 1.5em 2em 1.5em;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  color: #fff; }
+  .dataset_info h3, .dataset_info h3 label {
+    text-transform: uppercase;
+    font-family: "Ubuntu Condensed";
+    font-size: 1.3rem;
+    color: #fff;
+    padding-bottom: .5em; }
+  .dataset_info h4 {
+    color: #fff;
+    padding-bottom: .5em;
+    border-bottom: 3px solid #c2d43b; }
+  .dataset_info input:focus, .dataset_info .hidden-focus:focus + label, .dataset_info .hidden-focus:checked:focus + label {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    border: none;
+    color: #303030; }
+  .dataset_info p {
+    margin-bottom: 0; }
+  .dataset_info .alternative_select {
+    display: none; }
+  .dataset_info .languages-section {
+    display: inline-block; }
+  .dataset_info .alternative-name {
+    display: none; }
+
+.reduced_label {
+  color: #606060;
+  font-size: 1.9rem;
+  line-height: 1.4;
+  padding: .1em .5em !important; }
+  .reduced_label:hover {
+    color: #c2d43b; }
+
+.hidden-focus:checked + .reduced_label {
+  background: #393939;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  color: #cacaca; }
+
+.editable_data, .non_editable_data {
+  width: 46%; }
+
+.editable_data {
+  margin-right: 7%;
+  position: relative; }
+  .editable_data::after {
+    content: "";
+    height: 80%;
+    top: 10%;
+    width: 0;
+    border-right: 1px solid #ccc;
+    position: absolute;
+    right: -8.5%; }

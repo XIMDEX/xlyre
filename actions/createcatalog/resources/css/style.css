@@ -55,7 +55,8 @@
   font-weight: bold;
   text-align: center;
   font-size: 1.4rem !important;
-  color: #464646; }
+  color: #464646;
+  left: 0; }
 
 .subfolder strong.dataset::before {
   background: #c2d43b; }

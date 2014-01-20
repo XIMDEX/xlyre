@@ -61,7 +61,7 @@
 
 
 .text_label{
-	position: absolute;
+	position: absolute; 
 	bottom: .5em;
 	width: 90%;
 	margin-left: 5%;
@@ -71,6 +71,7 @@
 	text-align: center;
 	font-size: 1.4rem !important;
 	color: $c_grey-l;
+	left: 0;
 }
 
 .subfolder strong.dataset{
@@ -82,3 +83,5 @@
 .input-select.folder-data::before{
 	color:#c2d43b;
 }
+
+
