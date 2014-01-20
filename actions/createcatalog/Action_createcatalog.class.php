@@ -25,6 +25,7 @@
  */
 
 ModulesManager::file('/actions/addsectionnode/Action_addsectionnode.class.php');
+ModulesManager::file('/services/NodetypeService.class.php');
 ModulesManager::file('/inc/nodetypes/xlyreopendatasection.inc','xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendataset.inc','xlyre');
 ModulesManager::file('/inc/io/XlyreBaseIO.class.php','xlyre');
@@ -64,17 +65,17 @@ class Action_createcatalog extends Action_addsectionnode {
                             'NAME' => $datasetName,
                             'PARENTID' => $id,
                             'FORCENEW' => true
-                    ); 
+                        ); 
                         $baseio->build($datasetData); 
-                }
+                    }
 
                     /*
-			$aliasLangArray = array();
-        	        if($langidlst) {
+			         $aliasLangArray = array();
+        	           if($langidlst) {
                 	        foreach ($langidlst as $key) {
                         	        $aliasLangArray[$key] = $namelst[$key];
                         	}
-                	}
+                	       }
 			
 
                         $section = new Node($id);
@@ -83,10 +84,18 @@ class Action_createcatalog extends Action_addsectionnode {
                                 $section->SetAliasForLang($langID, $longName);
                                 }   
                         }   */
+
+
+                        // Creating Licenses subfolder in links folder
+                        $catalognode = new Node($id);
+                        $projectnode = new Node($catalognode->getProject());
+                        $this->createLicenseLinksFolder($projectnode->getChildren(NodetypeService::LINK_MANAGER)[0]);
+
+
                         $this->reloadNode($nodeID);
                 }
 
-		if (!($id > 0)) {
+		      if (!($id > 0)) {
                         $this->messages->mergeMessages($baseio->messages);
                         $this->messages->add(_('Operation could not be successfully completed'), MSG_TYPE_ERROR);
                 }else{
@@ -112,5 +121,21 @@ class Action_createcatalog extends Action_addsectionnode {
                         case "4001": return "A dataset should be for a single data in several formats.";
 		}
 	}
+
+
+    private function createLicenseLinksFolder($links_id) {
+
+        $nodeaux = new Node();
+        $linkfolder = $nodeaux->find('IdNode', "idnodetype = %s AND Name = 'Licenses'", array(NodetypeService::LINK_FOLDER), MONO);
+        if (!$linkfolder) {
+            $nodeType = new NodeType();
+            $nodeType->SetByName('LinkFolder');
+            $folder = new Node();
+            $idFolder = $folder->CreateNode('Licenses', $links_id, $nodeType->GetID(), null);
+        }
+
+    }
+
 }
+
 ?>
