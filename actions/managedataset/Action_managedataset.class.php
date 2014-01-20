@@ -28,6 +28,9 @@ ModulesManager::file('/inc/io/XlyreBaseIO.class.php','xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendataset.inc', 'xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendatasection.inc', 'xlyre');
 ModulesManager::file('/inc/io/XlyreBaseIOConstants.class.php', "xlyre");
+ModulesManager::file('/inc/model/XlyreThemes.php', 'xlyre');
+ModulesManager::file('/inc/model/XlyrePeriodicities.php', 'xlyre');
+ModulesManager::file('/inc/model/XlyreSpatials.php', 'xlyre');
 
 
 class Action_managedataset extends ActionAbstract {
@@ -159,10 +162,12 @@ class Action_managedataset extends ActionAbstract {
     function loadValues(&$values, $idNode = 0) {
         
         #Default values for selectors
-        $values['themes'] = array('Undefined', '111-XXX', '222-YYY', '333-ZZZ');
-        $values['periodicities'] = array(0, 3, 6, 12);
-        $values['licenses'] = array('Undefined', 'Creative Commons', 'Open Data license');
-        $values['spatials'] = array('Undefined', 'Natial', 'Regional', 'Local');
+        $this->getValues(new XlyreThemes(), $values['themes']);
+        $this->getValues(new XlyrePeriodicities(), $values['periodicities']);
+        $this->getValues(new XlyreSpatials(), $values['spatials']);
+
+        $values['licenses'] = array();
+        
 
         if ($idNode > 0) {
             $dsmeta = new XlyreDataset($idNode);
@@ -182,6 +187,17 @@ class Action_managedataset extends ActionAbstract {
             $values['reference'] = "";
         }
     }
+
+
+
+    private function getValues($object, &$partial_options) {
+        $values = $object->find('Id, Name', "1 ORDER BY Id", array(), MULTI);
+        foreach ($values as $key => $value) {
+            $partial_options[$key]['id'] = $value['Id'];
+            $partial_options[$key]['name'] = $value['Name'];
+        }
+    }
+
 
 
 	function _getDescription($nodetype) {
