@@ -57,10 +57,10 @@
                                 <label for="theme_label"  class="label_title">{t}Theme{/t}</label>
                                 <select class="not_empty full_size" name="theme" id="theme">
                                     {foreach from=$themes item=t}
-                                        {if ($t|gettext == $theme)}
-                                            <option value='{$t|gettext}' selected>{$t|gettext}</option>
+                                        {if ($t.id|gettext == $theme)}
+                                            <option value='{$t.id|gettext}' selected>{$t.name|gettext}</option>
                                         {else}
-                                            <option value='{$t|gettext}'>{$t|gettext}</option>
+                                            <option value='{$t.id|gettext}'>{$t.name|gettext}</option>
                                         {/if}
                                     {/foreach}
                                 </select>
@@ -69,10 +69,10 @@
                                 <label for="periodicity_label"  class="label_title">{t}Periodicity{/t}</label>
                                 <select class="not_empty full_size" name="periodicity" id="periodicity">
                                     {foreach from=$periodicities item=p}
-                                        {if ($p|gettext == $periodicity)}
-                                            <option value='{$p|gettext}' selected>{$p|gettext}</option>
+                                        {if ($p.id|gettext == $periodicity)}
+                                            <option value='{$p.id|gettext}' selected>{$p.name|gettext}</option>
                                         {else}
-                                            <option value='{$p|gettext}'>{$p|gettext}</option>
+                                            <option value='{$p.id|gettext}'>{$p.name|gettext}</option>
                                         {/if}
                                     {/foreach}
                                 </select>
@@ -81,10 +81,10 @@
                                 <label for="license_label"  class="label_title">{t}License{/t}</label>
                                 <select class="not_empty full_size" name="license" id="license">
                                     {foreach from=$licenses item=l}
-                                        {if ($l|gettext == $license)}
-                                            <option value='{$l|gettext}' selected>{$l|gettext}</option>
+                                        {if ($l.id|gettext == $license)}
+                                            <option value='{$l.id|gettext}' selected>{$l.name|gettext}</option>
                                         {else}
-                                            <option value='{$l|gettext}'>{$l|gettext}</option>
+                                            <option value='{$l.id|gettext}'>{$l.name|gettext}</option>
                                         {/if}
                                     {/foreach}
                                 </select>
@@ -92,10 +92,10 @@
                             <label for="spatial_label"  class="label_title">{t}Spatial{/t}</label>
                             <select class="not_empty full_size" name="spatial" id="spatial">
                                 {foreach from=$spatials item=s}
-                                    {if ($s|gettext == $spatial)}
-                                        <option value='{$s|gettext}' selected>{$s|gettext}</option>
+                                    {if ($s.id|gettext == $spatial)}
+                                        <option value='{$s.id|gettext}' selected>{$s.name|gettext}</option>
                                     {else}
-                                        <option value='{$s|gettext}'>{$s|gettext}</option>
+                                        <option value='{$s.id|gettext}'>{$s.name|gettext}</option>
                                     {/if}
                                 {/foreach}
                             </select>

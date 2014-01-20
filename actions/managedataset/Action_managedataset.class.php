@@ -166,8 +166,15 @@ class Action_managedataset extends ActionAbstract {
         $this->getValues(new XlyrePeriodicities(), $values['periodicities']);
         $this->getValues(new XlyreSpatials(), $values['spatials']);
 
-        $values['licenses'] = array();
-        
+        $node = new Node();
+        $linkfolder = $node->find('IdNode', "idnodetype = 5048 AND Name = 'Licenses'", array(), MONO);
+        if ($linkfolder) {
+            $links = $node->find('IdNode, Name', "idparent = %s", array($linkfolder[0]), MULTI);
+            foreach ($links as $key => $link) {
+                $values['licenses'][$key]['id'] = $link['IdNode'];
+                $values['licenses'][$key]['name'] = $link['Name'];
+            }
+        }
 
         if ($idNode > 0) {
             $dsmeta = new XlyreDataset($idNode);
