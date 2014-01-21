@@ -38,19 +38,21 @@
 
                         <h3>Metadatos</h3>
                         <div class="editable_data col1_2">
-                            <p>
-                                <label for="" class="label_title">{t}Dataset title{/t}</label>
-                                <select name="" id="" class="language_selector">
-                                    <option value="">Español</option>
-                                    <option value="">Inglés</option>
-                                    <option value="">Francés</option>
+                            <div>
+                                <select name="" id="" class="language_selector js_language_selector">
+                                    <option value="">Select a language</option>
                                 </select>
-                                <input type="text" class="full_size">
-                            </p>
-                            <p>
-                                <label for=""  class="label_title">{t}Dataset description{/t}</label>
-                                <textarea name="" id="" cols="30" rows="9" class="full_size"></textarea>
-                            </p>
+                            </div>
+                            <div class="js_form_sections">
+                                {foreach from=$languages item=l}
+                                    <div class="js_form_section" id="language_selector_{$l.IdLanguage}" style="display:none;">
+                                        <label for="" class="label_title">{t}Dataset title{/t}</label>
+                                        <input type="text" class="full_size">
+                                        <label for=""  class="label_title">{t}Dataset description{/t}</label>
+                                        <textarea name="" id="" cols="30" rows="9" class="full_size"></textarea>
+                                    </div>
+                                {/foreach}
+                            </div>
                         </div>
                         <div class="non_editable_data col1_2">
                             <p>
