@@ -162,9 +162,9 @@ class Action_managedataset extends ActionAbstract {
     function loadValues(&$values, $idNode = 0) {
         
         #Default values for selectors
-        $this->getValues(new XlyreThemes(), $values['themes']);
-        $this->getValues(new XlyrePeriodicities(), $values['periodicities']);
-        $this->getValues(new XlyreSpatials(), $values['spatials']);
+        $this->_getValues(new XlyreThemes(), $values['themes']);
+        $this->_getValues(new XlyrePeriodicities(), $values['periodicities']);
+        $this->_getValues(new XlyreSpatials(), $values['spatials']);
 
         $node = new Node();
         $linkfolder = $node->find('IdNode', "idnodetype = 5048 AND Name = 'Licenses'", array(), MONO);
@@ -197,7 +197,7 @@ class Action_managedataset extends ActionAbstract {
 
 
 
-    private function getValues($object, &$partial_options) {
+    private function _getValues($object, &$partial_options) {
         $values = $object->find('Id, Name', "1 ORDER BY Id", array(), MULTI);
         foreach ($values as $key => $value) {
             $partial_options[$key]['id'] = $value['Id'];
@@ -207,7 +207,7 @@ class Action_managedataset extends ActionAbstract {
 
 
 
-	function _getDescription($nodetype) {
+	private function _getDescription($nodetype) {
         switch($nodetype){
             case "4001": return "A dataset should be for a single data in several formats.";
         }

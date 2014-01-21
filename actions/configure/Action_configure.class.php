@@ -34,7 +34,7 @@ class Action_configure extends ActionAbstract {
 
 	function index () {
 
-		$configure_options = $this->loadValues();
+		$configure_options = $this->_loadValues();
 		$values = array(
 			'themes' => implode(",", $configure_options['themes']),
 			'periodicities' => implode(",", $configure_options['periodicities']),
@@ -49,10 +49,10 @@ class Action_configure extends ActionAbstract {
 
 	function update() {		
 
-		$old_options = $this->loadValues();
-		$this->processField($old_options['themes'], explode(',', $this->request->getParam('themes')), 'theme');
-		$this->processField($old_options['periodicities'], explode(',', $this->request->getParam('periodicities')), 'periodicity');
-		$this->processField($old_options['spatials'], explode(',', $this->request->getParam('spatials')), 'spatial');
+		$old_options = $this->_loadValues();
+		$this->_processField($old_options['themes'], explode(',', $this->request->getParam('themes')), 'theme');
+		$this->_processField($old_options['periodicities'], explode(',', $this->request->getParam('periodicities')), 'periodicity');
+		$this->_processField($old_options['spatials'], explode(',', $this->request->getParam('spatials')), 'spatial');
 
 		$values = array(
 			'messages' => $this->messages->messages,
@@ -65,7 +65,7 @@ class Action_configure extends ActionAbstract {
 
 
 
-	private function processField($old_values, $new_values, $field) {
+	private function _processField($old_values, $new_values, $field) {
 
 		foreach ($new_values as $key => $value) {
 			$new_values[$key] = trim($value);
@@ -80,13 +80,13 @@ class Action_configure extends ActionAbstract {
 				echo "<li>Added: $added_value</li>";
 				switch ($field) {
 					case 'theme':
-						$this->executeDbOperation('XlyreThemes', 'add', $added_value);
+						$this->_executeDbOperation('XlyreThemes', 'add', $added_value);
 						break;
 					case 'periodicity':
-						$this->executeDbOperation('XlyrePeriodicities', 'add', $added_value);
+						$this->_executeDbOperation('XlyrePeriodicities', 'add', $added_value);
 						break;
 					case 'spatial':
-						$this->executeDbOperation('XlyreSpatials', 'add', $added_value);
+						$this->_executeDbOperation('XlyreSpatials', 'add', $added_value);
 						break;
 					default:
 						break;
@@ -98,13 +98,13 @@ class Action_configure extends ActionAbstract {
 				echo "<li>Deleted: $deleted_value</li>";
 				switch ($field) {
 					case 'theme':
-						$this->executeDbOperation('XlyreThemes', 'delete', $deleted_value);
+						$this->_executeDbOperation('XlyreThemes', 'delete', $deleted_value);
 						break;
 					case 'periodicity':
-						$this->executeDbOperation('XlyrePeriodicities', 'delete', $deleted_value);
+						$this->_executeDbOperation('XlyrePeriodicities', 'delete', $deleted_value);
 						break;
 					case 'spatial':
-						$this->executeDbOperation('XlyreSpatials', 'delete', $deleted_value);
+						$this->_executeDbOperation('XlyreSpatials', 'delete', $deleted_value);
 						break;
 					default:
 						break;
@@ -117,7 +117,7 @@ class Action_configure extends ActionAbstract {
 
 
 
-	private function executeDbOperation($class, $op, $value) {
+	private function _executeDbOperation($class, $op, $value) {
 
 		switch ($op) {
 			case 'add':
@@ -145,7 +145,7 @@ class Action_configure extends ActionAbstract {
 
 
 
-	private function loadValues() {
+	private function _loadValues() {
 
 		$options = array(
 			'themes' => array(),
@@ -153,16 +153,16 @@ class Action_configure extends ActionAbstract {
 			'spatials' => array(),
 		);
 		
-		$this->getValues(new XlyreThemes(), $options['themes']);
-		$this->getValues(new XlyrePeriodicities(), $options['periodicities']);
-		$this->getValues(new XlyreSpatials(), $options['spatials']);
+		$this->_getValues(new XlyreThemes(), $options['themes']);
+		$this->_getValues(new XlyrePeriodicities(), $options['periodicities']);
+		$this->_getValues(new XlyreSpatials(), $options['spatials']);
 
 		return $options;
 		
 	}
 
 
-	private function getValues($object, &$partial_options) {
+	private function _getValues($object, &$partial_options) {
 		$values = $object->find('Name', "1 ORDER BY Id", array(), MONO);
 		foreach ($values as $value) {
 			$partial_options[] = $value;

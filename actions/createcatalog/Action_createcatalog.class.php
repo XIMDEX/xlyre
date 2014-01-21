@@ -89,7 +89,7 @@ class Action_createcatalog extends Action_addsectionnode {
                         // Creating Licenses subfolder in links folder
                         $catalognode = new Node($id);
                         $projectnode = new Node($catalognode->getProject());
-                        $this->createLicenseLinksFolder($projectnode->getChildren(NodetypeService::LINK_MANAGER)[0]);
+                        $this->_createLicenseLinksFolder($projectnode->getChildren(NodetypeService::LINK_MANAGER)[0]);
 
 
                         $this->reloadNode($nodeID);
@@ -123,7 +123,7 @@ class Action_createcatalog extends Action_addsectionnode {
 	}
 
 
-    private function createLicenseLinksFolder($links_id) {
+    private function _createLicenseLinksFolder($links_id) {
 
         $nodeaux = new Node();
         $linkfolder = $nodeaux->find('IdNode', "idnodetype = %s AND Name = 'Licenses'", array(NodetypeService::LINK_FOLDER), MONO);
