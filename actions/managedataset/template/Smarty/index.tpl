@@ -115,15 +115,15 @@
 
                         <div class="creation_date">
                             <h3>{t}Creation date{/t}</h3>
-                            <p>09/01/2014</p>
+                            <p>{$issued}</p>
                         </div>
                         <div class="modification_date">
                             <h3>{t}Modification date{/t}</h3>
-                            <p>--/--/--</p>
+                            <p>{$modified}</p>
                         </div>
                         <div class="publicator">
-                            <h3>{t}Publicated by $user{/t}</h3>
-                            <p>Ximdex</p>
+                            <h3>{t}Publicated by{/t}</h3>
+                            <p>{$publisher}</p>
                         </div>
                         
                      

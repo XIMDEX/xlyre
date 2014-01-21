@@ -184,6 +184,14 @@ class Action_managedataset extends ActionAbstract {
             $values['license'] = $dsmeta->get("License");
             $values['spatial'] = $dsmeta->get("Spatial");
             $values['reference'] = $dsmeta->get("Reference");
+            $format = _('m-d-Y H:i:s');
+            $values['issued'] = date($format, $dsmeta->get("Issued"));
+            $values['modified'] = date($format, $dsmeta->get("Modified"));
+            $user = new User($dsmeta->get('Publisher'));
+            $values['publisher'] = $user->Get('Name');
+
+            print_r($dsmeta->getXml());
+
         }
         else {
             $values['name'] = "";
@@ -192,6 +200,10 @@ class Action_managedataset extends ActionAbstract {
             $values['license'] = "";
             $values['spatial'] = "";
             $values['reference'] = "";
+            $values['issued'] = "--/--/--";
+            $values['modified'] = "--/--/--";
+            $user = new User(XSession::get('userID'));
+            $values['publisher'] = $user->Get('Name');
         }
     }
 
