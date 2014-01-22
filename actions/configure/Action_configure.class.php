@@ -74,10 +74,8 @@ class Action_configure extends ActionAbstract {
 		$added_values = array_diff($new_values, $old_values);
 		$deleted_values = array_diff($old_values, $new_values);
 
-		echo "<strong>$field</strong><ul>";
 		foreach ($added_values as $added_value) {
 			if (!empty($added_value)) {
-				echo "<li>Added: $added_value</li>";
 				switch ($field) {
 					case 'theme':
 						$this->_executeDbOperation('XlyreThemes', 'add', $added_value);
@@ -95,7 +93,6 @@ class Action_configure extends ActionAbstract {
 		}
 		foreach ($deleted_values as $deleted_value) {
 			if (!empty($deleted_value)) {
-				echo "<li>Deleted: $deleted_value</li>";
 				switch ($field) {
 					case 'theme':
 						$this->_executeDbOperation('XlyreThemes', 'delete', $deleted_value);
@@ -111,7 +108,6 @@ class Action_configure extends ActionAbstract {
 				}
 			}
 		}
-		echo "</ul>";
 
 	}
 
@@ -132,8 +128,6 @@ class Action_configure extends ActionAbstract {
 					foreach ($results as $id) {
 						$obj->set('Id', $id);
 						$obj->delete();
-						// $objectToDelete = new $class($id);
-						// $objectToDelete->delete();
 					}
 				}
 				break;
