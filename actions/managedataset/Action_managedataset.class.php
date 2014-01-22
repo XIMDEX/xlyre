@@ -73,6 +73,8 @@ class Action_managedataset extends ActionAbstract {
 
 	function createdataset() {
 
+
+
         $parentID = $this->request->getParam('nodeid');
         $name = $this->request->getParam('name');
 
@@ -87,8 +89,12 @@ class Action_managedataset extends ActionAbstract {
             'PERIODICITY' => $this->request->getParam('periodicity'),
             'LICENSE' => $this->request->getParam('license'),
             'SPATIAL' => $this->request->getParam('spatial'),
-            'REFERENCE' => $this->request->getParam('reference')
+            'REFERENCE' => $this->request->getParam('reference'),
+            'LANGUAGES' => $this->request->getParam('languages')
             );
+        
+
+        var_dump($data['LANGUAGES']['10002']);
 
         $baseio = new XlyreBaseIO();
         $id = $baseio->build($data);
@@ -127,7 +133,8 @@ class Action_managedataset extends ActionAbstract {
             'PERIODICITY' => $this->request->getParam('periodicity'),
             'LICENSE' => $this->request->getParam('license'),
             'SPATIAL' => $this->request->getParam('spatial'),
-            'REFERENCE' => $this->request->getParam('reference')
+            'REFERENCE' => $this->request->getParam('reference'),
+            'LANGUAGES' => $this->request->getParam('languages')
             );
 
         $baseio = new XlyreBaseIO();
