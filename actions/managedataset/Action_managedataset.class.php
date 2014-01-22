@@ -28,6 +28,7 @@ ModulesManager::file('/inc/io/XlyreBaseIO.class.php','xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendataset.inc', 'xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendatasection.inc', 'xlyre');
 ModulesManager::file('/inc/io/XlyreBaseIOConstants.class.php', "xlyre");
+ModulesManager::file('/inc/model/XlyreDistribution.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyreThemes.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyrePeriodicities.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyreSpatials.php', 'xlyre');
@@ -196,8 +197,6 @@ class Action_managedataset extends ActionAbstract {
             $values['modified'] = date($format, $dsmeta->get("Modified"));
             $user = new User($dsmeta->get('Publisher'));
             $values['publisher'] = $user->Get('Name');
-
-            print_r($dsmeta->getXml());
 
         }
         else {

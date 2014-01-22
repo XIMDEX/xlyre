@@ -50,7 +50,7 @@ class XlyreDataset extends XlyreDataset_ORM {
      * Export dataset info to its XML format
      * @return string A string that contains XML file
      */
-    public function getXml() {
+    public function ToXml() {
         $xml = new DOMDocument();
         $xml->preserveWhiteSpace = false;
         $xml->validateOnParse = true;
