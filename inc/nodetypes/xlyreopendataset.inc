@@ -95,7 +95,7 @@ class XlyreOpenDataSet extends FolderNode{
 	 */
 	public function updateNode($idnode, $name, $theme, $periodicity, $license, $spatial, $reference) {
 		//Updating the Dataset
-		$dataset = new XlyreDataset(idnode);
+		$dataset = new XlyreDataset($idnode);
 
 		//Settings properties for the dataset.
 		$dataset->set("Identifier", $name);
