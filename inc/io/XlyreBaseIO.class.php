@@ -46,32 +46,24 @@ class XlyreBaseIO extends BaseIO{
 			$metaTypesArray = XlyreBaseIOConstants::$metaTypesArray;
 			$metaType = $metaTypesArray[$nodeTypeClass];
 		}
-
+		$instance = new Node();
 		switch ($metaType) {
 			case 'OPENDATASECTION':
-				$nodeType = new NodeType();
-				$nodeType->setId(XlyreOpenDataSection::IDNODETYPE);
-				$section = new Node();
-				$idNode = $section->CreateNode($data['NAME'], $data['PARENTID'],$nodeType->GetID(), NULL,array(false));
-				if (!($idNode > 0)) {
-					return ERROR_INCORRECT_DATA;
-				}
-				return $idNode;
+				$idNode = $instance->CreateNode($data['NAME'], $data['PARENTID'], XlyreOpenDataSection::IDNODETYPE, NULL, array(false));
 				break;
 			case 'OPENDATASET':
-				$nodeType = new NodeType();
-				$nodeType->setId(XlyreOpenDataSet::IDNODETYPE);
-				$dataset = new Node();
-				$idNode = $dataset->CreateNode($data['NAME'], $data['PARENTID'],$nodeType->GetID(), NULL,array(false), $data["THEME"], $data["PERIODICITY"], $data["LICENSE"], $data["SPATIAL"], $data["REFERENCE"]);
-				if (!($idNode > 0)) {
-					return ERROR_INCORRECT_DATA;
-				}
-				return $idNode;
+				$idNode = $instance->CreateNode($data['NAME'], $data['PARENTID'], XlyreOpenDataSet::IDNODETYPE, NULL, array(false), $data["THEME"], $data["PERIODICITY"], $data["LICENSE"], $data["SPATIAL"], $data["REFERENCE"]);
+				break;
+			case 'OPENDISTRIBUTION':
+				$idNode = $instance->CreateNode($data['NAME'], $data['PARENTID'], XlyreOpenDistribution::IDNODETYPE, NULL,array(false), $data["FILENAME"]);
 				break;
 			default:
-				# code...
 				break;
 		}
+		if (!($idNode > 0)) {
+			return ERROR_INCORRECT_DATA;
+		}
+		return $idNode;
 	}
 
 

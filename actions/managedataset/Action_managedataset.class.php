@@ -25,6 +25,7 @@
  */
 
 ModulesManager::file('/inc/io/XlyreBaseIO.class.php','xlyre');
+ModulesManager::file('/inc/nodetypes/xlyreopendistribution.inc', 'xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendataset.inc', 'xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendatasection.inc', 'xlyre');
 ModulesManager::file('/inc/io/XlyreBaseIOConstants.class.php', "xlyre");
@@ -74,16 +75,12 @@ class Action_managedataset extends ActionAbstract {
 
 	function createdataset() {
 
-
-
         $parentID = $this->request->getParam('nodeid');
         $name = $this->request->getParam('name');
 
         $nt = new NodeType(XlyreOpenDataSet::IDNODETYPE);
-        $ntName = $nt->get('Name');
-
         $data = array(
-            'NODETYPENAME' => $ntName,
+            'NODETYPENAME' => $nt->get('Name'),
             'NAME' => $name,
             'PARENTID' => $parentID,
             'THEME' => $this->request->getParam('theme'),
@@ -92,10 +89,7 @@ class Action_managedataset extends ActionAbstract {
             'SPATIAL' => $this->request->getParam('spatial'),
             'REFERENCE' => $this->request->getParam('reference'),
             'LANGUAGES' => $this->request->getParam('languages')
-            );
-        
-
-        var_dump($data['LANGUAGES']['10002']);
+        );
 
         $baseio = new XlyreBaseIO();
         $id = $baseio->build($data);
@@ -106,7 +100,30 @@ class Action_managedataset extends ActionAbstract {
         }
         else {
             $this->reloadNode($parentID);
-            $this->messages->add(sprintf(_('%s has been successfully created'), $name), MSG_TYPE_NOTICE);
+
+            // Add dummy distribution for testing
+            $nt = new NodeType(XlyreOpenDistribution::IDNODETYPE);
+            $data_dist = array(
+                'NODETYPENAME' => $nt->get('Name'),
+                'NAME' => "disttro",
+                'PARENTID' => $id,
+                'FILENAME' => 'data.csv',
+                'PERIODICITY' => $this->request->getParam('periodicity'),
+                'LICENSE' => $this->request->getParam('license'),
+                'SPATIAL' => $this->request->getParam('spatial'),
+                'REFERENCE' => $this->request->getParam('reference'),
+                'LANGUAGES' => $this->request->getParam('languages')
+            );
+            $baseio = new XlyreBaseIO();
+            $iddist = $baseio->build($data_dist);
+            if (!($iddist > 0)) {
+                $this->messages->mergeMessages($baseio->messages);
+                $this->messages->add(_('Operation could not be successfully completed'), MSG_TYPE_ERROR);
+            }
+            else {
+                $this->messages->add(sprintf(_('%s has been successfully created'), $name), MSG_TYPE_NOTICE);
+            }
+
         }
 
         $values = array(
@@ -124,10 +141,8 @@ class Action_managedataset extends ActionAbstract {
         $name = $this->request->getParam('name');
 
         $nt = new NodeType(XlyreOpenDataSet::IDNODETYPE);
-        $ntName = $nt->get('Name');
-
         $data = array(
-            'NODETYPENAME' => $ntName,
+            'NODETYPENAME' => $nt->get('Name'),
             'NAME' => $name,
             'IDNODE' => $nodeID,
             'THEME' => $this->request->getParam('theme'),
