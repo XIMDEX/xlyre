@@ -41,12 +41,14 @@ class Action_deletedataset extends ActionAbstract {
 			$idNode = $this->request->getParam('nodeid');
 		}
 		$node = new Node($idNode);
-
-		/*
-		 * TODO:
-		 * We need to get all dependencies (distributions)
-		 * and inform to the user that those dependencies will be removed 
-		*/
+		$distributions = $node->GetChildren();
+		$dstList = array();
+		if ($distributions) {
+			foreach ($distributions as $distribution) {
+				$tmpNode = new Node($distribution);
+				$dstList[] = array('id' => $distribution, "name" => $tmpNode->get("Name"));
+			}
+		}
 
 		// Add default core css for delete elements
 		$this->addCss('/actions/deletenode/resources/css/style.css');
@@ -55,6 +57,7 @@ class Action_deletedataset extends ActionAbstract {
 			'id_node' => $idNode,
 			'nameNode' => $node->get('Name'),
 			'formType' => $formType,
+			'dstList' => $dstList,
 			"go_method" => "delete_dataset",
 		);
 
@@ -69,11 +72,6 @@ class Action_deletedataset extends ActionAbstract {
 	function delete_dataset($dataset = -1) {
 
 		$idNode	= ($dataset != -1) ? $dataset : $this->request->getParam("nodeid");
-	 
-	    /*
-		 * TODO:
-		 * Delete all dependencies (distributions)
-		*/
 
 		// Deleting publication tasks
 		$sync = new SynchroFacade();
@@ -83,6 +81,13 @@ class Action_deletedataset extends ActionAbstract {
 		$parentID = $node->get('IdParent');
 
 		$node = new Node($idNode);
+		$distributions = $node->getChildren();
+		if ($datasets) {
+			foreach ($distributions as $distribution) {
+				$dist = new Node($distribution);
+				$dist->delete();
+			}
+		}
 		$result = $node->delete();
 
 		if ($dataset == -1) {
@@ -95,7 +100,7 @@ class Action_deletedataset extends ActionAbstract {
 			if (strlen($err)) {
 				$this->messages->add($err, MSG_TYPE_ERROR);
 			} else {
-				$this->messages->add(_("The dataset were successfully deleted"), MSG_TYPE_NOTICE);
+				$this->messages->add(_("The dataset and its distributions were successfully deleted"), MSG_TYPE_NOTICE);
 			}
 				
 			$this->reloadNode($parentID);

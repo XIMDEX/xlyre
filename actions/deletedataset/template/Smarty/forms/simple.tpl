@@ -39,6 +39,22 @@
 		<fieldset>
 			<input type="hidden" name="nodeid" value="{$id_node}">
 		</fieldset>
+		{if ($dstList)}
+            <h3 class="delete">{t}The following distributions will be deleted{/t}</h3>
+            <div class="deletenodes">
+                <ul>
+                    {foreach from=$dstList item=dst}
+                    <li class="box_short">{$dst.name|gettext} <span class="node_id">({$dst.id|gettext})</span></li>
+                    {foreachelse}
+                    <li><span>{t}No distributions were found{/t}</span></li>
+                    {/foreach}
+                </ul>
+            </div>
+        {else}
+            <div class="deletenodes">
+                <p>{t}This dataset has not any distributions{/t}.</p>
+            </div>
+        {/if}
 	</div>
 
 </form>

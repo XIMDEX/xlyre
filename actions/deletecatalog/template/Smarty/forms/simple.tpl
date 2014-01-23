@@ -40,7 +40,7 @@
 			<input type="hidden" name="nodeid" value="{$id_node}">
 		</fieldset>
 		{if ($dtsList)}
-            <h3 class="delete">{t}The following datasets will be deleted{/t}</h3>
+            <h3 class="delete">{t}The following datasets (and their dependencies) will be deleted{/t}</h3>
             <div class="deletenodes">
                 <ul>
                     {foreach from=$dtsList item=dts}

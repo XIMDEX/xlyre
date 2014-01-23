@@ -49,7 +49,6 @@ class Action_deletecatalog extends ActionAbstract {
 			foreach ($datasets as $dataset) {
 				$tmpNode = new Node($dataset);
 				$dtsList[] = array('id' => $dataset, "name" => $tmpNode->get("Name"));
-				unset($tmpNode);
 			}
 		}
 
@@ -92,11 +91,6 @@ class Action_deletecatalog extends ActionAbstract {
 				}
 			}
 		}
-	    
-	    /*
-		 * TODO:
-		 * Delete all dependencies (datasets and distributions)
-		*/
 
 		// Deleting publication tasks
 		$sync = new SynchroFacade();

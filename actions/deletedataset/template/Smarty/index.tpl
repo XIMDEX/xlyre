@@ -27,8 +27,4 @@
 	{include file="`$_APP_ROOT`/modules/xlyre/actions/deletedataset/template/Smarty/forms/simple.tpl"}
 {/if}
 
-{if ($formType == 'dependencies') }
-	{include file="`$_APP_ROOT`/modules/xlyre/actions/deletedatasete/template/Smarty/forms/dependencies.tpl"}
-{/if}
-
 
