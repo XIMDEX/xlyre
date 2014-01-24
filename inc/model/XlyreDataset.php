@@ -25,6 +25,9 @@
  */
 
 ModulesManager::file('/inc/model/orm/XlyreDataset_ORM.class.php', 'xlyre');
+ModulesManager::file('/inc/model/orm/XlyreThemes.class.php', 'xlyre');
+ModulesManager::file('/inc/model/orm/XlyrePeriodicities.class.php', 'xlyre');
+ModulesManager::file('/inc/model/orm/XlyreSpatials.class.php', 'xlyre');
 
 class XlyreDataset extends XlyreDataset_ORM {
     
@@ -41,5 +44,44 @@ class XlyreDataset extends XlyreDataset_ORM {
     	}
     	return $result;
     }
+
+
+    /**
+     * Export dataset info to its XML format
+     * @return string A string that contains XML file
+     */
+    public function ToXml() {
+        $xml = new DOMDocument();
+        $xml->preserveWhiteSpace = false;
+        $xml->validateOnParse = true;
+        $xml->formatOutput = true;
+        
+        $dataset = $xml->createElement('dataset');
+        $dataset_identifier = $xml->createElement('identifier', $this->Identifier);
+        $theme = new XlyreThemes($this->Theme);
+        $dataset_theme = $xml->createElement('theme', $theme->Get('Name'));
+        $periodicity = new XlyrePeriodicities($this->Periodicity);
+        $dataset_periodicity = $xml->createElement('periodicity', $periodicity->Get('Name'));
+        $spatial = new XlyreSpatials($this->Spatial);
+        $dataset_spatial = $xml->createElement('spatial', $spatial->Get('Name'));
+        $user = new User($this->Publisher);
+        $dataset_publisher = $xml->createElement('publisher', $user->Get('Name'));
+        $format = _('m-d-Y');
+        $dataset_issued = $xml->createElement('issued', date($format, $this->Issued));
+        $dataset_modified = $xml->createElement('modified', date($format, $this->Modified));
+        $dataset_reference = $xml->createElement('reference', $this->Reference);
+        
+        $dataset->appendChild($dataset_identifier);
+        $dataset->appendChild($dataset_theme);
+        $dataset->appendChild($dataset_periodicity);
+        $dataset->appendChild($dataset_spatial);
+        $dataset->appendChild($dataset_publisher);
+        $dataset->appendChild($dataset_issued);
+        $dataset->appendChild($dataset_modified);
+        $xml->appendChild($dataset);
+
+        return $xml->saveXML($xml->documentElement);
+    }
+
 }
 ?>

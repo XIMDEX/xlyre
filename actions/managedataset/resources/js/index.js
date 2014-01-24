@@ -30,9 +30,51 @@ X.actionLoaded(function(event, fn, params) {
         var fm = form.getFormMgr();
         var submit = fn('.validate').get(0);
 
+        var $languageSelect = fn('.js_language_selector');
+        var $formSections = fn('.js_form_sections');
+
+        var addLanguage = function(language) {
+        	var $option = fn('<option value='+language.id+'>'+language.label+'</option>');
+        	$languageSelect.append($option);
+        	var $formSection = $formSections.find('#language_selector_'+language.id);
+        	$formSection.find('input').prop('disabled', false);
+        	$formSection.find('textarea').prop('disabled', false);
+        }
+        var removeLanguage = function(language_id) {
+        	var $option = $languageSelect.find('option[value='+language_id+']');
+        	if ($option.prop('selected')) {
+        		$option.prop('selected', false);
+        		$languageSelect.change();
+        	}
+        	$option.remove();
+        	var $formSection = $formSections.find('#language_selector_'+language_id);
+        	$formSection.find('input').prop('disabled', true);
+        	$formSection.find('textarea').prop('disabled', true);
+        }
+
+        $formSections.find('.js_form_section').hide();
+
         fn('.checkbox-label').addClass('reduced_label');
         fn('.dataset_info .col2-3').removeClass('col2-3').removeClass('left').addClass('channel_selection');
         fn('.languages-available').removeClass('col1-3');
+        
+        fn('.languages-available input[type=checkbox]').change(function(){
+        	$language = fn(this);
+        	if ($language.prop('checked')) {
+	        	var id = $language.attr('id');
+	        	var label = $language.siblings('label').html();
+	        	addLanguage({id: id, label:label});
+        	} else {
+        		removeLanguage($language.attr('id'));
+        	}
+        });
 
+        $languageSelect.change(function(){
+        	var language_id = fn(this).attr('value');
+        	$formSections.find('.js_form_section').hide();
+        	if (language_id) {
+	        	$formSections.find('#language_selector_'+language_id).show();
+	        }
+        });
 });
 

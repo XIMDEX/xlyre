@@ -3,7 +3,8 @@
 -- New Nodetypes
 LOCK TABLES `NodeTypes` WRITE;
 INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4000, 'OpenDataSection', 'xlyreopendatasection', 'catalog_xlyre.png', 'Open Data Section', 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, "xlyre");
-INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4001, 'OpenDataDataset', 'xlyreopendataset', 'dataset_xlyre.png', 'Dataset', 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, "xlyre");
+INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4001, 'OpenDataDataset', 'xlyreopendataset', 'dataset_xlyre.png', 'Open Data Dataset', 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, "xlyre");
+INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4002, 'OpenDataDistribution', 'xlyreopendistribution', 'binary_file.png', 'Open Data Distribution', 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, "xlyre");
 INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4003, 'OpenDataConfig', 'root', 'modulesconfig.png', 'Xlyre Configuration', 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, NULL);
 -- INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4001, 'OpenDataDatasetSection', 'sectionnode', 'folder_xlyre.png', 'Dataset Section', 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, NULL);
 -- INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4002, 'OpenDataDataset', 'foldernode', 'folder_xlyre.png', 'Dataset', 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, NULL);
@@ -17,7 +18,7 @@ LOCK TABLES `Nodes` WRITE;
 INSERT INTO `Nodes` (`IdNode`, `IdParent`, `IdNodeType`, `Name`, `IdState`, `BlockTime`, `BlockUser`, `CreationDate`, `ModificationDate`, `Description`, `SharedWorkflow`, `Path`) VALUES (14, 2, 4003, 'Xlyre manager', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '/Ximdex/Control center');
 UNLOCK TABLES;
 
--- Roles for these actions
+-- Ximdex Path for Settings
 LOCK TABLES `FastTraverse` WRITE;
 INSERT INTO FastTraverse VALUES (1,14,2);
 INSERT INTO FastTraverse VALUES (2,14,1);
@@ -36,6 +37,7 @@ LOCK TABLES `NodeAllowedContents` WRITE;
 INSERT INTO `NodeAllowedContents` VALUES (NULL,5014,4000,0);
 insert into `NodeAllowedContents` VALUES (NULL,5015,4000,0);
 INSERT INTO `NodeAllowedContents` VALUES (NULL,4000,4001,0);
+INSERT INTO `NodeAllowedContents` VALUES (NULL,4001,4002,0);
 INSERT INTO `NodeAllowedContents` VALUES (NULL,5002,4003,1);
 -- INSERT INTO `NodeAllowedContents` VALUES (NULL,4001,4002,0);
 -- INSERT INTO `NodeAllowedContents` VALUES (NULL,4000,4003,0);
@@ -106,13 +108,13 @@ CREATE TABLE `XlyreDataset` (
   `IdDataset` int(11) unsigned NOT NULL COMMENT 'Ximdex NodeId',
   `IdCatalog` int(11) unsigned NOT NULL,
   `Identifier` varchar(100) NOT NULL,
-  `Theme` varchar(100) NOT NULL DEFAULT '',
+  `Theme` int(11) unsigned NOT NULL,
   `Issued` int(12) unsigned NOT NULL DEFAULT '0',
   `Modified` int(12) unsigned NOT NULL DEFAULT '0',
   `Publisher` int(12) unsigned NOT NULL DEFAULT '0' COMMENT 'Ximdex User',
-  `Periodicity` mediumint(6) unsigned NOT NULL DEFAULT '12' COMMENT 'Units in Month',
-  `License` varchar(100) NOT NULL DEFAULT '',
-  `Spatial` varchar(100) NOT NULL DEFAULT '',
+  `Periodicity` int(11) unsigned NOT NULL COMMENT 'Units in Month',
+  `License` int(11) unsigned NOT NULL,
+  `Spatial` int(11) unsigned NOT NULL,
   `Reference` varchar(255) NOT NULL DEFAULT '' COMMENT 'Reference webpage for more information about the dataset',
   PRIMARY KEY (`IdDataset`),
   UNIQUE KEY `Identifier` (`Identifier`),

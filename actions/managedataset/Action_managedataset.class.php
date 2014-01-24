@@ -25,9 +25,14 @@
  */
 
 ModulesManager::file('/inc/io/XlyreBaseIO.class.php','xlyre');
+ModulesManager::file('/inc/nodetypes/xlyreopendistribution.inc', 'xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendataset.inc', 'xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendatasection.inc', 'xlyre');
 ModulesManager::file('/inc/io/XlyreBaseIOConstants.class.php', "xlyre");
+ModulesManager::file('/inc/model/XlyreDistribution.php', 'xlyre');
+ModulesManager::file('/inc/model/XlyreThemes.php', 'xlyre');
+ModulesManager::file('/inc/model/XlyrePeriodicities.php', 'xlyre');
+ModulesManager::file('/inc/model/XlyreSpatials.php', 'xlyre');
 
 
 class Action_managedataset extends ActionAbstract {
@@ -74,18 +79,17 @@ class Action_managedataset extends ActionAbstract {
         $name = $this->request->getParam('name');
 
         $nt = new NodeType(XlyreOpenDataSet::IDNODETYPE);
-        $ntName = $nt->get('Name');
-
         $data = array(
-            'NODETYPENAME' => $ntName,
+            'NODETYPENAME' => $nt->get('Name'),
             'NAME' => $name,
             'PARENTID' => $parentID,
             'THEME' => $this->request->getParam('theme'),
             'PERIODICITY' => $this->request->getParam('periodicity'),
             'LICENSE' => $this->request->getParam('license'),
             'SPATIAL' => $this->request->getParam('spatial'),
-            'REFERENCE' => $this->request->getParam('reference')
-            );
+            'REFERENCE' => $this->request->getParam('reference'),
+            'LANGUAGES' => $this->request->getParam('languages')
+        );
 
         $baseio = new XlyreBaseIO();
         $id = $baseio->build($data);
@@ -96,7 +100,30 @@ class Action_managedataset extends ActionAbstract {
         }
         else {
             $this->reloadNode($parentID);
-            $this->messages->add(sprintf(_('%s has been successfully created'), $name), MSG_TYPE_NOTICE);
+
+            // Add dummy distribution for testing
+            $nt = new NodeType(XlyreOpenDistribution::IDNODETYPE);
+            $data_dist = array(
+                'NODETYPENAME' => $nt->get('Name'),
+                'NAME' => "disttro",
+                'PARENTID' => $id,
+                'FILENAME' => 'data.csv',
+                'PERIODICITY' => $this->request->getParam('periodicity'),
+                'LICENSE' => $this->request->getParam('license'),
+                'SPATIAL' => $this->request->getParam('spatial'),
+                'REFERENCE' => $this->request->getParam('reference'),
+                'LANGUAGES' => $this->request->getParam('languages')
+            );
+            $baseio = new XlyreBaseIO();
+            $iddist = $baseio->build($data_dist);
+            if (!($iddist > 0)) {
+                $this->messages->mergeMessages($baseio->messages);
+                $this->messages->add(_('Operation could not be successfully completed'), MSG_TYPE_ERROR);
+            }
+            else {
+                $this->messages->add(sprintf(_('%s has been successfully created'), $name), MSG_TYPE_NOTICE);
+            }
+
         }
 
         $values = array(
@@ -114,17 +141,16 @@ class Action_managedataset extends ActionAbstract {
         $name = $this->request->getParam('name');
 
         $nt = new NodeType(XlyreOpenDataSet::IDNODETYPE);
-        $ntName = $nt->get('Name');
-
         $data = array(
-            'NODETYPENAME' => $ntName,
+            'NODETYPENAME' => $nt->get('Name'),
             'NAME' => $name,
             'IDNODE' => $nodeID,
             'THEME' => $this->request->getParam('theme'),
             'PERIODICITY' => $this->request->getParam('periodicity'),
             'LICENSE' => $this->request->getParam('license'),
             'SPATIAL' => $this->request->getParam('spatial'),
-            'REFERENCE' => $this->request->getParam('reference')
+            'REFERENCE' => $this->request->getParam('reference'),
+            'LANGUAGES' => $this->request->getParam('languages')
             );
 
         $baseio = new XlyreBaseIO();
@@ -159,10 +185,19 @@ class Action_managedataset extends ActionAbstract {
     function loadValues(&$values, $idNode = 0) {
         
         #Default values for selectors
-        $values['themes'] = array('Undefined', '111-XXX', '222-YYY', '333-ZZZ');
-        $values['periodicities'] = array(0, 3, 6, 12);
-        $values['licenses'] = array('Undefined', 'Creative Commons', 'Open Data license');
-        $values['spatials'] = array('Undefined', 'Natial', 'Regional', 'Local');
+        $this->_getValues(new XlyreThemes(), $values['themes']);
+        $this->_getValues(new XlyrePeriodicities(), $values['periodicities']);
+        $this->_getValues(new XlyreSpatials(), $values['spatials']);
+
+        $node = new Node();
+        $linkfolder = $node->find('IdNode', "idnodetype = 5048 AND Name = 'Licenses'", array(), MONO);
+        if ($linkfolder) {
+            $links = $node->find('IdNode, Name', "idparent = %s", array($linkfolder[0]), MULTI);
+            foreach ($links as $key => $link) {
+                $values['licenses'][$key]['id'] = $link['IdNode'];
+                $values['licenses'][$key]['name'] = $link['Name'];
+            }
+        }
 
         if ($idNode > 0) {
             $dsmeta = new XlyreDataset($idNode);
@@ -172,6 +207,12 @@ class Action_managedataset extends ActionAbstract {
             $values['license'] = $dsmeta->get("License");
             $values['spatial'] = $dsmeta->get("Spatial");
             $values['reference'] = $dsmeta->get("Reference");
+            $format = _('m-d-Y H:i:s');
+            $values['issued'] = date($format, $dsmeta->get("Issued"));
+            $values['modified'] = date($format, $dsmeta->get("Modified"));
+            $user = new User($dsmeta->get('Publisher'));
+            $values['publisher'] = $user->Get('Name');
+
         }
         else {
             $values['name'] = "";
@@ -180,11 +221,26 @@ class Action_managedataset extends ActionAbstract {
             $values['license'] = "";
             $values['spatial'] = "";
             $values['reference'] = "";
+            $values['issued'] = "--/--/--";
+            $values['modified'] = "--/--/--";
+            $user = new User(XSession::get('userID'));
+            $values['publisher'] = $user->Get('Name');
         }
     }
 
 
-	function _getDescription($nodetype) {
+
+    private function _getValues($object, &$partial_options) {
+        $values = $object->find('Id, Name', "1 ORDER BY Id", array(), MULTI);
+        foreach ($values as $key => $value) {
+            $partial_options[$key]['id'] = $value['Id'];
+            $partial_options[$key]['name'] = $value['Name'];
+        }
+    }
+
+
+
+	private function _getDescription($nodetype) {
         switch($nodetype){
             case "4001": return "A dataset should be for a single data in several formats.";
         }
