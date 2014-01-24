@@ -19,8 +19,9 @@
  *
  *  If not, visit http://gnu.org/licenses/agpl-3.0.html.
  *
- *  @author Ximdex DevTeam <dev@ximdex.com>
- *  @version $Revision$
+ *  @author Ximdex DevTeam
+<dev@ximdex.com>
+	*  @version $Revision$
  */
 
 
@@ -190,3 +191,139 @@
 		
 	}
 }
+
+	/**************
+	// Distributions
+	***************/
+
+	.distributions{
+		clear: both;
+		.xim-uploader-selected{
+			display: inline-block;
+			margin-bottom: .5em;
+		}
+	}
+
+	.distribution_item{
+		color: $c_grey;
+	}
+
+	.translate_item{
+		margin-bottom: .5em;
+	}
+
+	.distribution_title{
+		position: relative;
+		&::before{
+			position: absolute;
+			right: 0;
+			top: 50%;
+			-webkit-transform: translateY(-50%);
+			-moz-transform: translateY(-50%);
+			-ms-transform: translateY(-50%);
+			-o-transform: translateY(-50%);
+			transform: translateY(-50%);
+			
+		}
+
+		input{
+		border: none;
+		color: darken(#c2d43b, 15%);
+		font-size: 1.2em;
+		font-family: $t_text;	
+		padding: 0;
+		}
+	}
+
+	.title_language{
+		padding-right: 1em;
+		float: right;
+		position: relative;
+		&::before{
+			position: absolute;
+			right: -.5em;
+			background: #c2d43b;
+			color: #fff;
+			-webkit-transform: rotate(90deg);
+			-moz-transform: rotate(90deg);
+			-ms-transform: rotate(90deg);
+			-o-transform: rotate(90deg);
+			transform: rotate(90deg);
+			
+		}
+	}
+
+	.distribution_actions{
+
+		.file{
+			position: relative;
+			font-size: 1.2em;
+			top: -1em;
+		}
+
+		span:not(.label_title):not(.file){
+			display: inline-block;
+			margin-left: 4.5em;
+
+		}
+
+		.label_title{
+			padding-left: 0;
+		}
+
+		.name_uploader{
+			position: relative;
+			padding-right: 3em;
+			&:hover{
+				color: #c2d43b;
+			}
+			&::before{
+				background:#c2d43b;
+				position: absolute;
+				right: 0;
+				width: 2rem;
+				height: 2rem;
+				content: "";
+				top: 50%;
+				-webkit-transform: translateY(-50%);
+				-moz-transform: translateY(-50%);
+				-ms-transform: translateY(-50%);
+				-o-transform: translateY(-50%);
+				transform: translateY(-50%);
+
+			}
+
+			&::after{
+				position: absolute;
+				right: 0;		
+				top: 50%;
+				-webkit-transform: translateY(-50%) rotate(-90deg);
+				-moz-transform: translateY(-50%) rotate(-90deg);
+				-ms-transform: translateY(-50%) rotate(-90deg);
+				-o-transform: translateY(-50%) rotate(-90deg);
+				transform: translateY(-50%) rotate(-90deg);		
+			}
+		}
+
+		.download_link{
+			width: 2rem;
+			height: 2rem;
+			-webkit-border-radius: 0;
+			-moz-border-radius: 0;
+			border-radius: 0;
+			background:#c2d43b;
+
+			&::before{
+				position: absolute;
+				-webkit-transform: rotate(90deg);
+				-moz-transform: rotate(90deg);
+				-ms-transform: rotate(90deg);
+				-o-transform: rotate(90deg);
+				transform: rotate(90deg);				
+			}
+		}		
+
+	}
+
+
+

@@ -36,7 +36,7 @@
                         <input type="text" name="name" id="name" maxlength="100" class="validable not_empty full-size" placeholder="{t}Name of your dataset{/t}" value="{$name}">
                         </div>
 
-                        <h3>Metadatos</h3>
+                        <h3>{t}Metadata{/t}</h3>
                         <div class="editable_data col1_2">
                             <p>
                                 <label for="" class="label_title">{t}Dataset title{/t}</label>
@@ -130,14 +130,44 @@
                     </div>
                        
                       
+                <div class="distributions">
+                        <h3>{t}Distributions{/t}</h3>
+                        <a href="#" class="xim-uploader-selected btn-labeled icon btn">{t}Add distribution{/t}</a>
 
-                        <div class="col1-3">  
+                        <div class="row-item distribution_item">
+                            <div class="translate_item">
+                                <span class="distribution_title icon editable"><input type="text" placeholder="Distribution title"  value="Distribution title"></span>
+                               <span class="title_language icon toggle">
+                                    language by default
+                               </span>
 
-                                {*<h3>{t}Data{/t}</h3>
-
-                                  <uploader />*}
-
-                                </div>
+                               {*aquí vienen el resto de inputs con el nombre de sus idiomas*}
+                            </div>
+                            <div class="distribution_actions">
+                                <span class="file">
+                                    <a href="#" class="name_uploader icon reload">File name</a>
+                                    <a href="" class="download_link icon btn-unlabel-rounded">{t}Download distribution{/t}</a>
+                                </span>
+                                <span class="format_file">
+                                    <span class="label_title">{t}Format{/t}</span>
+                                    .CSV
+                                </span>
+                                <span class="size_file">
+                                    <span class="label_title">{t}Size{/t}</span>
+                                    16.3k
+                                </span>
+                                <span class="creation_date">
+                                    <span class="label_title">{t}Creation date{/t}</span>
+                                    09/10/2014
+                                </span>
+                                <span class="modified_date">
+                                    <span class="label_title">{t}Modification date {/t}</span>
+                                    09/10/2014
+                                </span>
+                            </div>
+                        </div>
+                    
+                </div>
 
                 
                 </div>
