@@ -221,13 +221,12 @@ class Action_managedataset extends ActionAbstract {
             $values['publisher'] = $user->Get('Name');
             $xlrml = new XlyreRelMetaLangs();
             $languages_dataset = $xlrml->find('Title, Description, IdLanguage', "IdNode = %s", array($idNode), MULTI);
-            foreach ($languages_dataset as $key => $ld) {
-                $values['languages_dataset'][$key]['IdLanguage'] = $ld['IdLanguage'];
-                $values['languages_dataset'][$key]['title'] = $ld['Title'];
-                $values['languages_dataset'][$key]['description'] = $ld['Description'];
+            foreach ($languages_dataset as $ld) {
+                $values['languages_dataset'][$ld['IdLanguage']]['title'] = $ld['Title'];
+                $values['languages_dataset'][$ld['IdLanguage']]['description'] = $ld['Description'];
             }
             for($i=0; $i<sizeof($values['languages']); $i++) {
-                $values['languages'][$i]['Checked'] = $this->_compareLangSelected($values['languages'][$i]['IdLanguage'], $values['languages_dataset']) ? TRUE : FALSE;
+                $values['languages'][$i]['Checked'] = in_array($values['languages'][$i]['IdLanguage'], array_keys($values['languages_dataset'])) ? TRUE : FALSE;
             }
         }
         else {
@@ -246,20 +245,6 @@ class Action_managedataset extends ActionAbstract {
                 $values['languages'][$i]['Checked'] = FALSE;
             }
         }
-    }
-
-
-
-    private function _compareLangSelected($value, $array) {
-        $i = 0;
-        $found = false;
-        while (($i<sizeof($array)) && (!$found)) {
-            if ($value == $array[$i]['IdLanguage']) {
-                $found = true;
-            }
-            $i++;
-        }
-        return $found;
     }
 
 

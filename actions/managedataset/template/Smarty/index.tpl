@@ -44,12 +44,12 @@
                                 </select>
                             </div>
                             <div class="js_form_sections">
-                                {foreach from=$languages_dataset item=l}
+                                {foreach from=$languages item=l}
                                     <div class="js_form_section" id="language_selector_{$l.IdLanguage}" style="display:none;">
                                         <label for="languages_dataset[{$l.IdLanguage}][title]" class="label_title">{t}Dataset title{/t}</label>
-                                        <input name="languages_dataset[{$l.IdLanguage}][title]" type="text" class="full_size" value="{$l.title}">
+                                        <input name="languages_dataset[{$l.IdLanguage}][title]" type="text" class="full_size" value="{$languages_dataset[$l.IdLanguage].title}">
                                         <label for="languages_dataset[{$l.IdLanguage}][description]"  class="label_title">{t}Dataset description{/t}</label>
-                                        <textarea name="languages_dataset[{$l.IdLanguage}][description]" id="" cols="30" rows="9" class="full_size">{$l.description}</textarea>
+                                        <textarea name="languages_dataset[{$l.IdLanguage}][description]" id="" cols="30" rows="9" class="full_size">{$languages_dataset[$l.IdLanguage].description}</textarea>
                                     </div>
                                 {/foreach}
                             </div>
