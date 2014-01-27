@@ -168,6 +168,38 @@ class Action_managedataset extends ActionAbstract {
             $this->messages->add(_('Operation could not be successfully completed'), MSG_TYPE_ERROR);
         }
         else {
+            $xlrml = new XlyreRelMetaLangs();
+            $i18n_dataset_values = $xlrml->find('IdLanguage', "IdNode = %s", array($nodeID), MONO);
+            //Updating title and description based on languages
+            foreach ($this->request->getParam('languages_dataset') as $key => $value) {
+                if (in_array($key, $this->request->getParam('languages'))) {
+                    if (in_array($key, $i18n_dataset_values)) {
+                        #Update language
+                        $rel = $xlrml->find('IdRel', "IdNode = %s AND IdLanguage = %s", array($nodeID, $key), MONO);
+                        $xlrml_update = new XlyreRelMetaLangs($rel[0]);
+                        $xlrml_update->set('Title', $value['title']);
+                        $xlrml_update->set('Description', $value['description']);
+                        $xlrml_update->update();
+                        unset($i18n_dataset_values[array_search($key, $i18n_dataset_values)]);
+                    }
+                    else {
+                        #Add language
+                        $xlrml_add = new XlyreRelMetaLangs();
+                        $xlrml_add->set('IdNode', $nodeID);
+                        $xlrml_add->set('IdLanguage', $key);
+                        $xlrml_add->set('Title', $value['title']);
+                        $xlrml_add->set('Description', $value['description']);
+                        $xlrml_add->add();
+                    }
+                }
+            }
+            foreach ($i18n_dataset_values as $key => $value) {
+                #Delete language
+                $rel = $xlrml->find('IdRel', "IdNode = %s AND IdLanguage = %s", array($nodeID, $value), MONO);
+                $xlrml_delete = new XlyreRelMetaLangs($rel[0]);
+                $xlrml_delete->delete();
+            }
+
             $node = new Node($nodeID);
             $this->reloadNode($node->get("IdParent"));
             $this->messages->add(sprintf(_('%s has been successfully updated'), $name), MSG_TYPE_NOTICE);
