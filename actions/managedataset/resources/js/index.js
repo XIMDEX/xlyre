@@ -34,7 +34,7 @@ X.actionLoaded(function(event, fn, params) {
         var $formSections = fn('.js_form_sections');
 
         var addLanguage = function(language) {
-        	var $option = fn('<option value='+language.id+'>'+language.label+'</option>');
+                var $option = fn('<option value='+language.id+'>'+language.label+'</option>');
         	$languageSelect.append($option);
         	var $formSection = $formSections.find('#language_selector_'+language.id);
         	$formSection.find('input').prop('disabled', false);
@@ -42,23 +42,28 @@ X.actionLoaded(function(event, fn, params) {
         }
         var removeLanguage = function(language_id) {
         	var $option = $languageSelect.find('option[value='+language_id+']');
-        	if ($option.prop('selected')) {
-        		$option.prop('selected', false);
-        		$languageSelect.change();
-        	}
-        	$option.remove();
-        	var $formSection = $formSections.find('#language_selector_'+language_id);
-        	$formSection.find('input').prop('disabled', true);
-        	$formSection.find('textarea').prop('disabled', true);
+                if ($option.prop('selected')) {
+                        $option.prop('selected', false);
+                        $languageSelect.change();
+                }
+                $option.remove();
+                var $formSection = $formSections.find('#language_selector_'+language_id);
+                $formSection.find('input').prop('disabled', true);
+                $formSection.find('textarea').prop('disabled', true);
+
         }
 
         $formSections.find('.js_form_section').hide();
-
-        fn('.checkbox-label').addClass('reduced_label');
-        fn('.dataset_info .col2-3').removeClass('col2-3').removeClass('left').addClass('channel_selection');
-        fn('.languages-available').removeClass('col1-3');
         
+        fn('.languages-available input[type=checkbox]:checked').each(function(){
+                var $language = fn(this);
+                var id = $language.attr('id');
+                var label = $language.siblings('label').html();
+                addLanguage({id: id, label:label});
+        });
+
         fn('.languages-available input[type=checkbox]').change(function(){
+                
         	$language = fn(this);
         	if ($language.prop('checked')) {
 	        	var id = $language.attr('id');

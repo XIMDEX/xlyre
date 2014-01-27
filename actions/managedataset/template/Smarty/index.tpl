@@ -44,12 +44,12 @@
                                 </select>
                             </div>
                             <div class="js_form_sections">
-                                {foreach from=$languages item=l}
+                                {foreach from=$languages_dataset item=l}
                                     <div class="js_form_section" id="language_selector_{$l.IdLanguage}" style="display:none;">
-                                        <label for="languages[{$l.IdLanguage}]['title']" class="label_title">{t}Dataset title{/t}</label>
-                                        <input name="languages[{$l.IdLanguage}]['title']" type="text" class="full_size" value="{$l.title}">
-                                        <label for="languages[{$l.IdLanguage}]['description']"  class="label_title">{t}Dataset description{/t}</label>
-                                        <textarea name="languages[{$l.IdLanguage}]['description']" id="" cols="30" rows="9" class="full_size">{$l.description}</textarea>
+                                        <label for="languages_dataset[{$l.IdLanguage}][title]" class="label_title">{t}Dataset title{/t}</label>
+                                        <input name="languages_dataset[{$l.IdLanguage}][title]" type="text" class="full_size" value="{$l.title}">
+                                        <label for="languages_dataset[{$l.IdLanguage}][description]"  class="label_title">{t}Dataset description{/t}</label>
+                                        <textarea name="languages_dataset[{$l.IdLanguage}][description]" id="" cols="30" rows="9" class="full_size">{$l.description}</textarea>
                                     </div>
                                 {/foreach}
                             </div>
@@ -106,7 +106,36 @@
 
                     <div class="col1-3 right dataset_info">
                         <h4>{t}Dataset info{/t}</h4>
-                           {include file="`$_APP_ROOT`/actions/createxmlcontainer/template/Smarty/_ximdoc_languages.tpl"}                        
+                           <div class="channel_selection">
+                            <h3>{t}Channels{/t}</h3>
+                            {if count($channels) > 0}
+                                {foreach from=$channels item=channel}
+                                    <div class="channel-section">
+                                        <input name='channels[]' type='checkbox' value='{$channel.IdChannel}' class="hidden-focus" id="{$channel.IdChannel}"/>
+                                        <label  class="icon checkbox-label reduced_label"  for="{$channel.IdChannel}">{$channel.Description|gettext}</label>
+                                    </div>
+                                {/foreach}
+                                
+                            {else}
+                                <p>{t}There are no channels associated to this catalog{/t}</p>
+                            {/if}
+                        </div>
+                        <div class="languages-available"><h3>{t}Languages{/t}</h3>
+                            {if count($languages) > 0}
+                                {foreach from=$languages item=language}
+                                    <div class="languages-section">
+                                        {if $language.Checked == true}
+                                            <input name='languages[]' type='checkbox' value='{$language.IdLanguage}'  id='{$language.IdLanguage}' class="hidden-focus" checked />
+                                        {else}
+                                            <input name='languages[]' type='checkbox' value='{$language.IdLanguage}'  id='{$language.IdLanguage}' class="hidden-focus" />
+                                        {/if}
+                                        <label  for="{$language.IdLanguage}" class="icon checkbox-label reduced_label">{$language.Name|gettext}</label>
+                                    </div>
+                                {/foreach}
+                            {else}
+                                <p>{t}There are no languages associated to this catalog{/t}</p>
+                            {/if}
+                        </div>
 
                         <div class="reference_url">
                             <h3>

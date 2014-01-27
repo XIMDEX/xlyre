@@ -30,6 +30,7 @@ ModulesManager::file('/inc/nodetypes/xlyreopendataset.inc', 'xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendatasection.inc', 'xlyre');
 ModulesManager::file('/inc/io/XlyreBaseIOConstants.class.php', "xlyre");
 ModulesManager::file('/inc/model/XlyreDistribution.php', 'xlyre');
+ModulesManager::file('/inc/model/XlyreRelMetaLangs.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyreThemes.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyrePeriodicities.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyreSpatials.php', 'xlyre');
@@ -39,6 +40,16 @@ class Action_managedataset extends ActionAbstract {
 
 	function index(){
 		$this->loadResources();
+
+        // Getting channels
+        $channel = new Channel();
+        $channels = $channel->getChannelsForNode($idNode);
+        $values['channels'] = $channels;
+
+        // Getting languages
+        $language = new Language();
+        $languages = $language->getLanguagesForNode($idNode);
+        $values['languages'] = $languages;
 
         $idNode = $this->request->getParam("nodeid");
         $node = new Node($idNode);
@@ -56,18 +67,7 @@ class Action_managedataset extends ActionAbstract {
             $values['button'] = 'Update';
         }
         $idNode = $node->get('IdNode');
-
-        // Getting channels
-        $channel = new Channel();
-        $channels = $channel->getChannelsForNode($idNode);
-    
-        // Getting languages
-        $language = new Language();
-        $languages = $language->getLanguagesForNode($idNode);
-
         $values['id_node'] = $idNode;
-        $values['channels'] = $channels;
-        $values['languages'] = $languages;
         
         $this->render($values, null, 'default-3.0.tpl');
 	}
@@ -88,31 +88,37 @@ class Action_managedataset extends ActionAbstract {
             'LICENSE' => $this->request->getParam('license'),
             'SPATIAL' => $this->request->getParam('spatial'),
             'REFERENCE' => $this->request->getParam('reference'),
-            'LANGUAGES' => $this->request->getParam('languages')
+            'LANGUAGES' => $this->request->getParam('languages_dataset')
         );
 
         $baseio = new XlyreBaseIO();
-        $id = $baseio->build($data);
+        $iddataset = $baseio->build($data);
 
-		if (!($id > 0)) {
+		if (!($iddataset > 0)) {
             $this->messages->mergeMessages($baseio->messages);
             $this->messages->add(_('Operation could not be successfully completed'), MSG_TYPE_ERROR);
         }
         else {
-            $this->reloadNode($parentID);
+            //Adding title and description based on languages
+            foreach ($this->request->getParam('languages_dataset') as $key => $value) {
+                if (in_array($key, $this->request->getParam('languages'))) {
+                    $xlrml = new XlyreRelMetaLangs();
+                    $xlrml->set('IdNode', $iddataset);
+                    $xlrml->set('IdLanguage', $key);
+                    $xlrml->set('Title', $value['title']);
+                    $xlrml->set('Description', $value['description']);
+                    $xlrml->add();
+                }
+            }
 
             // Add dummy distribution for testing
             $nt = new NodeType(XlyreOpenDistribution::IDNODETYPE);
             $data_dist = array(
                 'NODETYPENAME' => $nt->get('Name'),
                 'NAME' => "disttro",
-                'PARENTID' => $id,
-                'FILENAME' => 'data.csv',
-                'PERIODICITY' => $this->request->getParam('periodicity'),
-                'LICENSE' => $this->request->getParam('license'),
-                'SPATIAL' => $this->request->getParam('spatial'),
-                'REFERENCE' => $this->request->getParam('reference'),
-                'LANGUAGES' => $this->request->getParam('languages')
+                'PARENTID' => $iddataset,
+                'FILENAME' => 'data.csv'
+
             );
             $baseio = new XlyreBaseIO();
             $iddist = $baseio->build($data_dist);
@@ -123,11 +129,12 @@ class Action_managedataset extends ActionAbstract {
             else {
                 $this->messages->add(sprintf(_('%s has been successfully created'), $name), MSG_TYPE_NOTICE);
             }
+            $this->reloadNode($parentID);
 
         }
 
         $values = array(
-                'action_with_no_return' => $id > 0,
+                'action_with_no_return' => $iddataset > 0,
                 'messages' => $this->messages->messages
         );
 
@@ -212,7 +219,16 @@ class Action_managedataset extends ActionAbstract {
             $values['modified'] = date($format, $dsmeta->get("Modified"));
             $user = new User($dsmeta->get('Publisher'));
             $values['publisher'] = $user->Get('Name');
-
+            $xlrml = new XlyreRelMetaLangs();
+            $languages_dataset = $xlrml->find('Title, Description, IdLanguage', "IdNode = %s", array($idNode), MULTI);
+            foreach ($languages_dataset as $key => $ld) {
+                $values['languages_dataset'][$key]['IdLanguage'] = $ld['IdLanguage'];
+                $values['languages_dataset'][$key]['title'] = $ld['Title'];
+                $values['languages_dataset'][$key]['description'] = $ld['Description'];
+            }
+            for($i=0; $i<sizeof($values['languages']); $i++) {
+                $values['languages'][$i]['Checked'] = $this->_compareLangSelected($values['languages'][$i]['IdLanguage'], $values['languages_dataset']) ? TRUE : FALSE;
+            }
         }
         else {
             $values['name'] = "";
@@ -225,7 +241,25 @@ class Action_managedataset extends ActionAbstract {
             $values['modified'] = "--/--/--";
             $user = new User(XSession::get('userID'));
             $values['publisher'] = $user->Get('Name');
+            $values['languages_dataset'] = array();
+            for($i=0; $i<sizeof($values['languages']); $i++) {
+                $values['languages'][$i]['Checked'] = FALSE;
+            }
         }
+    }
+
+
+
+    private function _compareLangSelected($value, $array) {
+        $i = 0;
+        $found = false;
+        while (($i<sizeof($array)) && (!$found)) {
+            if ($value == $array[$i]['IdLanguage']) {
+                $found = true;
+            }
+            $i++;
+        }
+        return $found;
     }
 
 
