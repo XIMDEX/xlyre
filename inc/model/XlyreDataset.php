@@ -78,6 +78,7 @@ class XlyreDataset extends XlyreDataset_ORM {
         $dataset->appendChild($dataset_publisher);
         $dataset->appendChild($dataset_issued);
         $dataset->appendChild($dataset_modified);
+        $dataset->appendChild($dataset_reference);
         $xml->appendChild($dataset);
 
         return $xml->saveXML($xml->documentElement);
