@@ -101,13 +101,15 @@ class Action_managedataset extends ActionAbstract {
         else {
             //Adding title and description based on languages
             foreach ($this->request->getParam('languages_dataset') as $key => $value) {
-                if (in_array($key, $this->request->getParam('languages'))) {
-                    $xlrml = new XlyreRelMetaLangs();
-                    $xlrml->set('IdNode', $iddataset);
-                    $xlrml->set('IdLanguage', $key);
-                    $xlrml->set('Title', $value['title']);
-                    $xlrml->set('Description', $value['description']);
-                    $xlrml->add();
+                if (!is_null($this->request->getParam('languages'))) {
+                    if (in_array($key, $this->request->getParam('languages'))) {
+                        $xlrml = new XlyreRelMetaLangs();
+                        $xlrml->set('IdNode', $iddataset);
+                        $xlrml->set('IdLanguage', $key);
+                        $xlrml->set('Title', $value['title']);
+                        $xlrml->set('Description', $value['description']);
+                        $xlrml->add();
+                    }
                 }
             }
 
@@ -115,7 +117,7 @@ class Action_managedataset extends ActionAbstract {
             $nt = new NodeType(XlyreOpenDistribution::IDNODETYPE);
             $data_dist = array(
                 'NODETYPENAME' => $nt->get('Name'),
-                'NAME' => "disttro",
+                'NAME' => $this->_generateRandomString(),
                 'PARENTID' => $iddataset,
                 'FILENAME' => 'data.csv'
 
@@ -295,6 +297,17 @@ class Action_managedataset extends ActionAbstract {
         switch($nodetype){
             case "4001": return "A dataset should be for a single data in several formats.";
         }
+    }
+
+
+
+    private function _generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        return $randomString;
     }
 
 
