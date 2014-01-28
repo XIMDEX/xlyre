@@ -73,7 +73,8 @@ class XlyreOpenDistribution extends Root {
         $distribution->set("Modified", time());
         $filenameparts = explode('.', $filename);
         $distribution->set("MediaType", $filenameparts[sizeof($filenameparts)-1]);
-        $distribution->set("ByteSize", filesize($filename));
+        $bs = file_exists($filename) ? filesize($filename) : 0;
+        $distribution->set("ByteSize", $bs);
 
         return $distribution->add();
     }
