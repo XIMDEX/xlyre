@@ -70,7 +70,15 @@ class XlyreDataset extends XlyreDataset_ORM {
         $dataset_issued = $xml->createElement('issued', date($format, $this->Issued));
         $dataset_modified = $xml->createElement('modified', date($format, $this->Modified));
         $dataset_reference = $xml->createElement('reference', $this->Reference);
-        
+        $node = new Node($this->IdDataset);
+        $distributions = $node->GetChildren();
+        $str_distributions = '';
+        foreach ($distributions as $value) {
+            $dist = new XlyreDistribution($value);
+            $str_distributions .= $dist->ToXml();
+        }
+        $dataset_distributions = $xml->createElement('distributions', $str_distributions);
+
         $dataset->appendChild($dataset_identifier);
         $dataset->appendChild($dataset_theme);
         $dataset->appendChild($dataset_periodicity);
@@ -79,6 +87,7 @@ class XlyreDataset extends XlyreDataset_ORM {
         $dataset->appendChild($dataset_issued);
         $dataset->appendChild($dataset_modified);
         $dataset->appendChild($dataset_reference);
+        $dataset->appendChild($dataset_distributions);
         $xml->appendChild($dataset);
 
         return $xml->saveXML($xml->documentElement);
