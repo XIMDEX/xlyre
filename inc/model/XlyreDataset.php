@@ -25,9 +25,11 @@
  */
 
 ModulesManager::file('/inc/model/orm/XlyreDataset_ORM.class.php', 'xlyre');
-ModulesManager::file('/inc/model/orm/XlyreThemes.class.php', 'xlyre');
-ModulesManager::file('/inc/model/orm/XlyrePeriodicities.class.php', 'xlyre');
-ModulesManager::file('/inc/model/orm/XlyreSpatials.class.php', 'xlyre');
+ModulesManager::file('/inc/model/XlyreDistribution.php', 'xlyre');
+ModulesManager::file('/inc/model/XlyreThemes.php', 'xlyre');
+ModulesManager::file('/inc/model/XlyrePeriodicities.php', 'xlyre');
+ModulesManager::file('/inc/model/XlyreSpatials.php', 'xlyre');
+ModulesManager::file('/inc/model/XlyreRelMetaLangs.php', 'xlyre');
 
 class XlyreDataset extends XlyreDataset_ORM {
     
@@ -48,49 +50,66 @@ class XlyreDataset extends XlyreDataset_ORM {
 
     /**
      * Export dataset info to its XML format
+     * @param boolean $exportdomdoc A boolean value that indicates if the result is string or XML string
      * @return string A string that contains XML file
      */
-    public function ToXml() {
-        $xml = new DOMDocument();
-        $xml->preserveWhiteSpace = false;
-        $xml->validateOnParse = true;
-        $xml->formatOutput = true;
-        
-        $dataset = $xml->createElement('dataset');
-        $dataset_identifier = $xml->createElement('identifier', $this->Identifier);
-        $theme = new XlyreThemes($this->Theme);
-        $dataset_theme = $xml->createElement('theme', $theme->Get('Name'));
-        $periodicity = new XlyrePeriodicities($this->Periodicity);
-        $dataset_periodicity = $xml->createElement('periodicity', $periodicity->Get('Name'));
-        $spatial = new XlyreSpatials($this->Spatial);
-        $dataset_spatial = $xml->createElement('spatial', $spatial->Get('Name'));
-        $user = new User($this->Publisher);
-        $dataset_publisher = $xml->createElement('publisher', $user->Get('Name'));
+    public function ToXml($exportdomdoc = false) {
         $format = _('m-d-Y');
-        $dataset_issued = $xml->createElement('issued', date($format, $this->Issued));
-        $dataset_modified = $xml->createElement('modified', date($format, $this->Modified));
-        $dataset_reference = $xml->createElement('reference', $this->Reference);
+        $stringxml = "<dataset>";
+        $stringxml .= "<identifier>$this->Identifier</identifier>";
+
+        $theme = new XlyreThemes($this->Theme);
+        $theme_name = $theme->Get('Name');
+        $stringxml .= "<theme>$theme_name</theme>";
+        $periodicity = new XlyrePeriodicities($this->Periodicity);
+        $periodicity_name = $periodicity->Get('Name');
+        $stringxml .= "<periodicity>$periodicity_name</periodicity>";
+        $spatial = new XlyreSpatials($this->Spatial);
+        $spatial_name = $spatial->Get('Name');
+        $stringxml .= "<spatial>$spatial_name</spatial>";
+        $user = new User($this->Publisher);
+        $user_name = $user->Get('Name');
+        $stringxml .= "<publisher>$user_name</publisher>";
+        $issued_date = date($format, $this->Issued);
+        $stringxml .= "<issued>$issued_date</issued>";
+        $modified_date = date($format, $this->Modified);
+        $stringxml .= "<modified>$modified_date</modified>";
+        $stringxml .= "<reference>$this->Reference</reference>";
+
+        $stringxml .= "<languages>";
+        $xlrml = new XlyreRelMetaLangs();
+        $languages_dataset = $xlrml->find('Title, Description, IdLanguage', "IdNode = %s", array($this->IdDataset), MULTI);
+        foreach ($languages_dataset as $ld) {
+            $lang = new Language($ld['IdLanguage']);
+            $lang_iso = $lang->Get('IsoName');
+            $title = $ld['Title'];
+            $description = $ld['Description'];
+            $stringxml .= "<language>";
+            $stringxml .= "<id>$lang_iso</id>";
+            $stringxml .= "<title>$title</title>";
+            $stringxml .= "<description>$description</description>";
+            $stringxml .= "</language>";
+        }
+        $stringxml .= "</languages>";
+
+        $stringxml .= "<distributions>";
         $node = new Node($this->IdDataset);
         $distributions = $node->GetChildren();
-        $str_distributions = '';
         foreach ($distributions as $value) {
             $dist = new XlyreDistribution($value);
-            $str_distributions .= $dist->ToXml();
+            $stringxml .= $dist->ToXml();
         }
-        $dataset_distributions = $xml->createElement('distributions', $str_distributions);
+        $stringxml .= "</distributions>";
+        $stringxml .= "</dataset>";
 
-        $dataset->appendChild($dataset_identifier);
-        $dataset->appendChild($dataset_theme);
-        $dataset->appendChild($dataset_periodicity);
-        $dataset->appendChild($dataset_spatial);
-        $dataset->appendChild($dataset_publisher);
-        $dataset->appendChild($dataset_issued);
-        $dataset->appendChild($dataset_modified);
-        $dataset->appendChild($dataset_reference);
-        $dataset->appendChild($dataset_distributions);
-        $xml->appendChild($dataset);
-
-        return $xml->saveXML($xml->documentElement);
+        if ($exportdomdoc) {
+            $doc = new DOMDocument();
+            $doc->loadXML($stringxml);
+            return $doc->saveXML();
+        }
+        else {
+            return $stringxml;
+        }
     }
 
 }

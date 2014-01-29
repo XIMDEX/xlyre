@@ -29,21 +29,50 @@ ModulesManager::file('/inc/model/XlyreDataset.php', 'xlyre');
 
 class XlyreCatalog extends XlyreCatalog_ORM {
     
-    // Add methods here
-    
     /**
      * Get all datasets for current Catalog
      * @return array Array with dataset object for every dataset in the current Catalog.
      */
     public function getDatasets(){
-
     	$result = array();
     	if ($this->get("IdCatalog")){
     		$dataset = new XlyreDataset();
     		return $dataset->getByCatalog($this->get("IdCatalog"));    		
     	}
-
     	return $result;
+    }
+
+
+    /**
+     * Export catalog info to its XML format
+     * @param boolean $exportdomdoc A boolean value that indicates if the result is string or XML string
+     * @return string A string that contains XML file
+     */
+    public function ToXml($exportdomdoc = false) {
+        $format = _('m-d-Y');
+        $stringxml = "<catalog>";
+        $stringxml .= "<identifier>$this->Identifier</identifier>";
+        $issued_date = date($format, $this->Issued);
+        $stringxml .= "<issued>$issued_date</issued>";
+        $modified_date = date($format, $this->Modified);
+        $stringxml .= "<modified>$modified_date</modified>";
+        $stringxml .= "<datasets>";
+        $node = new Node($this->IdCatalog);
+        $datasets = $node->GetChildren();
+        foreach ($datasets as $value) {
+            $dataset = new XlyreDataset($value);
+            $stringxml .= $dataset->ToXml();
+        }
+        $stringxml .= "</datasets>";
+        $stringxml .= "</catalog>";
+        if ($exportdomdoc) {
+            $doc = new DOMDocument();
+            $doc->loadXML($stringxml);
+            return $doc->saveXML();
+        }
+        else {
+            return $stringxml;
+        }
     }
     
 }

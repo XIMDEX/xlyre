@@ -25,37 +25,48 @@
  */
 
 ModulesManager::file('/inc/model/orm/XlyreDistribution_ORM.class.php', 'xlyre');
+ModulesManager::file('/inc/model/XlyreRelMetaLangs.php', 'xlyre');
 
 class XlyreDistribution extends XlyreDistribution_ORM {
-    
+
     /**
      * Export distribution info to its XML format
+     * @param boolean $exportdomdoc A boolean value that indicates if the result is string or XML string
      * @return string A string that contains XML file
      */
-    public function ToXml() {
-        $xml = new DOMDocument();
-        $xml->preserveWhiteSpace = false;
-        $xml->validateOnParse = true;
-        $xml->formatOutput = true;
-        
-        $distribution = $xml->createElement('distribution');
-        $distribution_identifier = $xml->createElement('identifier', $this->Identifier);
-        $distribution_filename = $xml->createElement('filename', $this->Filename);
+    public function ToXml($exportdomdoc = false) {
         $format = _('m-d-Y');
-        $distribution_issued = $xml->createElement('issued', date($format, $this->Issued));
-        $distribution_modified = $xml->createElement('modified', date($format, $this->Modified));
-        $distribution_mediatype = $xml->createElement('mediatype', $this->MediaType);
-        $distribution_bytesize = $xml->createElement('bytesize', $this->ByteSize);
-        
-        $distribution->appendChild($distribution_identifier);
-        $distribution->appendChild($distribution_filename);
-        $distribution->appendChild($distribution_issued);
-        $distribution->appendChild($distribution_modified);
-        $distribution->appendChild($distribution_mediatype);
-        $distribution->appendChild($distribution_bytesize);
-        $xml->appendChild($distribution);
-
-        return $xml->saveXML($xml->documentElement);
+        $stringxml = "<distribution>";
+        $stringxml .= "<identifier>$this->Identifier</identifier>";
+        $stringxml .= "<filename>$this->Filename</filename>";
+        $issued_date = date($format, $this->Issued);
+        $stringxml .= "<issued>$issued_date</issued>";
+        $modified_date = date($format, $this->Modified);
+        $stringxml .= "<modified>$modified_date</modified>";
+        $stringxml .= "<mediatype>$this->MediaType</mediatype>";
+        $stringxml .= "<bytesize>$this->ByteSize</bytesize>";
+        $stringxml .= "<languages>";
+        $xlrml = new XlyreRelMetaLangs();
+        $languages_distribution = $xlrml->find('Title, Description, IdLanguage', "IdNode = %s", array($this->IdDistribution), MULTI);
+        foreach ($languages_distribution as $ld) {
+            $lang = new Language($ld['IdLanguage']);
+            $lang_iso = $lang->Get('IsoName');
+            $title = $ld['Title'];
+            $stringxml .= "<language>";
+            $stringxml .= "<id>$lang_iso</id>";
+            $stringxml .= "<title>$title</title>";
+            $stringxml .= "</language>";
+        }
+        $stringxml .= "</languages>";
+        $stringxml .= "</distribution>";
+        if ($exportdomdoc) {
+            $doc = new DOMDocument();
+            $doc->loadXML($stringxml);
+            return $doc->saveXML();
+        }
+        else {
+            return $stringxml;
+        }
     }
     
 }

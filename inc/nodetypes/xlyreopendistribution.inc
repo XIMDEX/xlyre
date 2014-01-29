@@ -24,10 +24,11 @@
  *  @version $Revision$
  */
 
+ModulesManager::file('/inc/nodetypes/filenode.inc');
 ModulesManager::file('/inc/model/XlyreDistribution.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyreRelMetaLangs.php', 'xlyre');
 
-class XlyreOpenDistribution extends Root {
+class XlyreOpenDistribution extends FileNode {
 
     const IDNODETYPE = 4002;
 
@@ -75,6 +76,7 @@ class XlyreOpenDistribution extends Root {
         $distribution->set("MediaType", $filenameparts[sizeof($filenameparts)-1]);
         $bs = file_exists($filename) ? filesize($filename) : 0;
         $distribution->set("ByteSize", $bs);
+        // $this->setContent(file_get_contents($filename)):
 
         return $distribution->add();
     }
