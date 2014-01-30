@@ -201,7 +201,7 @@
         <div class="row-item distribution_item new_distribution_item" 
             ng-show="newDistribution"
             ng-controller="XUploader"
-            file-upload="fileUploadOptions">
+            file-upload="fileUploaderOptions">
             <div class="translated_items expanded">
                 <ul>
                     {foreach from=$languages item=l}
@@ -214,12 +214,17 @@
                 </ul>
             </div>
             <button type="button" class="upload-button">
-                <span>Upload file</span>
+                <span>Add file</span>
                 <input name="files[]" type="file" multi="false" class="xim-uploader"/>
             </button>
             <button type="button" class="save-button" 
-                ng-click="newDistribution = null">
-                Save
+                ng-click="uploadDistribution(newDistribution, queue[0])"
+                ng-disabled="queue[0].length < 1"
+                x-button
+                x-label="buttonLabel"
+                x-state="uploadState"
+                x-progress= "queue[0].$progress()">
+                Save Distribution
             </button>
         </div>
 
