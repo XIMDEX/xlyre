@@ -68,18 +68,39 @@ class Action_publish extends ActionAbstract {
 
 	function publish_catalog() {
 		$catalog = new XlyreCatalog($this->request->getParam("nodeid"));
-		$this->messages->add(htmlentities($catalog->ToXml(true)), MSG_TYPE_NOTICE);
+
+		$data = new DataFactory($this->request->getParam("nodeid"));
+		$retid = $data->SetContent($catalog->ToXml());
+		if ($retid > 0) {
+			#The version was created sucessfully
+			$this->messages->add(htmlentities($catalog->ToXml(true)), MSG_TYPE_NOTICE);
+		}
+		else {
+			$this->messages->add(_('There was an error while creating a data version for this catalog'), MSG_TYPE_ERROR);
+		}
+
 		$values = array(
-        	'action_with_no_return' => 1,
-            'messages' => $this->messages->messages
-        );
+        		'action_with_no_return' => 1,
+            	'messages' => $this->messages->messages
+        	);
+
         $this->render($values, NULL, 'messages.tpl');
 	}
 
 
 	function publish_dataset() {
 		$dataset = new XlyreDataset($this->request->getParam("nodeid"));
-		$this->messages->add(htmlentities($dataset->ToXml(true)), MSG_TYPE_NOTICE);
+
+		$data = new DataFactory($this->request->getParam("nodeid"));
+		$retid = $data->SetContent($dataset->ToXml());
+		if ($retid > 0) {
+			#The version was created sucessfully
+			$this->messages->add(htmlentities($dataset->ToXml()), MSG_TYPE_NOTICE);
+		}
+		else {
+			$this->messages->add(_('There was an error while creating a data version for this dataset'), MSG_TYPE_ERROR);
+		}
+
 		$values = array(
         	'action_with_no_return' => 1,
             'messages' => $this->messages->messages

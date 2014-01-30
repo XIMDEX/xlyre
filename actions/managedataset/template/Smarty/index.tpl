@@ -171,13 +171,15 @@
                 ng-init="dataset.reference='{$reference}'">
             </div>
 
-            <div class="creation_date">
+            <div class="creation_date"
+                ng-init="dataset.issued = '{$issued}'">
                 <h3>{t}Creation date{/t}</h3>
-                <p>{$issued}</p>
+                <p>[[dataset.issued]]</p>
             </div>
-            <div class="modification_date">
+            <div class="modification_date"
+                ng-init="dataset.modified = '{$modified}'">
                 <h3>{t}Modification date{/t}</h3>
-                <p>{$modified}</p>
+                <p>[[dataset.modified]]</p>
             </div>
             <div class="publicator">
                 <h3>{t}Publicated by{/t}</h3>
