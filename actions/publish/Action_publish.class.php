@@ -30,40 +30,61 @@ ModulesManager::file('/inc/nodetypes/xlyreopendatasection.inc', 'xlyre');
 ModulesManager::file('/inc/io/XlyreBaseIOConstants.class.php', "xlyre");
 ModulesManager::file('/inc/model/XlyreCatalog.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyreDataset.php', 'xlyre');
+ModulesManager::file('/actions/workflow_forward/Action_workflow_forward.class.php');
 
 
-class Action_publish extends ActionAbstract {
+class Action_publish extends Action_workflow_forward {
 
-	function index () {
+	 function index () {
 
-		$idNode = $this->request->getParam("nodeid");
+        parent::index();
+
+	// 	$idNode = $this->request->getParam("nodeid");
+ //        $node = new Node($idNode);
+ //        $values['nameNode'] = $node->get('Name');
+ //        $nt = $node->GetNodeType();
+ //        if ($nt == XlyreOpenDataSection::IDNODETYPE) {
+ //            $values['go_method'] = 'publish_catalog';
+ //            $values['title'] = 'Publish Catalog';
+ //        }
+ //        elseif ($nt == XlyreOpenDataset::IDNODETYPE) {
+ //            $values['go_method'] = 'publish_dataset';
+ //            $values['title'] = 'Publish Dataset';
+ //        }
+ //        $childrens = $node->GetChildren();
+	// 	$list = array();
+	// 	if ($childrens) {
+	// 		foreach ($childrens as $children) {
+	// 			$tmpNode = new Node($children);
+	// 			$list[] = array('id' => $children, "name" => $tmpNode->get("Name"));
+	// 		}
+	// 	}
+ //        $values['id_node'] = $idNode;
+ //        $values['list'] = $list;
+
+	// 	// Add default core css for delete elements
+	// 	$this->addCss('/actions/deletenode/resources/css/style.css');
+
+	// 	$this->render($values, null, 'default-3.0.tpl');
+	 }
+
+    protected function sendToPublish($idNode, $up, $down, $markEnd, $republish, $structure, $deepLevel, $sendNotifications, $notificableUsers, $idState, $texttosend){
         $node = new Node($idNode);
-        $values['nameNode'] = $node->get('Name');
         $nt = $node->GetNodeType();
+        $data = new DataFactory($idNode);
         if ($nt == XlyreOpenDataSection::IDNODETYPE) {
-            $values['go_method'] = 'publish_catalog';
-            $values['title'] = 'Publish Catalog';
+            $catalog = new XlyreCatalog($idNode);
+            $retid = $data->SetContent($catalog->ToXml());
         }
         elseif ($nt == XlyreOpenDataset::IDNODETYPE) {
-            $values['go_method'] = 'publish_dataset';
-            $values['title'] = 'Publish Dataset';
+            $dataset = new XlyreDataset($idNode);
+            $retid = $data->SetContent($catalog->ToXml());
         }
-        $childrens = $node->GetChildren();
-		$list = array();
-		if ($childrens) {
-			foreach ($childrens as $children) {
-				$tmpNode = new Node($children);
-				$list[] = array('id' => $children, "name" => $tmpNode->get("Name"));
-			}
-		}
-        $values['id_node'] = $idNode;
-        $values['list'] = $list;
+        if ($retid > 0) {
+            parent::sendToPublish($idNode, $up, $down, $markEnd, $republish, $structure, $deepLevel, $sendNotifications, $notificableUsers, $idState, $texttosend);
+        }
 
-		// Add default core css for delete elements
-		$this->addCss('/actions/deletenode/resources/css/style.css');
-
-		$this->render($values, null, 'default-3.0.tpl');
-	}
+    }
 
 
 	function publish_catalog() {
@@ -95,6 +116,8 @@ class Action_publish extends ActionAbstract {
 		$retid = $data->SetContent($dataset->ToXml());
 		if ($retid > 0) {
 			#The version was created sucessfully
+            #Publish
+
 			$this->messages->add(htmlentities($dataset->ToXml()), MSG_TYPE_NOTICE);
 		}
 		else {
