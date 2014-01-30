@@ -88,8 +88,10 @@ X.actionLoaded(function(event, fn, params) {
                     console.log($scope.submitUrl);
                     xBackend.sendFormData(formData, $scope.submitUrl, function(data){
                         console.log("Recieved data", formData.nodeid);  
-                        if (!dataset.id && data.IDDataset) {
-                            dataset.id = data.IDDataset;
+                        if (!dataset.id && data.dataset.id) {
+                            dataset.id = data.dataset.id;
+                            dataset.issued = data.dataset.issued;
+                            dataset.modified = data.dataset.modified;
                             $scope.submitUrl = $scope.submitUrl.replace('createdataset', 'updatedataset');
                         }
                         if (data && data.messages) {

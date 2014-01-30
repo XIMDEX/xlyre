@@ -135,8 +135,14 @@ class Action_managedataset extends ActionAbstract {
 
         }
 
+        $dataset = new XlyreDataset($iddataset);
+        $format = _('m-d-Y H:i:s');
         $values = array(
-                'IDDataset' => $iddataset,
+                'dataset' => array(
+                    'id' => $iddataset,
+                    'issued' => date($format, $dataset->Get('Issued')),
+                    'modified' => date($format, $dataset->Get('Modified')),
+                ),
                 'action_with_no_return' => $iddataset > 0,
                 'messages' => $this->messages->messages
         );
