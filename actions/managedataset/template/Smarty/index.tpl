@@ -26,8 +26,7 @@
 
 <form method="post" id='mdfdts_form' name="mdfdts" action='{$action_url}' 
     ng-controller="XDistibution" 
-    file-upload="fileUploadOptions"
-    ng-init="dataset.nodeid = '{$id_node}'; dataset.id = '{if (!$dataset.id)}{$id_dataset}{else}none{/if}'"
+    ng-init="dataset.IDParent = '{$id_catalog}'; dataset.id = '{$id_dataset}';"
     ng-cloak>
     <div class="action_header">
             <h2>{t}{$title}{/t}</h2>  
@@ -190,78 +189,80 @@
            
           
     <div class="distributions" ng-show="dataset.id">
-            <h3>{t}Distributions{/t}</h3>
-            <button type="button" class="add-button" id="new-distribution"
-                ng-click="newDistribution = {}"
-                ng-hide="newDistribution">
-                {t}Add distribution{/t}
+        <h3>{t}Distributions{/t}</h3>
+        <button type="button" class="add-button" id="new-distribution"
+            ng-click="newDistribution = {}"
+            ng-hide="newDistribution">
+            {t}Add distribution{/t}
+        </button>
+
+        <div class="row-item distribution_item new_distribution_item" 
+            ng-show="newDistribution"
+            ng-controller="XUploader"
+            file-upload="fileUploadOptions">
+            <div class="translated_items expanded">
+                <ul>
+                    {foreach from=$languages item=l}
+                        <li class="translate_item">
+                            <input type="text" placeholder="Distribution title"  value="Distribution title"
+                                ng-model="newDistribution['{$l.IdLanguage}']">
+                            <span class="language-label">{$l.Name}</span>
+                        </li>
+                    {/foreach}
+                </ul>
+            </div>
+            <button type="button" class="upload-button">
+                <span>Upload file</span>
+                <input name="files[]" type="file" multi="false" class="xim-uploader"/>
             </button>
-
-            <div class="row-item distribution_item new_distribution_item" 
-                ng-show="newDistribution">
-                <div class="translated_items expanded">
-                    <ul>
-                        {foreach from=$languages item=l}
-                            <li class="translate_item">
-                                <input type="text" placeholder="Distribution title"  value="Distribution title"
-                                    ng-model="newDistribution['{$l.IdLanguage}']">
-                                <span class="language-label">{$l.Name}</span>
-                            </li>
-                        {/foreach}
-                    </ul>
-                </div>
-                <button type="button" class="upload-button">
-                    <span>Upload file</span>
-                    <input name="files[]" type="file" multi="false" class="xim-uploader" style="display: block; visibility: hidden;"/>
-                </button>
-                <button type="button" class="save-button" 
-                    ng-click="newDistribution = null">
-                    Save
-                </button>
-            </div>
+            <button type="button" class="save-button" 
+                ng-click="newDistribution = null">
+                Save
+            </button>
+        </div>
 
 
-            <div class="row-item distribution_item">
-                <div class="translated_items">
-                    <div class="default_title"
-                        ng-hide="showAllTitles">
-                        Default distribution title</div>
-                    <ul ng-show="showAllTitles">
-                        {foreach from=$languages item=l}
-                            <li class="translate_item">
-                                <input type="text" placeholder="Distribution title"  value="Distribution title"><span class="language-label">{$l.Name}</span>
-                            </li>
-                        {/foreach}
-                    </ul>
-                    <div class="title_language icon toggle"
-                        ng-click="showAllTitles = !showAllTitles">
-                        <span ng-hide="showAllTitles">{$languages[0].Name}</span>
-                    </div>
-                </div>
-                <div class="distribution_actions">
-                    <span class="file">
-                        <span class="file_name">File name</span>
-                        <button type="button" class="name_uploader"></button>
-                        <a href="#" class="download_link"></a>
-                    </span>
-                    <span class="format_file">
-                        <span class="label_title">{t}Format{/t}</span>
-                        .CSV
-                    </span>
-                    <span class="size_file">
-                        <span class="label_title">{t}Size{/t}</span>
-                        16.3k
-                    </span>
-                    <span class="creation_date">
-                        <span class="label_title">{t}Creation date{/t}</span>
-                        09/10/2014
-                    </span>
-                    <span class="modified_date">
-                        <span class="label_title">{t}Modification date {/t}</span>
-                        09/10/2014
-                    </span>
+        <div class="row-item distribution_item">
+            <div class="translated_items">
+                <div class="default_title"
+                    ng-hide="showAllTitles">
+                    Default distribution title</div>
+                <ul ng-show="showAllTitles">
+                    {foreach from=$languages item=l}
+                        <li class="translate_item">
+                            <input type="text" placeholder="Distribution title"  value="Distribution title"><span class="language-label">{$l.Name}</span>
+                        </li>
+                    {/foreach}
+                </ul>
+                <div class="title_language icon toggle"
+                    ng-click="showAllTitles = !showAllTitles">
+                    <span ng-hide="showAllTitles">{$languages[0].Name}</span>
                 </div>
             </div>
+            <div class="distribution_actions">
+                <span class="file">
+                    <span class="file_name">File name</span>
+                    <button type="button" class="name_uploader"></button>
+                    <a href="#" class="download_link"></a>
+                </span>
+                <span class="format_file">
+                    <span class="label_title">{t}Format{/t}</span>
+                    .CSV
+                </span>
+                <span class="size_file">
+                    <span class="label_title">{t}Size{/t}</span>
+                    16.3k
+                </span>
+                <span class="creation_date">
+                    <span class="label_title">{t}Creation date{/t}</span>
+                    09/10/2014
+                </span>
+                <span class="modified_date">
+                    <span class="label_title">{t}Modification date {/t}</span>
+                    09/10/2014
+                </span>
+            </div>
+        </div>
         
     </div>
 

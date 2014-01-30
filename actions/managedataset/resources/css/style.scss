@@ -286,7 +286,17 @@
 .save-button {
 	background-color: #c2d43b;
 }
-
+.upload-button {
+	position: relative;
+	input {
+		opacity: 0;
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 100%;
+		height: 100%;
+	}
+}
 .distribution_actions {
 	display: flex;
 	justify-content: space-between;

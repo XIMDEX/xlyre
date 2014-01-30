@@ -53,29 +53,29 @@ class Action_managedataset extends ActionAbstract {
 
         $idNode = $this->request->getParam("nodeid");
         $node = new Node($idNode);
+        $idNode = $node->get('IdNode');
         $nt = $node->GetNodeType();
         if ($nt == XlyreOpenDataSection::IDNODETYPE) {
             $this->loadValues($values);
             $values['go_method'] = 'createdataset';
             $values['title'] = 'Create Dataset';
             $values['button'] = 'Create';
+            $values['id_catalog'] = $idNode;
         }
         elseif ($nt == XlyreOpenDataset::IDNODETYPE) {
             $this->loadValues($values, $idNode);
             $values['go_method'] = 'updatedataset';
             $values['title'] = 'Edit Dataset';
             $values['button'] = 'Update';
-        }
-        $idNode = $node->get('IdNode');
-        $values['id_node'] = $idNode;
-        
+            $values['id_dataset'] = $idNode;
+        }        
         $this->render($values, null, 'default-3.0.tpl');
 	}
 
 
 	function createdataset() {
 
-        $parentID = $this->request->getParam('nodeid');
+        $parentID = $this->request->getParam('IDParent');
         $name = $this->request->getParam('name');
 
         $nt = new NodeType(XlyreOpenDataSet::IDNODETYPE);
@@ -136,7 +136,7 @@ class Action_managedataset extends ActionAbstract {
         }
 
         $values = array(
-                'datasetId' => $iddataset,
+                'IDDataset' => $iddataset,
                 'action_with_no_return' => $iddataset > 0,
                 'messages' => $this->messages->messages
         );
@@ -147,7 +147,7 @@ class Action_managedataset extends ActionAbstract {
 
 
     function updatedataset() {
-        $nodeID = $this->request->getParam('nodeid');
+        $nodeID =$this->request->getParam('id');
         $name = $this->request->getParam('name');
 
         $nt = new NodeType(XlyreOpenDataSet::IDNODETYPE);
