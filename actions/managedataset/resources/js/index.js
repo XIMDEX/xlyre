@@ -25,61 +25,96 @@
 
 
 X.actionLoaded(function(event, fn, params) {
-
-        var form = params.actionView.getForm('mdfdts_form');
-        var fm = form.getFormMgr();
-        var submit = fn('.validate').get(0);
-
-        var $languageSelect = fn('.js_language_selector');
-        var $formSections = fn('.js_form_sections');
-
-        var addLanguage = function(language) {
-                var $option = fn('<option value='+language.id+'>'+language.label+'</option>');
-        	$languageSelect.append($option);
-        	var $formSection = $formSections.find('#language_selector_'+language.id);
-        	$formSection.find('input').prop('disabled', false);
-        	$formSection.find('textarea').prop('disabled', false);
-        }
-        var removeLanguage = function(language_id) {
-        	var $option = $languageSelect.find('option[value='+language_id+']');
-                if ($option.prop('selected')) {
-                        $option.prop('selected', false);
-                        $languageSelect.change();
-                }
-                $option.remove();
-                var $formSection = $formSections.find('#language_selector_'+language_id);
-                $formSection.find('input').prop('disabled', true);
-                $formSection.find('textarea').prop('disabled', true);
-
-        }
-
-        $formSections.find('.js_form_section').hide();
+        var ximdexModule = angular.module('ximdex', ['blueimp.fileupload']);
         
-        fn('.languages-available input[type=checkbox]:checked').each(function(){
-                var $language = fn(this);
-                var id = $language.attr('id');
-                var label = $language.siblings('label').html();
-                addLanguage({id: id, label:label});
+        ximdexModule.config(function($interpolateProvider) {
+                $interpolateProvider.startSymbol('[[');
+                $interpolateProvider.endSymbol(']]');
         });
 
-        fn('.languages-available input[type=checkbox]').change(function(){
-                
-        	$language = fn(this);
-        	if ($language.prop('checked')) {
-	        	var id = $language.attr('id');
-	        	var label = $language.siblings('label').html();
-	        	addLanguage({id: id, label:label});
-        	} else {
-        		removeLanguage($language.attr('id'));
-        	}
-        });
+        //TODO: Load global services and directives globally
+        //SERVICES 
+        ximdexModule.factory('xBackend', ['$http', '$rootScope', 'xTree', function($http, $rootScope, xTree) {
+                return {
+                        sendFormData: function(formData, url, callback){
+                                console.log("Sending data", $.param(formData));
+                                $http({
+                                        method  : 'POST',
+                                        url     : url,
+                                        data    : $.param(formData),  // pass in data as strings
+                                        headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
+                                }).success(function(data) {         
+                                        if (formData.nodeid)
+                                            xTree.reloadNode(formData.nodeid);
+                                        callback(data);
+                                });
+                        }
+                }
+        }]);
+        
+        ximdexModule.factory('xTree', ['$window', '$rootScope', function($window, $rootScope) { 
+            return {
+                // REALLY REALLY BAD PRACTIVE JUS A HACK TO DEAL WITH THE TREE
+                reloadNode: function(nodeId) {
+                    $window.jQuery('li#treeview-nodeid-'+nodeId)
+                        .closest('div.xim-treeview-container')
+                        .treeview('refresh', nodeId);
+                }    
+            }
+        }]);
 
-        $languageSelect.change(function(){
-        	var language_id = fn(this).attr('value');
-        	$formSections.find('.js_form_section').hide();
-        	if (language_id) {
-	        	$formSections.find('#language_selector_'+language_id).show();
-	        }
-        });
+        //CONTROLLER
+        ximdexModule.controller('XDistibution', ['$scope', '$attrs', 'xBackend', '$timeout', function($scope, $attrs, xBackend, $timeout){
+
+                $scope.selectedLanguages = {};
+
+                $scope.submitForm = function(form, dataset){
+                        var formData = angular.copy(dataset);
+                        formData.languages = []
+                        for (var language in dataset.languages) {
+                            if (language) {
+                                formData.languages.push(language);
+                            }
+                        }
+                        xBackend.sendFormData(formData, $attrs.action, function(data){
+                                console.log("Recieved data", formData.nodeid);
+                                if (data.datasetId) {
+                                    dataset.id = data.datasetId;
+                                }
+                                if (data && data.messages)
+                                    $scope.submitMessages = data.messages;
+                                    $timeout(function(){
+                                        $scope.submitMessages = null;
+                                    }, 4000);
+                        });
+                        
+                }
+        }]); 
+        
+        //DIRECTIVES
+        // ximdexModule.directive('xButton', function () {
+        //     return {
+        //         template: '<div></div>',
+        //         restrict: 'A',
+        //         link: function postLink(scope, element, attrs) {
+        //             element.text('this is the directita directive');
+        //         }
+        //     };
+        // });
+
+        // ximdexModule.directive('xVlidate', function () {
+        //     return {
+        //         template: '<div></div>',
+        //         transclude: 'element',
+        //         restrict: 'A',
+        //         link: function postLink(scope, element, attrs) {
+        //             element.text('this is the directita directive');
+        //         }
+        //     };
+        // });
+
+
+        //INITIALIZE ANGULAR APP
+        angular.bootstrap(fn('form'), ['ximdex']);
 });
 

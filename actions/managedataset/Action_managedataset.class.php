@@ -136,11 +136,12 @@ class Action_managedataset extends ActionAbstract {
         }
 
         $values = array(
+                'datasetId' => $iddataset,
                 'action_with_no_return' => $iddataset > 0,
                 'messages' => $this->messages->messages
         );
 
-        $this->render($values, NULL, 'messages.tpl');
+        $this->sendJSON($values);
 
     }
 
@@ -212,7 +213,7 @@ class Action_managedataset extends ActionAbstract {
                 'messages' => $this->messages->messages
         );
 
-        $this->render($values, NULL, 'messages.tpl');
+        $this->sendJSON($values);
 
     }
 
