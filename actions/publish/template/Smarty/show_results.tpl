@@ -23,4 +23,4 @@
  *  @version $Revision$
  *}
 
-{include file="`$_APP_ROOT`/actions/workflow_forward/template/Smarty/index.tpl"}
+{include file="`$_APP_ROOT`/actions/workflow_forward/template/Smarty/show_results.tpl"}
