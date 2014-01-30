@@ -288,7 +288,13 @@ class Action_managedataset extends ActionAbstract {
         }
     }
 
-
+    function addDistribution() {
+        if (isset($_FILES)) {
+            $this->sendJSON(array("file" => $_FILES['file']['name']));
+        } else {
+            $this->sendJSON(array("message" => "NANAI"));
+        }    
+    }
 
     private function _getValues($object, &$partial_options) {
         $values = $object->find('Id, Name', "1 ORDER BY Id", array(), MULTI);

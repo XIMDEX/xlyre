@@ -259,6 +259,8 @@
 
 .save-button {
   background-color: #c2d43b; }
+  .save-button:focus {
+    outline: none; }
 
 .upload-button {
   position: relative; }
