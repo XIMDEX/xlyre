@@ -276,29 +276,37 @@
 	}
 	// .title_language span {display: none;}
 }
-
-.upload-button, .save-button {
-	@extend %button;
-	height: 40px;
-	width: 49%;
-	display: inline-block!important;
-}
-.save-button {
-	background-color: #c2d43b;
-	&:focus {
-		outline: none;
-		
+.distributions {
+	.upload-button, .save-button {
+		@extend %button;
+		height: 40px;
+		width: 49%;
+		display: inline-block!important;
 	}
-}
-.upload-button {
-	position: relative;
-	input {
-		opacity: 0;
-		position: absolute;
-		top: 0;
-		right: 0;
-		width: 100%;
-		height: 100%;
+	.save-button {
+		background-color: #c2d43b;
+		&:focus {
+			outline: none;
+
+		}
+	}
+	.upload-button {
+		position: relative;
+		text-align: center;
+		display: inline-block!important;
+		vertical-align: top;
+		span {
+			font-size: 1.1em;
+			line-height: 1.2;
+		}
+		input {
+			opacity: 0;
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 100%;
+			height: 100%;
+		}
 	}
 }
 .distribution_actions {

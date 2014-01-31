@@ -23,7 +23,7 @@
 <dev@ximdex.com>
 	*  @version $Revision$
  */
-.distribution_actions button, .distribution_actions a, .upload-button, .save-button {
+.distribution_actions button, .distribution_actions a, .distributions .upload-button, .distributions .save-button {
   width: 100%;
   background: #fff;
   border: 1px solid #dedede;
@@ -252,19 +252,23 @@
     right: 16px;
     top: 3px; }
 
-.upload-button, .save-button {
+.distributions .upload-button, .distributions .save-button {
   height: 40px;
   width: 49%;
   display: inline-block !important; }
-
-.save-button {
+.distributions .save-button {
   background-color: #c2d43b; }
-  .save-button:focus {
+  .distributions .save-button:focus {
     outline: none; }
-
-.upload-button {
-  position: relative; }
-  .upload-button input {
+.distributions .upload-button {
+  position: relative;
+  text-align: center;
+  display: inline-block !important;
+  vertical-align: top; }
+  .distributions .upload-button span {
+    font-size: 1.1em;
+    line-height: 1.2; }
+  .distributions .upload-button input {
     opacity: 0;
     position: absolute;
     top: 0;
