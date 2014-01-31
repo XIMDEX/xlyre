@@ -38,16 +38,16 @@ X.actionLoaded(function(event, fn, params) {
             .factory('xBackend', ['$http', '$rootScope', 'xTree', function($http, $rootScope, xTree) {
                 return {
                     sendFormData: function(formData, url, callback){
-                            $http({
-                                    method  : 'POST',
-                                    url     : url,
-                                    data    : $.param(formData),  // pass in data as strings
-                                    headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
-                            }).success(function(data) {         
-                                    if (formData.IDParent)
-                                        xTree.reloadNode(formData.IDParent);
-                                    callback(data);
-                            });
+                        $http({
+                                method  : 'POST',
+                                url     : url,
+                                data    : $.param(formData),  // pass in data as strings
+                                headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
+                        }).success(function(data) {         
+                                if (formData.IDParent)
+                                    xTree.reloadNode(formData.IDParent);
+                                callback(data);
+                        });
                     }
                 }
         }]);
@@ -108,84 +108,77 @@ X.actionLoaded(function(event, fn, params) {
 
         ximdexModule
             .controller('XUploader', ['$scope', '$attrs', function($scope, $attrs){
+                var progressCallback = function (event, data) {
+                    $scope.$apply(function(){
+                        //$scope.uploadProgress = parseInt(data.loaded / data.total * 100, 10);
+                    });
+                }
+                var addCallback = function (event, data) {
+                    console.log('adding', data);
+                    $scope.$apply(function(){
+                        $scope.addFileLabel = data.files[data.files.length-1].name; 
+                    });
+                     
+                }
                 $scope.fileUploaderOptions = {
-                    url: $attrs.xUploadUrl
+                    url: $scope.submitUrl.replace("updatedataset", 'addDistribution'),
+                    progress: progressCallback
                 };
+                $scope.uploadButtonLabel = 'Save Distribution';
+                $scope.addFileLabel = 'Atach File';
+
                 $scope.uploadDistribution = function (metadata, file) {
                     console.log("Uploading", metadata, file);
                     if(metadata && file) {
+                        $scope.uploadButtonLabel = "Uploading";
+                        $scope.uploadProgress = 0;
                         file.$formData(metadata);
                         file.$submit()
                             .success(function(data){
                                 console.log("File Upladed", data);
-                            });
+                                $scope.uploadButtonLabel = "Done";
+                                $scope.newDistributions = $scope.newDistributions || [];
+                                $scope.newDistributions.push({
+                                    name: file.name,
+                                    format: file.type,
+                                    size: file.size,
+                                    created: file.lastModifiedDate,
+                                    modified: file.lastModifiedDate,
+                                    languages: angular.copy(metadata)
+                                });
+                                metadata = null;
+                        });
                     }
                 }
         }]);  
         
         //DIRECTIVES
-        // ximdexModule
-        //     .directive('xButton', function () {
-        //         return {
-        //             replace: true,
-        //             template: '<button type="submit" class="button ladda-button" data-style="slide-up" data-size="xs" ng-disabled="btnDisabled">'+
-        //                     '<span class="ladda-label">{{btnLabel}}</span>'+
-        //                 '</button>',
-        //             controller: ['$scope', '$attrs', '$parse', function ($scope, $attrs, $parse){
-        //                 console.log("controlling directive");
-        //                 $scope.btnLabel = "fede";
-        //                 if ($attrs.xProgress) {
-        //                     var fn = $parse($attrs.progress);
-        //                     var update = function(){
-        //                         var progress = fn($scope);
-        //                         if (!progress || !progress.total)
-        //                             return
-        //                         $scope.num = progress.loaded/progress.total;
-        //                     }
-        //                     update();
-        //                     $scope.$watch($attrs.xProgress+'.loaded', function(newValue, oldValue){
-        //                         update();
-        //                     });
-        //                 }
-        //             }],
-        //             link: function(scope, element, attrs){
-        //                 console.log("linking directive");
-        //                 var loader = $window.Ladda.create(element[0]);
+        ximdexModule
+            .directive('ximButton', ['$window', function ($window) {
+                return {
+                    replace: true,
+                    scope: {
+                        state: '=ximState',
+                        disabled: '=ximDisabled',
+                        label: '=ximLabel',
+                        progress: '=ximProgress'
+                    },
+                    template: '<button type="button" class="button ladda-button" data-style="slide-up" data-size="xs" ng-disabled="disabled"><span class="ladda-label">[[label]]</span></button>',
+                    controller: ['$scope', '$attrs', function ($scope, $attrs){
+                        console.log("controlling directive");
 
-        //                 scope.$watch(attrs.xLabel, function(newValue, oldValue) {
-        //                     console.log("WATHCING LABELS", newValue);
-        //                     if(oldValue != newValue){
-        //                         $scope.btnLabel = newValue
-        //                     }
-        //                 });
+                    }],
+                    linking: function (scope, element, attrs) {
+                        console.log("controlling directive");
+                        var loader = $window.Ladda.create(element[0]);
 
-        //                 if (attrs.xProgress){
-        //                     scope.$watch('num', function(newValue, oldValue){
-        //                         if (oldValue != newValue)
-        //                             loader.setProgress(newValue)
-        //                     });
-        //                 }
-        //                 if (attrs.xState){
-        //                     scope.$watch(attrs.xState, function(newValue, oldValue) {
-        //                         if(oldValue != newValue){
-        //                             switch(newValue){
-        //                                 case 'submitting':
-        //                                     loader.start();
-        //                                     break;
-        //                                 case 'succes':
-        //                                     loader:stop();
-        //                                     break;
-        //                                 case 'error':
-        //                                     loader:stop();
-        //                                     break;
-                                    
-        //                             }
-        //                         }
-        //                     });
-        //                 }
-        //             }
-        //         };
-        // });
+
+
+                    },
+                }
+        }]);
+
+        
 
         // ximdexModule.directive('xVlidate', function () {
         //     return {

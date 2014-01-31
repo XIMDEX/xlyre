@@ -197,35 +197,76 @@
             ng-hide="newDistribution">
             {t}Add distribution{/t}
         </button>
-
-        <div class="row-item distribution_item new_distribution_item" 
+        <div class="new distributions"
             ng-show="newDistribution"
             ng-controller="XUploader"
             file-upload="fileUploaderOptions">
-            <div class="translated_items expanded">
-                <ul>
-                    {foreach from=$languages item=l}
-                        <li class="translate_item">
-                            <input type="text" placeholder="Distribution title"  value="Distribution title"
-                                ng-model="newDistribution['{$l.IdLanguage}']">
-                            <span class="language-label">{$l.Name}</span>
-                        </li>
-                    {/foreach}
-                </ul>
+            <div class="row-item distribution_item new_distribution_item">
+                <div class="translated_items expanded">
+                    <ul>
+                        {foreach from=$languages item=l}
+                            <li class="translate_item">
+                                <input type="text" placeholder="Distribution title"  value="Distribution title"
+                                    ng-model="newDistribution['{$l.IdLanguage}']">
+                                <span class="language-label">{$l.Name}</span>
+                            </li>
+                        {/foreach}
+                    </ul>
+                </div>
+                <button type="button" class="upload-button">
+                    <span>[[queue[queue.length-1].name || 'Attach file']]</span>
+                    <input name="file" type="file" multi="false" class="xim-uploader"/>
+                </button>
+                <button class="save-button" 
+                    ng-click="uploadDistribution(newDistribution, queue[queue.length-1])"
+                    xim-button
+                    xim-label="uploadButtonLabel"
+                    xim-disabled = "allowSave"
+                    xim-progress = "uploadProgress"
+                    xim-state = "uploadState">
+                    Save Distribution
+                </button>
             </div>
-            <button type="button" class="upload-button">
-                <span>Add file</span>
-                <input name="files[]" type="file" multi="false" class="xim-uploader"/>
-            </button>
-            <button type="button" class="save-button" 
-                ng-click="uploadDistribution(newDistribution, queue[0])"
-                ng-disabled="queue[0].length < 1"
-                x-button
-                x-label="buttonLabel"
-                x-state="uploadState"
-                x-progress= "queue[0].$progress()">
-                Save Distribution
-            </button>
+            <div class="row-item distribution_item" ng-repeat="distribution in newDistributions">
+                <div class="translated_items">
+                    <div class="default_title"
+                        ng-hide="showAllTitles">
+                        Spanish
+                    </div>
+                    <ul ng-show="showAllTitles">
+                        <li class="translate_item" ng-repeat="language in distribution.languages">
+                            <input type="text" placeholder="Distribution title"  value="[[language]]"><span class="language-label"></span>
+                        </li>
+                    </ul>
+                    <div class="title_language icon toggle"
+                        ng-click="showAllTitles = !showAllTitles">
+                        <span ng-hide="showAllTitles">{$languages[0].Name}</span>
+                    </div>
+                </div>
+                <div class="distribution_actions">
+                    <span class="file">
+                        <span class="file_name">[[distribution.name]]</span>
+                        <button type="button" class="name_uploader"></button>
+                        <a href="#" class="download_link"></a>
+                    </span>
+                    <span class="format_file">
+                        <span class="label_title">{t}Format{/t}</span>
+                        [[distribution.format]]
+                    </span>
+                    <span class="size_file">
+                        <span class="label_title">{t}Size{/t}</span>
+                        [[distribution.size]]
+                    </span>
+                    <span class="creation_date">
+                        <span class="label_title">{t}Creation date{/t}</span>
+                        [[distribution.created]]
+                    </span>
+                    <span class="modified_date">
+                        <span class="label_title">{t}Modification date {/t}</span>
+                        [[distribution.modified]]
+                    </span>
+                </div>
+            </div>
         </div>
 
 
