@@ -55,7 +55,7 @@ X.actionLoaded(function(event, fn, params) {
         ximdexModule
             .factory('xTree', ['$window', '$rootScope', function($window, $rootScope) { 
                 return {
-                    // REALLY REALLY BAD PRACTIVE JUS A HACK TO DEAL WITH THE TREE
+                    // REALLY REALLY BAD PRACTIVE JUST A HACK TO DEAL WITH THE TREE
                     reloadNode: function(nodeId) {
                         $window.jQuery('li#treeview-nodeid-'+nodeId)
                             .closest('div.xim-treeview-container')
@@ -64,19 +64,20 @@ X.actionLoaded(function(event, fn, params) {
                 }
         }]);
 
-        // ximdexModule.factory('xNotifications', ['$window', function($window) { 
-        //     return {
-        //         notify: function(notice, class) {       
-        //         }    
-        //     }
-        // }]);
-
         //CONTROLLER
         ximdexModule
             .controller('XDistibution', ['$scope', '$attrs', 'xBackend', '$timeout', function($scope, $attrs, xBackend, $timeout){
 
                 $scope.selectedLanguages = {};
                 $scope.submitUrl = $attrs.action;
+
+                $scope.$watch('dataset.languages', function(languages, oldLanguages){
+                    $scope.activeLanguages = 0;
+                    for (key in languages) {
+                        if (languages[key] != '')
+                            $scope.activeLanguages++;
+                    }
+                }, true);
 
                 $scope.submitForm = function(form, dataset){
                     var formData = angular.copy(dataset);
@@ -110,15 +111,8 @@ X.actionLoaded(function(event, fn, params) {
             .controller('XUploader', ['$scope', '$attrs', function($scope, $attrs){
                 var progressCallback = function (event, data) {
                     $scope.$apply(function(){
-                        //$scope.uploadProgress = parseInt(data.loaded / data.total * 100, 10);
+                        $scope.uploadProgress = parseInt(data.loaded / data.total * 100, 10);
                     });
-                }
-                var addCallback = function (event, data) {
-                    console.log('adding', data);
-                    $scope.$apply(function(){
-                        $scope.addFileLabel = data.files[data.files.length-1].name; 
-                    });
-                     
                 }
                 $scope.fileUploaderOptions = {
                     url: $scope.submitUrl.replace("updatedataset", 'addDistribution'),
@@ -135,10 +129,9 @@ X.actionLoaded(function(event, fn, params) {
                         file.$formData(metadata);
                         file.$submit()
                             .success(function(data){
-                                console.log("File Upladed", data);
                                 $scope.uploadButtonLabel = "Done";
                                 $scope.newDistributions = $scope.newDistributions || [];
-                                $scope.newDistributions.push({
+                                $scope.newDistributions.unshift({
                                     name: file.name,
                                     format: file.type,
                                     size: file.size,
@@ -146,7 +139,9 @@ X.actionLoaded(function(event, fn, params) {
                                     modified: file.lastModifiedDate,
                                     languages: angular.copy(metadata)
                                 });
-                                metadata = null;
+                                $scope.uploadButtonLabel = "Save Distribution";
+                                $scope.$parent.newDistribution = null;
+                                $scope.queue = [];
                         });
                     }
                 }
@@ -163,7 +158,9 @@ X.actionLoaded(function(event, fn, params) {
                         label: '=ximLabel',
                         progress: '=ximProgress'
                     },
-                    template: '<button type="button" class="button ladda-button" data-style="slide-up" data-size="xs" ng-disabled="disabled"><span class="ladda-label">[[label]]</span></button>',
+                    template: '<button type="button" class="button ladda-button" data-style="slide-up" data-size="xs" ng-disabled="disabled">'+
+                            '<span class="ladda-label">[[label]]</span>'+
+                        '</button>',
                     controller: ['$scope', '$attrs', function ($scope, $attrs){
                         console.log("controlling directive");
 
@@ -171,9 +168,13 @@ X.actionLoaded(function(event, fn, params) {
                     linking: function (scope, element, attrs) {
                         console.log("controlling directive");
                         var loader = $window.Ladda.create(element[0]);
+                        scope.$watch('state', function(newState, oldState){
+                            console.log(newState);
+                            switch (newState) {
+            
 
-
-
+                            }
+                        });
                     },
                 }
         }]);

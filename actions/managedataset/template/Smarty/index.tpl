@@ -145,7 +145,7 @@
                         <div class="languages-section">
                             {if $language.Checked == true}
                                 <input name='languages[]' type='checkbox' value='{$language.IdLanguage}'  id='{$language.IdLanguage}' class="hidden-focus" 
-                                    ng-init="selectedLanguages.{$language.IdLanguage} = '{$language.Name|gettext}'" ng-model="dataset.languages.{$language.IdLanguage}" 
+                                    ng-init="dataset.languages.{$language.IdLanguage} = '{$language.Name|gettext}'" ng-model="dataset.languages.{$language.IdLanguage}" 
                                     ng-true-value="{$language.Name|gettext}" 
                                     ng-false-value=""/>
                             {else}
@@ -188,7 +188,7 @@
             
          
         </div>
-           
+            
           
     <div class="distributions" ng-show="dataset.id">
         <h3>{t}Distributions{/t}</h3>
@@ -197,15 +197,15 @@
             ng-hide="newDistribution">
             {t}Add distribution{/t}
         </button>
-        <div class="new distributions"
-            ng-show="newDistribution"
+        <div class="new distributions" 
             ng-controller="XUploader"
             file-upload="fileUploaderOptions">
-            <div class="row-item distribution_item new_distribution_item">
+            <div class="row-item distribution_item new_distribution_item"
+                ng-show="newDistribution">
                 <div class="translated_items expanded">
                     <ul>
                         {foreach from=$languages item=l}
-                            <li class="translate_item">
+                            <li class="translate_item" ng-show="dataset.languages.{$l.IdLanguage}">
                                 <input type="text" placeholder="Distribution title"  value="Distribution title"
                                     ng-model="newDistribution['{$l.IdLanguage}']">
                                 <span class="language-label">{$l.Name}</span>
@@ -213,10 +213,10 @@
                         {/foreach}
                     </ul>
                 </div>
-                <button type="button" class="upload-button">
+                <span type="button" class="upload-button">
                     <span>[[queue[queue.length-1].name || 'Attach file']]</span>
                     <input name="file" type="file" multi="false" class="xim-uploader"/>
-                </button>
+                </span>
                 <button class="save-button" 
                     ng-click="uploadDistribution(newDistribution, queue[queue.length-1])"
                     xim-button
@@ -234,12 +234,15 @@
                         Spanish
                     </div>
                     <ul ng-show="showAllTitles">
-                        <li class="translate_item" ng-repeat="language in distribution.languages">
-                            <input type="text" placeholder="Distribution title"  value="[[language]]"><span class="language-label"></span>
-                        </li>
+                        {foreach from=$languages item=l}
+                            <li class="translate_item" ng-show="dataset.languages.{$l.IdLanguage}">
+                                <input type="text" placeholder="Distribution title"  value="[[newDistribution.{$l.IdLanguage}]]"><span class="language-label">{$l.Name}</span>
+                            </li>
+                        {/foreach}
                     </ul>
                     <div class="title_language icon toggle"
-                        ng-click="showAllTitles = !showAllTitles">
+                        ng-click="showAllTitles = !showAllTitles"
+                        ng-show="activeLanguages">
                         <span ng-hide="showAllTitles">{$languages[0].Name}</span>
                     </div>
                 </div>
@@ -270,20 +273,21 @@
         </div>
 
 
-        <div class="row-item distribution_item">
+         <div class="row-item distribution_item">
             <div class="translated_items">
                 <div class="default_title"
                     ng-hide="showAllTitles">
                     Default distribution title</div>
                 <ul ng-show="showAllTitles">
                     {foreach from=$languages item=l}
-                        <li class="translate_item">
+                        <li class="translate_item" ng-show="dataset.languages.{$l.IdLanguage}">
                             <input type="text" placeholder="Distribution title"  value="Distribution title"><span class="language-label">{$l.Name}</span>
                         </li>
                     {/foreach}
                 </ul>
                 <div class="title_language icon toggle"
-                    ng-click="showAllTitles = !showAllTitles">
+                    ng-click="showAllTitles = !showAllTitles"
+                    ng-show="activeLanguages">
                     <span ng-hide="showAllTitles">{$languages[0].Name}</span>
                 </div>
             </div>
@@ -312,7 +316,7 @@
             </div>
         </div>
         
-    </div>
+    </div> 
 
     
     </div>
