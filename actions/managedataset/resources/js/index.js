@@ -108,7 +108,7 @@ X.actionLoaded(function(event, fn, params) {
         }]);
 
         ximdexModule
-            .controller('XUploader', ['$scope', '$attrs', function($scope, $attrs){
+            .controller('XUploader', ['$scope', '$attrs', '$timeout',function($scope, $attrs, $timeout){
                 var progressCallback = function (event, data) {
                     $scope.$apply(function(){
                         $scope.uploadProgress = parseInt(data.loaded / data.total * 100, 10);
@@ -126,22 +126,33 @@ X.actionLoaded(function(event, fn, params) {
                     if(metadata && file) {
                         $scope.uploadButtonLabel = "Uploading";
                         $scope.uploadProgress = 0;
-                        file.$formData(metadata);
-                        file.$submit()
-                            .success(function(data){
-                                $scope.uploadButtonLabel = "Done";
-                                $scope.newDistributions = $scope.newDistributions || [];
-                                $scope.newDistributions.unshift({
-                                    name: file.name,
-                                    format: file.type,
-                                    size: file.size,
-                                    created: file.lastModifiedDate,
-                                    modified: file.lastModifiedDate,
-                                    languages: angular.copy(metadata)
-                                });
-                                $scope.uploadButtonLabel = "Save Distribution";
-                                $scope.$parent.newDistribution = null;
-                                $scope.queue = [];
+                        // file.$formData({languages: metadata});
+                        var url = $scope.submitUrl.replace("updatedataset", 'addDistribution');
+                        for (key in metadata) {
+                            url+='&'+key+'='+metadata[key];
+                        }
+                        console.log(url);
+                        $scope.fileUploaderOptions = {
+                            url: url,
+                            progress: progressCallback
+                        };
+                        $timeout(function(){   
+                            file.$submit()
+                                .success(function(data){
+                                    $scope.uploadButtonLabel = "Done";
+                                    $scope.newDistributions = $scope.newDistributions || [];
+                                    $scope.newDistributions.unshift({
+                                        name: file.name,
+                                        format: file.type,
+                                        size: file.size,
+                                        created: file.lastModifiedDate,
+                                        modified: file.lastModifiedDate,
+                                        languages: angular.copy(metadata)
+                                    });
+                                    $scope.uploadButtonLabel = "Save Distribution";
+                                    $scope.$parent.newDistribution = null;
+                                    $scope.queue = [];
+                            });
                         });
                     }
                 }
