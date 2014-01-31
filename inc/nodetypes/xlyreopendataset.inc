@@ -110,6 +110,44 @@ class XlyreOpenDataSet extends FolderNode{
 		return $dataset->update();
 	}
 
+	/**
+	 * Required method for publishing.
+	 * Return the full name for the current node when is published.
+	 * @param int $channel Channel id
+	 */
+	function GetPublishedNodeName($channel = null) {
+
+		$channel = new Channel($channel);
+		$sufix = "-id".$channel->GetName() . "." . $channel->GetExtension();
+		$fileName = $this->parent->GetNodeName() . $sufix;
+
+		return $fileName;
+	}
+
+	/**
+	 * Required method for publishing.
+	 * Return available channels for the current node.
+	 * @return  array Channels id
+	 */
+	public function getChannels(){
+		//TODO: Change query
+		$query = sprintf("SELECT idChannel FROM Channels limit 1");
+
+		$this->dbObj->Query($query);
+
+		if ($this->dbObj->numErr) {
+			$this->parent->SetError(5);
+		}
+
+		$out = NULL;
+		while (!$this->dbObj->EOF) {
+	 		$out[] = $this->dbObj->GetValue("idChannel");
+			$this->dbObj->Next();
+		}
+
+	 	return $out;
+	}
+
 
 }
 
