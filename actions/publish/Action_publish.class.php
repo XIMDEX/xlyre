@@ -78,7 +78,7 @@ class Action_publish extends Action_workflow_forward {
         }
         elseif ($nt == XlyreOpenDataset::IDNODETYPE) {
             $dataset = new XlyreDataset($idNode);
-            $retid = $data->SetContent($catalog->ToXml());
+            $retid = $data->SetContent($dataset->ToXml());
         }
         if ($retid > 0) {
             parent::sendToPublish($idNode, $up, $down, $markEnd, $republish, $structure, $deepLevel, $sendNotifications, $notificableUsers, $idState, $texttosend);
