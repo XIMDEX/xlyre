@@ -209,19 +209,19 @@ class Action_managedataset extends ActionAbstract {
     function addDistribution() {
         $values = array();
         if (isset($_FILES)) {
-            $values['file'] = $_FILES['file']['name'];
+            $values['distribution']['file'] = $_FILES['file']['name'];
 
             #TODO: Change this method because the filename can contains more than one '.'
-            $mt = explode('.', $values['file']);
-            $values['format'] = $mt[1];
-            $values['size'] = $_FILES['file']['size'];
-            $values['issued'] = time();
-            $values['modified'] = time();
+            $mt = explode('.', $values['distribution']['file']);
+            $values['distribution']['format'] = $mt[1];
+            $values['distribution']['size'] = $_FILES['file']['size'];
+            $values['distribution']['issued'] = time();
+            $values['distribution']['modified'] = time();
             if (isset($_POST['languages'])) {
                 $array_langs = json_decode($_POST['languages'], true);
                 if (is_array($array_langs)) {
                     foreach ($array_langs as $key => $value) {
-                        $values['languages'][$key] = $value;
+                        $values['distribution']['languages'][$key] = $value;
                     }
                 }
             }
@@ -229,9 +229,9 @@ class Action_managedataset extends ActionAbstract {
             $nt = new NodeType(XlyreOpenDistribution::IDNODETYPE);
             $data_dist = array(
                 'NODETYPENAME' => $nt->get('Name'),
-                'NAME' => "Hello!",
+                'NAME' => $this->_toSlug($values['distribution']['file']),
                 'PARENTID' => $this->request->getParam('nodeid'),
-                'FILENAME' => "filename.csv"
+                'FILENAME' => $values['distribution']['file']
             );
             $baseio = new XlyreBaseIO();
             $iddist = $baseio->build($data_dist);
