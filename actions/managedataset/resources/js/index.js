@@ -138,14 +138,14 @@ X.actionLoaded(function(event, fn, params) {
                     if(metadata && file) {
                         $scope.uploadButtonLabel = "Uploading";
                         $scope.uploadProgress = 0;
-                        
+
                         var formData = []
                         formData.push({
                             name: 'languages',
                             value: angular.toJson(metadata)
                         });
-                        
                         file.$formData(formData);
+                        
                         file.$submit()
                             .success(function(data){
                                 console.log("Recieved data", data);
