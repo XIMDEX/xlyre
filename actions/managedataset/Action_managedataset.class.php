@@ -293,6 +293,8 @@ class Action_managedataset extends ActionAbstract {
             for($i=0; $i<sizeof($values['languages']); $i++) {
                 $values['languages'][$i]['Checked'] = in_array($values['languages'][$i]['IdLanguage'], array_keys($values['languages_dataset'])) ? TRUE : FALSE;
             }
+            $dsmeta_node = new Node($idNode);
+            $values['id_catalog'] = $dsmeta_node->getParent();
         }
         else {
             $values['name'] = "";
