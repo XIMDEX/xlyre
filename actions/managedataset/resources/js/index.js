@@ -126,8 +126,10 @@ X.actionLoaded(function(event, fn, params) {
                         $scope.uploadProgress = parseInt(data.loaded / data.total * 100, 10);
                     });
                 }
+                var url = $scope.submitUrl.replace("updatedataset", 'addDistribution');
+                url = $scope.submitUrl.replace("createdataset", 'addDistribution');
                 $scope.fileUploaderOptions = {
-                    url: $scope.submitUrl.replace("updatedataset", 'addDistribution'),
+                    url: url,
                     progress: progressCallback
                 };
                 $scope.uploadButtonLabel = 'Save Distribution';
