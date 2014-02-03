@@ -248,13 +248,13 @@
                 </div>
                 <div class="distribution_actions">
                     <span class="file">
-                        <span class="file_name">[[distribution.name]]</span>
+                        <span class="file_name">[[distribution.file]]</span>
                         <button type="button" class="name_uploader"></button>
                         <a href="#" class="download_link"></a>
                     </span>
                     <span class="format_file">
                         <span class="label_title">{t}Format{/t}</span>
-                        .[[distribution.format]]
+                        [[distribution.format]]
                     </span>
                     <span class="size_file">
                         <span class="label_title">{t}Size{/t}</span>
