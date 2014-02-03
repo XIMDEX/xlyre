@@ -254,19 +254,19 @@
                     </span>
                     <span class="format_file">
                         <span class="label_title">{t}Format{/t}</span>
-                        [[distribution.format]]
+                        .[[distribution.format]]
                     </span>
                     <span class="size_file">
                         <span class="label_title">{t}Size{/t}</span>
-                        [[distribution.size]]
+                        [[distribution.size | ximBytes]]
                     </span>
                     <span class="creation_date">
                         <span class="label_title">{t}Creation date{/t}</span>
-                        [[distribution.created]]
+                        [[distribution.issued | date:'dd/MM/yyyy']]
                     </span>
                     <span class="modified_date">
                         <span class="label_title">{t}Modification date {/t}</span>
-                        [[distribution.modified]]
+                        [[distribution.modified | date:'dd/MM/yyyy']]
                     </span>
                 </div>
             </div>
@@ -315,7 +315,6 @@
                 </span>
             </div>
         </div>
-        
     </div> 
 
     
@@ -323,6 +322,7 @@
     <fieldset class="buttons-form positioned_btn">
         <button type="button" class="submit-button" ng-click="submitForm(mdfdts, dataset)">Update</button>
     </fieldset>                
+    
     <!-- <div style="position: absolute; z-index:99999; bottom: 0; right: 0;">
         <ul>
             <li ng-repeat="(key, value) in dataset">
