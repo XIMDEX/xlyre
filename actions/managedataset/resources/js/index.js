@@ -151,7 +151,7 @@ X.actionLoaded(function(event, fn, params) {
                                 console.log("Recieved data", data);
                                 $scope.uploadButtonLabel = "Done";
                                 $scope.newDistributions = $scope.newDistributions || [];
-                                $scope.newDistributions.unshift(data);
+                                $scope.newDistributions.unshift(data.distribution);
                                 $scope.uploadButtonLabel = "Save Distribution";
                                 $scope.$parent.newDistribution = null;
                                 $scope.queue = [];
@@ -181,10 +181,9 @@ X.actionLoaded(function(event, fn, params) {
                             console.log("stating", newState);
                             switch (newState) {
                                 case 'submitting':
-                                    console.log("submittinh")
+                                case 'pending':
                                     loader.start();
                                     break;
-                                case 'pending':
                                 case 'resolved':
                                     loader.stop();
                                     break;
