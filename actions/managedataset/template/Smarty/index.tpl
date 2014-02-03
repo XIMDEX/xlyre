@@ -273,7 +273,7 @@
         </div>
 
 
-         <div class="row-item distribution_item">
+         <!-- <div class="row-item distribution_item">
             <div class="translated_items">
                 <div class="default_title"
                     ng-hide="showAllTitles">
@@ -314,7 +314,7 @@
                     09/10/2014
                 </span>
             </div>
-        </div>
+        </div> -->
     </div> 
 
     
