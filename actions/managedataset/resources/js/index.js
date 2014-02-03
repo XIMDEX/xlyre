@@ -30,9 +30,10 @@ X.actionLoaded(function(event, fn, params) {
         //Third party modules
         angular.module('ximdex.vendor', ['blueimp.fileupload']);
         //Common modules
-        angular.module('ximdex.common', ['ximdex.common.service', 'ximdex.common.directive']);
+        angular.module('ximdex.common', ['ximdex.common.service', 'ximdex.common.directive', 'ximdex.common.filter']);
         angular.module('ximdex.common.directive', []);
         angular.module('ximdex.common.service', []);
+        angular.module('ximdex.common.filter', []);
         
         //"Ximdex module" specific modules 
         angular.module('xlyre', []);
@@ -57,7 +58,7 @@ X.actionLoaded(function(event, fn, params) {
                                 headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
                         }).success(function(data) {         
                                 if (formData.IDParent)
-                                    xTree.reloadNode(formData.IDParent);
+                                    $rootScope.$broadcast('nodeModified', formData.IDParent);
                                 callback(data);
                         });
                     }
@@ -66,15 +67,12 @@ X.actionLoaded(function(event, fn, params) {
         
         angular.module('ximdex.common.service')
             .factory('xTree', ['$window', '$rootScope', function($window, $rootScope) { 
-                return {
-                    // REALLY REALLY BAD PRACTIVE JUST A HACK TO DEAL WITH THE TREE
-                    // Use custom events instead
-                    reloadNode: function(nodeId) {
-                        $window.jQuery('li#treeview-nodeid-'+nodeId)
-                            .closest('div.xim-treeview-container')
-                            .treeview('refresh', nodeId);
-                    }    
-                }
+                //Listen for node modification events to update the tree
+                $rootScope.$on('nodeModified', function(event, nodeId){
+                    $window.jQuery('li#treeview-nodeid-'+nodeId)
+                        .closest('div.xim-treeview-container')
+                        .treeview('refresh', nodeId);
+                });
         }]);
 
         //CONTROLLER
@@ -140,19 +138,20 @@ X.actionLoaded(function(event, fn, params) {
                     if(metadata && file) {
                         $scope.uploadButtonLabel = "Uploading";
                         $scope.uploadProgress = 0;
-                        file.$formData({data: {jose: 'tomas', paco: 'cepero'}});
+                        
+                        var formData = []
+                        formData.push({
+                            name: 'languages',
+                            value: angular.toJson(metadata)
+                        });
+                        
+                        file.$formData(formData);
                         file.$submit()
                             .success(function(data){
+                                console.log("Recieved data", data);
                                 $scope.uploadButtonLabel = "Done";
                                 $scope.newDistributions = $scope.newDistributions || [];
-                                $scope.newDistributions.unshift({
-                                    name: file.name,
-                                    format: file.type,
-                                    size: file.size,
-                                    created: file.lastModifiedDate,
-                                    modified: file.lastModifiedDate,
-                                    languages: angular.copy(metadata)
-                                });
+                                $scope.newDistributions.unshift(data);
                                 $scope.uploadButtonLabel = "Save Distribution";
                                 $scope.$parent.newDistribution = null;
                                 $scope.queue = [];
@@ -200,6 +199,17 @@ X.actionLoaded(function(event, fn, params) {
                 }
         }]);
 
+        //FILTERS
+        angular.module('ximdex.common.filter')
+            .filter('ximBytes', function(){
+                return function(bytes){
+                    if (isNaN(parseFloat(bytes)) || !isFinite(bytes))
+                        return ''
+                    units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'];
+                    number = Math.floor(Math.log(bytes) / Math.log(1024));
+                    return (bytes / Math.pow(1024, Math.floor(number))).toFixed(2) +' '+ units[number];
+                }
+        });
 
         //INITIALIZE ANGULAR APP
         angular.bootstrap(fn('form'), ['ximdex']);
