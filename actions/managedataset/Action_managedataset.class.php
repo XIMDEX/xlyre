@@ -113,26 +113,8 @@ class Action_managedataset extends ActionAbstract {
                 }
             }
 
-            // Add dummy distribution for testing
-            $nt = new NodeType(XlyreOpenDistribution::IDNODETYPE);
-            $data_dist = array(
-                'NODETYPENAME' => $nt->get('Name'),
-                'NAME' => $this->_generateRandomString(),
-                'PARENTID' => $iddataset,
-                'FILENAME' => 'data.csv'
-
-            );
-            $baseio = new XlyreBaseIO();
-            $iddist = $baseio->build($data_dist);
-            if (!($iddist > 0)) {
-                $this->messages->mergeMessages($baseio->messages);
-                $this->messages->add(_('Operation could not be successfully completed'), MSG_TYPE_ERROR);
-            }
-            else {
-                $this->messages->add(sprintf(_('%s has been successfully created'), $name), MSG_TYPE_NOTICE);
-            }
+            $this->messages->add(sprintf(_('%s has been successfully created'), $name), MSG_TYPE_NOTICE);
             $this->reloadNode($parentID);
-
         }
 
         $dataset = new XlyreDataset($iddataset);
@@ -224,6 +206,48 @@ class Action_managedataset extends ActionAbstract {
     }
 
 
+    function addDistribution() {
+        $values = array();
+        if (isset($_FILES)) {
+            $values['file'] = $_FILES['file']['name'];
+
+            #TODO: Change this method because the filename can contains more than one '.'
+            $mt = explode('.', $values['file']);
+            $values['format'] = $mt[1];
+            $values['size'] = $_FILES['file']['size'];
+            $values['issued'] = time();
+            $values['modified'] = time();
+            if (isset($_POST['languages'])) {
+                $array_langs = json_decode($_POST['languages'], true);
+                if (is_array($array_langs)) {
+                    foreach ($array_langs as $key => $value) {
+                        $values['languages'][$key] = $value;
+                    }
+                }
+            }
+
+            $nt = new NodeType(XlyreOpenDistribution::IDNODETYPE);
+            $data_dist = array(
+                'NODETYPENAME' => $nt->get('Name'),
+                'NAME' => "Hello!",
+                'PARENTID' => $this->request->getParam('nodeid'),
+                'FILENAME' => "filename.csv"
+            );
+            $baseio = new XlyreBaseIO();
+            $iddist = $baseio->build($data_dist);
+            // Add i18n for distributions
+
+            if (!($iddist > 0)) {
+                $values['errors'][] = _('Operation could not be successfully completed');
+            }
+        }
+        else {
+            $values['errors'][] = _("There is no file to upload. Please try again.");
+        }
+        $this->sendJSON($values);
+    }
+
+
 	function loadResources() {
         $this->addJs('/modules/xlyre/actions/managedataset/resources/js/index.js');
         $this->addCss('/modules/xlyre/actions/managedataset/resources/css/style.css');
@@ -288,13 +312,6 @@ class Action_managedataset extends ActionAbstract {
         }
     }
 
-    function addDistribution() {
-        if (isset($_FILES)) {
-            $this->sendJSON(array("file" => $_FILES['file']['name']));
-        } else {
-            $this->sendJSON(array("message" => "NANAI"));
-        }    
-    }
 
     private function _getValues($object, &$partial_options) {
         $values = $object->find('Id, Name', "1 ORDER BY Id", array(), MULTI);
@@ -321,6 +338,10 @@ class Action_managedataset extends ActionAbstract {
             $randomString .= $characters[rand(0, strlen($characters) - 1)];
         }
         return $randomString;
+    }
+
+    private function _toSlug($string) {
+        return preg_replace('/[^a-z\d-]/', '-', strtolower(trim($string)));
     }
 
 

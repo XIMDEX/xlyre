@@ -126,33 +126,36 @@ X.actionLoaded(function(event, fn, params) {
                     if(metadata && file) {
                         $scope.uploadButtonLabel = "Uploading";
                         $scope.uploadProgress = 0;
-                        // file.$formData({languages: metadata});
-                        var url = $scope.submitUrl.replace("updatedataset", 'addDistribution');
-                        for (key in metadata) {
-                            url+='&'+key+'='+metadata[key];
-                        }
-                        console.log(url);
-                        $scope.fileUploaderOptions = {
-                            url: url,
-                            progress: progressCallback
-                        };
-                        $timeout(function(){   
-                            file.$submit()
-                                .success(function(data){
-                                    $scope.uploadButtonLabel = "Done";
-                                    $scope.newDistributions = $scope.newDistributions || [];
-                                    $scope.newDistributions.unshift({
-                                        name: file.name,
-                                        format: file.type,
-                                        size: file.size,
-                                        created: file.lastModifiedDate,
-                                        modified: file.lastModifiedDate,
-                                        languages: angular.copy(metadata)
-                                    });
-                                    $scope.uploadButtonLabel = "Save Distribution";
-                                    $scope.$parent.newDistribution = null;
-                                    $scope.queue = [];
-                            });
+                        var formData = []
+                        formData.push({
+                            name: 'languages',
+                            value: angular.toJson(metadata)
+                        });
+                        file.$formData(formData);
+                        // var url = $scope.submitUrl.replace("updatedataset", 'addDistribution');
+                        // for (key in metadata) {
+                        //     url+='&languages['+key+']='+metadata[key];
+                        // }
+                        // console.log(url);
+                        // $scope.fileUploaderOptions = {
+                        //     url: url,
+                        //     progress: progressCallback
+                        // };
+                        file.$submit()
+                            .success(function(data){
+                                $scope.uploadButtonLabel = "Done";
+                                $scope.newDistributions = $scope.newDistributions || [];
+                                $scope.newDistributions.unshift({
+                                    name: file.name,
+                                    format: file.type,
+                                    size: file.size,
+                                    created: file.lastModifiedDate,
+                                    modified: file.lastModifiedDate,
+                                    languages: angular.copy(metadata)
+                                });
+                                $scope.uploadButtonLabel = "Save Distribution";
+                                $scope.$parent.newDistribution = null;
+                                $scope.queue = [];
                         });
                     }
                 }
