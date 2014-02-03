@@ -262,11 +262,11 @@
                     </span>
                     <span class="creation_date">
                         <span class="label_title">{t}Creation date{/t}</span>
-                        [[distribution.issued | date:'dd/MM/yyyy']]
+                        [[distribution.issued+'000' | date:'dd/MM/yyyy']]
                     </span>
                     <span class="modified_date">
                         <span class="label_title">{t}Modification date {/t}</span>
-                        [[distribution.modified | date:'dd/MM/yyyy']]
+                        [[distribution.modified+'000' | date:'dd/MM/yyyy']]
                     </span>
                 </div>
             </div>
