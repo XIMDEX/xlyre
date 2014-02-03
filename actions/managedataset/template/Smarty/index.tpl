@@ -198,7 +198,7 @@
             {t}Add distribution{/t}
         </button>
         <div class="new distributions" 
-            ng-controller="XUploader"
+            ng-controller="XLyreUploader"
             file-upload="fileUploaderOptions">
             <div class="row-item distribution_item new_distribution_item"
                 ng-show="newDistribution">
@@ -223,7 +223,7 @@
                     xim-label="uploadButtonLabel"
                     xim-disabled = "allowSave"
                     xim-progress = "uploadProgress"
-                    xim-state = "uploadState">
+                    xim-state = "queue[queue.length-1].$state()">
                     Save Distribution
                 </button>
             </div>
@@ -231,19 +231,19 @@
                 <div class="translated_items">
                     <div class="default_title"
                         ng-hide="showAllTitles">
-                        Spanish
+                        [[ distribution.languages[defaultLanguage] ]]
                     </div>
                     <ul ng-show="showAllTitles">
                         {foreach from=$languages item=l}
                             <li class="translate_item" ng-show="dataset.languages.{$l.IdLanguage}">
-                                <input type="text" placeholder="Distribution title"  value="[[newDistribution.{$l.IdLanguage}]]"><span class="language-label">{$l.Name}</span>
+                                <input type="text" placeholder="Distribution title"  value="[[distribution.languages.{$l.IdLanguage}]]"><span class="language-label">{$l.Name}</span>
                             </li>
                         {/foreach}
                     </ul>
                     <div class="title_language icon toggle"
                         ng-click="showAllTitles = !showAllTitles"
                         ng-show="activeLanguages">
-                        <span ng-hide="showAllTitles">{$languages[0].Name}</span>
+                        <span ng-hide="showAllTitles">Default language</span>
                     </div>
                 </div>
                 <div class="distribution_actions">
@@ -288,7 +288,7 @@
                 <div class="title_language icon toggle"
                     ng-click="showAllTitles = !showAllTitles"
                     ng-show="activeLanguages">
-                    <span ng-hide="showAllTitles">{$languages[0].Name}</span>
+                    <span ng-hide="showAllTitles">Default language</span>
                 </div>
             </div>
             <div class="distribution_actions">

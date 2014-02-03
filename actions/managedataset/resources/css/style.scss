@@ -277,19 +277,18 @@
 	// .title_language span {display: none;}
 }
 .distributions {
-	.upload-button, .save-button {
-		@extend %button;
-		height: 40px;
-		width: 49%;
-		display: inline-block!important;
+	.upload-button, .add-button {
+		@extend %button-default;
 	}
 	.save-button {
-		background-color: #c2d43b;
-		&:focus {
-			outline: none;
-
-		}
+		@extend %button-main-action-alt;
 	}
+
+	.upload-button, .save-button {
+		height: 40px;
+		width: 49%;
+	}
+	
 	.upload-button {
 		position: relative;
 		text-align: center;
@@ -319,7 +318,6 @@
 			vertical-align: middle;
 		}
 	}
-
 	button, a {
 		@extend %tiny-square-button;
 		background-color: #c2d43b;

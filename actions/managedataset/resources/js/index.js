@@ -25,16 +25,28 @@
 
 
 X.actionLoaded(function(event, fn, params) {
-        var ximdexModule = angular.module('ximdex', ['blueimp.fileupload']);
+        //Main ximdex module
+        angular.module('ximdex', ['ximdex.common', 'ximdex.vendor', 'xlyre']);
+        //Third party modules
+        angular.module('ximdex.vendor', ['blueimp.fileupload']);
+        //Common modules
+        angular.module('ximdex.common', ['ximdex.common.service', 'ximdex.common.directive']);
+        angular.module('ximdex.common.directive', []);
+        angular.module('ximdex.common.service', []);
         
-        ximdexModule.config(function($interpolateProvider) {
+        //"Ximdex module" specific modules 
+        angular.module('xlyre', []);
+        
+        //Configure interpolation symbols to work in smarty templates
+        angular.module('ximdex')
+            .config(function($interpolateProvider) {
                 $interpolateProvider.startSymbol('[[');
                 $interpolateProvider.endSymbol(']]');
         });
 
         //TODO: Load global services and directives globally
         //SERVICES 
-        ximdexModule
+        angular.module('ximdex.common.service')//Abstraction for server communications. TODO: Expose to client a REST like interface
             .factory('xBackend', ['$http', '$rootScope', 'xTree', function($http, $rootScope, xTree) {
                 return {
                     sendFormData: function(formData, url, callback){
@@ -52,10 +64,11 @@ X.actionLoaded(function(event, fn, params) {
                 }
         }]);
         
-        ximdexModule
+        angular.module('ximdex.common.service')
             .factory('xTree', ['$window', '$rootScope', function($window, $rootScope) { 
                 return {
                     // REALLY REALLY BAD PRACTIVE JUST A HACK TO DEAL WITH THE TREE
+                    // Use custom events instead
                     reloadNode: function(nodeId) {
                         $window.jQuery('li#treeview-nodeid-'+nodeId)
                             .closest('div.xim-treeview-container')
@@ -65,7 +78,7 @@ X.actionLoaded(function(event, fn, params) {
         }]);
 
         //CONTROLLER
-        ximdexModule
+        angular.module('xlyre')
             .controller('XDistibution', ['$scope', '$attrs', 'xBackend', '$timeout', function($scope, $attrs, xBackend, $timeout){
 
                 $scope.selectedLanguages = {};
@@ -73,9 +86,11 @@ X.actionLoaded(function(event, fn, params) {
 
                 $scope.$watch('dataset.languages', function(languages, oldLanguages){
                     $scope.activeLanguages = 0;
+                    $scope.defaultLanguage = null;
                     for (key in languages) {
                         if (languages[key] != '')
                             $scope.activeLanguages++;
+                            $scope.defaultLanguage = $scope.defaultLanguage || key;
                     }
                 }, true);
 
@@ -87,7 +102,6 @@ X.actionLoaded(function(event, fn, params) {
                             formData.languages.push(language);
                         }
                     }
-                    console.log($scope.submitUrl);
 
                     xBackend.sendFormData(formData, $scope.submitUrl, function(data){ 
                         if (!dataset.id && data.dataset.id) {
@@ -107,8 +121,8 @@ X.actionLoaded(function(event, fn, params) {
                 }
         }]);
 
-        ximdexModule
-            .controller('XUploader', ['$scope', '$attrs', '$timeout',function($scope, $attrs, $timeout){
+        angular.module('xlyre')
+            .controller('XLyreUploader', ['$scope', '$attrs', function($scope, $attrs){
                 var progressCallback = function (event, data) {
                     $scope.$apply(function(){
                         $scope.uploadProgress = parseInt(data.loaded / data.total * 100, 10);
@@ -120,46 +134,35 @@ X.actionLoaded(function(event, fn, params) {
                 };
                 $scope.uploadButtonLabel = 'Save Distribution';
                 $scope.addFileLabel = 'Atach File';
+                $scope.uploadState = 'pending';
 
                 $scope.uploadDistribution = function (metadata, file) {
-                    console.log("Uploading", metadata, file);
                     if(metadata && file) {
                         $scope.uploadButtonLabel = "Uploading";
                         $scope.uploadProgress = 0;
-                        // file.$formData({languages: metadata});
-                        var url = $scope.submitUrl.replace("updatedataset", 'addDistribution');
-                        for (key in metadata) {
-                            url+='&'+key+'='+metadata[key];
-                        }
-                        console.log(url);
-                        $scope.fileUploaderOptions = {
-                            url: url,
-                            progress: progressCallback
-                        };
-                        $timeout(function(){   
-                            file.$submit()
-                                .success(function(data){
-                                    $scope.uploadButtonLabel = "Done";
-                                    $scope.newDistributions = $scope.newDistributions || [];
-                                    $scope.newDistributions.unshift({
-                                        name: file.name,
-                                        format: file.type,
-                                        size: file.size,
-                                        created: file.lastModifiedDate,
-                                        modified: file.lastModifiedDate,
-                                        languages: angular.copy(metadata)
-                                    });
-                                    $scope.uploadButtonLabel = "Save Distribution";
-                                    $scope.$parent.newDistribution = null;
-                                    $scope.queue = [];
-                            });
+                        file.$formData({data: {jose: 'tomas', paco: 'cepero'}});
+                        file.$submit()
+                            .success(function(data){
+                                $scope.uploadButtonLabel = "Done";
+                                $scope.newDistributions = $scope.newDistributions || [];
+                                $scope.newDistributions.unshift({
+                                    name: file.name,
+                                    format: file.type,
+                                    size: file.size,
+                                    created: file.lastModifiedDate,
+                                    modified: file.lastModifiedDate,
+                                    languages: angular.copy(metadata)
+                                });
+                                $scope.uploadButtonLabel = "Save Distribution";
+                                $scope.$parent.newDistribution = null;
+                                $scope.queue = [];
                         });
                     }
                 }
         }]);  
         
         //DIRECTIVES
-        ximdexModule
+        angular.module('ximdex.common.directive')
             .directive('ximButton', ['$window', function ($window) {
                 return {
                     replace: true,
@@ -169,39 +172,33 @@ X.actionLoaded(function(event, fn, params) {
                         label: '=ximLabel',
                         progress: '=ximProgress'
                     },
+                    restrict: 'A',
                     template: '<button type="button" class="button ladda-button" data-style="slide-up" data-size="xs" ng-disabled="disabled">'+
-                            '<span class="ladda-label">[[label]]</span>'+
+                            '<span class="ladda-label">[[label]][[progress]]</span>'+
                         '</button>',
-                    controller: ['$scope', '$attrs', function ($scope, $attrs){
-                        console.log("controlling directive");
-
-                    }],
-                    linking: function (scope, element, attrs) {
-                        console.log("controlling directive");
+                    link: function postLink(scope, element, attrs) {
                         var loader = $window.Ladda.create(element[0]);
                         scope.$watch('state', function(newState, oldState){
-                            console.log(newState);
+                            console.log("stating", newState);
                             switch (newState) {
-            
-
+                                case 'submitting':
+                                    console.log("submittinh")
+                                    loader.start();
+                                    break;
+                                case 'pending':
+                                case 'resolved':
+                                    loader.stop();
+                                    break;
                             }
                         });
-                    },
+                        scope.$watch('progress', function(newValue, oldValue){
+                            console.log("progress", newValue);
+                            if (oldValue != newValue)
+                                loader.setProgress(newValue)
+                        });
+                    }
                 }
         }]);
-
-        
-
-        // ximdexModule.directive('xVlidate', function () {
-        //     return {
-        //         template: '<div></div>',
-        //         transclude: 'element',
-        //         restrict: 'A',
-        //         link: function postLink(scope, element, attrs) {
-        //             element.text('this is the directita directive');
-        //         }
-        //     };
-        // });
 
 
         //INITIALIZE ANGULAR APP
