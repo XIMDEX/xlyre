@@ -57,8 +57,8 @@ X.actionLoaded(function(event, fn, params) {
                                 data    : $.param(formData),  // pass in data as strings
                                 headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
                         }).success(function(data) {         
-                                if (formData.IDParent)
-                                    $rootScope.$broadcast('nodeModified', formData.IDParent);
+                                if (formData.IDParent || formData.id)
+                                    $rootScope.$broadcast('nodeModified', formData.IDParent || formData.id);
                                 callback(data);
                         });
                     }
