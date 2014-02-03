@@ -16,7 +16,7 @@ DELETE FROM SectionTypes where idSectionType=3;
 DELETE FROM NodeAllowedContents where NodeType in (4000,4001,4002,4003);
 
 -- Deleting all Xlyre Nodes
-DELETE FROM Nodes where Idnodetype in (4000,4001);
+DELETE FROM Nodes where Idnodetype in (4000,4001,4002);
 
 -- Deleting NodeDefaultContents for all Xlyre nodetypes
 DELETE FROM NodeDefaultContents where IdNodeType in (4000);
