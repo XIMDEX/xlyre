@@ -41,6 +41,8 @@ class Action_managedataset extends ActionAbstract {
 	function index(){
 		$this->loadResources();
 
+        $idNode = $this->request->getParam("nodeid");
+
         // Getting channels
         $channel = new Channel();
         $channels = $channel->getChannelsForNode($idNode);
@@ -51,16 +53,14 @@ class Action_managedataset extends ActionAbstract {
         $languages = $language->getLanguagesForNode($idNode);
         $values['languages'] = $languages;
 
-        $idNode = $this->request->getParam("nodeid");
         $node = new Node($idNode);
-        $idNode = $node->get('IdNode');
         $nt = $node->GetNodeType();
         if ($nt == XlyreOpenDataSection::IDNODETYPE) {
             $this->loadValues($values);
             $values['go_method'] = 'createdataset';
             $values['title'] = 'Create Dataset';
             $values['button'] = 'Create';
-            $values['id_catalog'] = $idNode;
+            // $values['id_catalog'] = $idNode;
         }
         elseif ($nt == XlyreOpenDataset::IDNODETYPE) {
             $this->loadValues($values, $idNode);
@@ -125,6 +125,7 @@ class Action_managedataset extends ActionAbstract {
                     'issued' => date($format, $dataset->Get('Issued')),
                     'modified' => date($format, $dataset->Get('Modified')),
                 ),
+                'id_dataset' => $iddataset,
                 'action_with_no_return' => $iddataset > 0,
                 'messages' => $this->messages->messages
         );
@@ -217,14 +218,6 @@ class Action_managedataset extends ActionAbstract {
             $values['distribution']['size'] = $_FILES['file']['size'];
             $values['distribution']['issued'] = time();
             $values['distribution']['modified'] = time();
-            if (isset($_POST['languages'])) {
-                $array_langs = json_decode($_POST['languages'], true);
-                if (is_array($array_langs)) {
-                    foreach ($array_langs as $key => $value) {
-                        $values['distribution']['languages'][$key] = $value;
-                    }
-                }
-            }
 
             $nt = new NodeType(XlyreOpenDistribution::IDNODETYPE);
             $data_dist = array(
@@ -235,7 +228,28 @@ class Action_managedataset extends ActionAbstract {
             );
             $baseio = new XlyreBaseIO();
             $iddist = $baseio->build($data_dist);
-            // Add i18n for distributions
+
+            error_log("*******************");
+            error_log("ID DISTRIBUTION: ".$iddist);
+            error_log("*******************");
+
+            if (isset($_POST['languages'])) {
+                $array_langs = json_decode($_POST['languages'], true);
+                if (is_array($array_langs)) {
+                    foreach ($array_langs as $key => $value) {
+                        // Save values in object to return
+                        $values['distribution']['languages'][$key] = $value;
+                        // Add i18n for title field
+                        if ($iddist > 0) {
+                            $xlrml = new XlyreRelMetaLangs();
+                            $xlrml->set('IdNode', $iddist);
+                            $xlrml->set('IdLanguage', $key);
+                            $xlrml->set('Title', $value);
+                            $xlrml->add();
+                        }
+                    }
+                }
+            }
 
             if (!($iddist > 0)) {
                 $values['errors'][] = _('Operation could not be successfully completed');
