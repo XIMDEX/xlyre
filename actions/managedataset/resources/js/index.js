@@ -99,7 +99,7 @@ X.actionLoaded(function(event, fn, params) {
 
         //CONTROLLER
         angular.module('xlyre')
-            .controller('XDistibution', ['$scope', '$attrs', 'xBackend', '$timeout', function($scope, $attrs, xBackend, $timeout){
+            .controller('XDistributionCtrl', ['$scope', '$attrs', 'xBackend', '$timeout', function($scope, $attrs, xBackend, $timeout){
 
                 $scope.selectedLanguages = {};
                 
@@ -142,7 +142,7 @@ X.actionLoaded(function(event, fn, params) {
         }]);
 
         angular.module('xlyre')
-            .controller('XLyreUploader', ['$scope', '$attrs', 'xUrlHelper', '$timeout', function($scope, $attrs, xUrlHelper, $timeout){
+            .controller('XLyreUploaderCtrl', ['$scope', '$attrs', 'xUrlHelper', '$timeout', function($scope, $attrs, xUrlHelper, $timeout){
                 var progressCallback = function (event, data) {
                     $scope.$apply(function(){
                         $scope.uploadProgress = parseInt(data.loaded / data.total * 100, 10);

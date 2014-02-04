@@ -25,7 +25,7 @@
 
 
 <form method="post" id='mdfdts_form' name="mdfdts" action="{$base_url}"
-    ng-controller="XDistibution" 
+    ng-controller="XDistributionCtrl" 
     ng-init="dataset.IDParent = '{$id_catalog}'; dataset.id = '{$id_dataset}';"
     ng-cloak
     xim-method="{$go_method}"
@@ -200,7 +200,7 @@
             {t}Add distribution{/t}
         </button>
         <div class="new distributions" 
-            ng-controller="XLyreUploader"
+            ng-controller="XLyreUploaderCtrl"
             file-upload="fileUploaderOptions"
             xim-nodeid="[[dataset.id]]">
             <div class="row-item distribution_item new_distribution_item"
