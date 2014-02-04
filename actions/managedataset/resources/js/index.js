@@ -123,7 +123,7 @@ X.actionLoaded(function(event, fn, params) {
                         }
                     }
                     console.log("que submito", dataset);
-                    xBackend.sendFormData(formData, $attrs.action, {action: $attrs.ximAction, method: $attrs.ximMethod, id: dataset.id, IDParent: dataset.IDParent}, function(data){ 
+                    xBackend.sendFormData(formData, $attrs.action, {action: $attrs.ximAction, method: $attrs.ximMethod, id: dataset.id || dataset.IDParent, IDParent: dataset.id || dataset.IDParent}, function(data){ 
                         $attrs.ximMethod = 'updatedataset';
                         if (!dataset.id && data && data.dataset && data.dataset.id) {
                             dataset.id = data.dataset.id;
