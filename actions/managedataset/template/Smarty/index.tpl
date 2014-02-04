@@ -261,7 +261,7 @@
                     </span>
                     <span class="size_file">
                         <span class="label_title">{t}Size{/t}</span>
-                        [[distribution.size | ximBytes]]
+                        [[distribution.size | xBytes]]
                     </span>
                     <span class="creation_date">
                         <span class="label_title">{t}Creation date{/t}</span>
