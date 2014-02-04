@@ -57,14 +57,18 @@ class Action_managedataset extends ActionAbstract {
         $nt = $node->GetNodeType();
         if ($nt == XlyreOpenDataSection::IDNODETYPE) {
             $this->loadValues($values);
+            $values['base_url'] = Config::getValue('UrlRoot');
             $values['go_method'] = 'createdataset';
+            $values['action'] = 'managedataset';
             $values['title'] = 'Create Dataset';
             $values['button'] = 'Create';
             // $values['id_catalog'] = $idNode;
         }
         elseif ($nt == XlyreOpenDataset::IDNODETYPE) {
             $this->loadValues($values, $idNode);
+            $values['base_url'] = Config::getValue('UrlRoot');
             $values['go_method'] = 'updatedataset';
+            $values['action'] = 'managedataset';
             $values['title'] = 'Edit Dataset';
             $values['button'] = 'Update';
             $values['id_dataset'] = $idNode;

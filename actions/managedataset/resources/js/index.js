@@ -48,19 +48,35 @@ X.actionLoaded(function(event, fn, params) {
         //TODO: Load global services and directives globally
         //SERVICES 
         angular.module('ximdex.common.service')//Abstraction for server communications. TODO: Expose to client a REST like interface
-            .factory('xBackend', ['$http', '$rootScope', 'xTree', function($http, $rootScope, xTree) {
+            .factory('xBackend', ['$http', '$rootScope', 'xTree', 'xUrlHelper', function($http, $rootScope, xTree, xUrlHelper) {
                 return {
-                    sendFormData: function(formData, url, callback){
-                        $http({
-                                method  : 'POST',
-                                url     : url,
-                                data    : $.param(formData),  // pass in data as strings
-                                headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
-                        }).success(function(data) {         
-                                if (formData.IDParent || formData.id)
-                                    $rootScope.$broadcast('nodeModified', formData.IDParent || formData.id);
-                                callback(data);
-                        });
+                    sendFormData: function(formData, url, params, callback){
+                        var actionUrl = xUrlHelper.parseAction(url, params);
+                        console.log(params);
+                        console.log("submitting: ", actionUrl);
+                        if (actionUrl) {
+                            $http({
+                                    method  : 'POST',
+                                    url     : actionUrl,
+                                    data    : $.param(formData),  // pass in data as strings
+                                    headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
+                            }).success(function(data) {         
+                                    if (formData.IDParent || formData.id)
+                                        $rootScope.$broadcast('nodeModified', formData.IDParent || formData.id);
+                                    callback(data);
+                            });
+                        }  
+                    }
+                }
+        }]);
+
+        angular.module('ximdex.common.service')//Abstraction for server communications. TODO: Expose to client a REST like interface
+            .factory('xUrlHelper', ['$window', function($window) {
+                return {
+                    parseAction: function(url, params){
+                        var timestamp = new Date().getTime();
+                        var actionUrl = url+'/xmd/loadaction.php?noCacheVar='+timestamp+'&action='+params.action+'&method='+params.method;
+                        return actionUrl;
                     }
                 }
         }]);
@@ -101,12 +117,12 @@ X.actionLoaded(function(event, fn, params) {
                         }
                     }
 
-                    xBackend.sendFormData(formData, $scope.submitUrl, function(data){ 
-                        if (!dataset.id && data.dataset.id) {
+                    xBackend.sendFormData(formData, $attrs.action, {action: $attrs.ximAction, method: $attrs.ximMethod}, function(data){ 
+                        if (!dataset.id && data.dataset && data.dataset.id) {
                             dataset.id = data.dataset.id;
                             dataset.issued = data.dataset.issued;
                             dataset.modified = data.dataset.modified;
-                            $scope.submitUrl = $scope.submitUrl.replace('createdataset', 'updatedataset');
+                            $attrs.ximMethod = 'updatedataset';
                         }
                         if (data && data.messages) {
                             $scope.submitMessages = data.messages;
@@ -120,14 +136,14 @@ X.actionLoaded(function(event, fn, params) {
         }]);
 
         angular.module('xlyre')
-            .controller('XLyreUploader', ['$scope', '$attrs', function($scope, $attrs){
+            .controller('XLyreUploader', ['$scope', '$attrs', 'xUrlHelper', function($scope, $attrs, xUrlHelper){
                 var progressCallback = function (event, data) {
                     $scope.$apply(function(){
                         $scope.uploadProgress = parseInt(data.loaded / data.total * 100, 10);
                     });
                 }
-                var url = $scope.submitUrl.replace("updatedataset", 'addDistribution');
-                url = $scope.submitUrl.replace("createdataset", 'addDistribution');
+                var url = xUrlHelper.parseAction($scope.submitUrl, {action:'managedataset', method:'addDistribution'});
+               
                 $scope.fileUploaderOptions = {
                     url: url,
                     progress: progressCallback
