@@ -50,10 +50,8 @@ X.actionLoaded(function(event, fn, params) {
         angular.module('ximdex.common.service')//Abstraction for server communications. TODO: Expose to client a REST like interface
             .factory('xBackend', ['$http', '$rootScope', 'xTree', 'xUrlHelper', function($http, $rootScope, xTree, xUrlHelper) {
                 return {
-                    sendFormData: function(formData, url, params, callback){
-                        var actionUrl = xUrlHelper.parseAction(url, params);
-                        console.log(params);
-                        console.log("submitting: ", actionUrl);
+                    sendFormData: function(formData, params, callback){
+                        var actionUrl = xUrlHelper.getAction(params);
                         if (actionUrl) {
                             $http({
                                     method  : 'POST',
@@ -73,14 +71,16 @@ X.actionLoaded(function(event, fn, params) {
         angular.module('ximdex.common.service')//Abstraction for server communications. TODO: Expose to client a REST like interface
             .factory('xUrlHelper', ['$window', function($window) {
                 return {
-                    parseAction: function(url, params){
+                    baseUrl: function() {
+                        return $window.X.restUrl;
+                    },
+                    getAction: function(params){
                         var timestamp = new Date().getTime();
-                        var actionUrl = url+'/xmd/loadaction.php?noCacheVar='+timestamp+'&action='+params.action+'&method='+params.method;
-                        if (params.IDParent) {
-                            actionUrl+='&nodeid='+params.IDParent;
-                        }
+                        var actionUrl = this.baseUrl()+'?noCacheVar='+timestamp+'&action='+params.action+'&method='+params.method;
                         if (params.id) {
-                            actionUrl+='&nodes[0]'+params.id;
+                            actionUrl+='&nodeid='+params.id+'&nodes[0]'+params.id;
+                        } else if (params.IDParent) {
+                            actionUrl+='&nodeid='+params.IDParent+'&nodes[0]'+params.IDParent;
                         }
                         return actionUrl;
                     }
@@ -102,8 +102,7 @@ X.actionLoaded(function(event, fn, params) {
             .controller('XDistibution', ['$scope', '$attrs', 'xBackend', '$timeout', function($scope, $attrs, xBackend, $timeout){
 
                 $scope.selectedLanguages = {};
-                $scope.submitUrl = $attrs.action;
-
+                
                 $scope.$watch('dataset.languages', function(languages, oldLanguages){
                     $scope.activeLanguages = 0;
                     $scope.defaultLanguage = null;
@@ -123,7 +122,7 @@ X.actionLoaded(function(event, fn, params) {
                         }
                     }
                     console.log("que submito", dataset);
-                    xBackend.sendFormData(formData, $attrs.action, {action: $attrs.ximAction, method: $attrs.ximMethod, id: dataset.id || dataset.IDParent, IDParent: dataset.id || dataset.IDParent}, function(data){ 
+                    xBackend.sendFormData(formData, {action: $attrs.ximAction, method: $attrs.ximMethod, id: dataset.id, IDParent: dataset.IDParent}, function(data){ 
                         $attrs.ximMethod = 'updatedataset';
                         if (!dataset.id && data && data.dataset && data.dataset.id) {
                             dataset.id = data.dataset.id;
@@ -143,26 +142,27 @@ X.actionLoaded(function(event, fn, params) {
         }]);
 
         angular.module('xlyre')
-            .controller('XLyreUploader', ['$scope', '$attrs', 'xUrlHelper', function($scope, $attrs, xUrlHelper){
+            .controller('XLyreUploader', ['$scope', '$attrs', 'xUrlHelper', '$timeout', function($scope, $attrs, xUrlHelper, $timeout){
                 var progressCallback = function (event, data) {
                     $scope.$apply(function(){
                         $scope.uploadProgress = parseInt(data.loaded / data.total * 100, 10);
                     });
                 }
-                var url = xUrlHelper.parseAction($scope.submitUrl, {action:'managedataset', method:'addDistribution', IDParent: $scope.dataset.id});
-               
-                $scope.fileUploaderOptions = {
-                    url: url,
-                    progress: progressCallback
-                };
+                
                 $scope.uploadButtonLabel = 'Save Distribution';
                 $scope.addFileLabel = 'Atach File';
                 $scope.uploadState = 'pending';
 
                 $scope.uploadDistribution = function (metadata, file) {
+                    
                     if(metadata && file) {
                         $scope.uploadButtonLabel = "Uploading";
                         $scope.uploadProgress = 0;
+                        
+                        $scope.fileUploaderOptions = {
+                            url: xUrlHelper.getAction({action:'managedataset', method:'addDistribution', IDParent: $attrs.ximNodeid}),
+                            progress: progressCallback
+                        };
 
                         var formData = []
                         formData.push({
@@ -170,16 +170,17 @@ X.actionLoaded(function(event, fn, params) {
                             value: angular.toJson(metadata)
                         });
                         file.$formData(formData);
-                        
-                        file.$submit()
-                            .success(function(data){
-                                console.log("Recieved data", data);
-                                $scope.uploadButtonLabel = "Done";
-                                $scope.newDistributions = $scope.newDistributions || [];
-                                $scope.newDistributions.unshift(data.distribution);
-                                $scope.uploadButtonLabel = "Save Distribution";
-                                $scope.$parent.newDistribution = null;
-                                $scope.queue = [];
+                        $timeout(function(){
+                            file.$submit()
+                                .success(function(data){
+                                    console.log("Recieved data", data);
+                                    $scope.uploadButtonLabel = "Done";
+                                    $scope.newDistributions = $scope.newDistributions || [];
+                                    $scope.newDistributions.unshift(data.distribution);
+                                    $scope.uploadButtonLabel = "Save Distribution";
+                                    $scope.$parent.newDistribution = null;
+                                    $scope.queue = [];
+                            });
                         });
                     }
                 }

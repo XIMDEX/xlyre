@@ -201,7 +201,8 @@
         </button>
         <div class="new distributions" 
             ng-controller="XLyreUploader"
-            file-upload="fileUploaderOptions">
+            file-upload="fileUploaderOptions"
+            xim-nodeid="[[dataset.id]]">
             <div class="row-item distribution_item new_distribution_item"
                 ng-show="newDistribution">
                 <div class="translated_items expanded">
