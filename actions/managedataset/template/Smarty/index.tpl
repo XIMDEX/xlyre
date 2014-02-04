@@ -24,10 +24,12 @@
 *}
 
 
-<form method="post" id='mdfdts_form' name="mdfdts" action='{$action_url}' 
+<form method="post" id='mdfdts_form' name="mdfdts" action="{$base_url}"
     ng-controller="XDistibution" 
     ng-init="dataset.IDParent = '{$id_catalog}'; dataset.id = '{$id_dataset}';"
-    ng-cloak>
+    ng-cloak
+    xim-method="{$go_method}"
+    xim-action="{$action}">
     <div class="action_header">
             <h2>{t}{$title}{/t}</h2>  
     </div>
