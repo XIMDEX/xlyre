@@ -76,6 +76,12 @@ X.actionLoaded(function(event, fn, params) {
                     parseAction: function(url, params){
                         var timestamp = new Date().getTime();
                         var actionUrl = url+'/xmd/loadaction.php?noCacheVar='+timestamp+'&action='+params.action+'&method='+params.method;
+                        if (params.IDParent) {
+                            actionUrl+='&nodeid='+params.IDParent;
+                        }
+                        if (params.id) {
+                            actionUrl+='&nodes[0]'+params.id;
+                        }
                         return actionUrl;
                     }
                 }
@@ -116,9 +122,10 @@ X.actionLoaded(function(event, fn, params) {
                             formData.languages.push(language);
                         }
                     }
-
-                    xBackend.sendFormData(formData, $attrs.action, {action: $attrs.ximAction, method: $attrs.ximMethod}, function(data){ 
-                        if (!dataset.id && data.dataset && data.dataset.id) {
+                    console.log("que submito", dataset);
+                    xBackend.sendFormData(formData, $attrs.action, {action: $attrs.ximAction, method: $attrs.ximMethod, id: dataset.id, IDParent: dataset.IDParent}, function(data){ 
+                        $attrs.ximMethod = 'updatedataset';
+                        if (!dataset.id && data && data.dataset && data.dataset.id) {
                             dataset.id = data.dataset.id;
                             dataset.issued = data.dataset.issued;
                             dataset.modified = data.dataset.modified;
@@ -142,7 +149,7 @@ X.actionLoaded(function(event, fn, params) {
                         $scope.uploadProgress = parseInt(data.loaded / data.total * 100, 10);
                     });
                 }
-                var url = xUrlHelper.parseAction($scope.submitUrl, {action:'managedataset', method:'addDistribution'});
+                var url = xUrlHelper.parseAction($scope.submitUrl, {action:'managedataset', method:'addDistribution', IDParent: $scope.dataset.id});
                
                 $scope.fileUploaderOptions = {
                     url: url,
@@ -191,7 +198,7 @@ X.actionLoaded(function(event, fn, params) {
                     },
                     restrict: 'A',
                     template: '<button type="button" class="button ladda-button" data-style="slide-up" data-size="xs" ng-disabled="disabled">'+
-                            '<span class="ladda-label">[[label]][[progress]]</span>'+
+                            '<span class="ladda-label">[[label]]</span>'+
                         '</button>',
                     link: function postLink(scope, element, attrs) {
                         var loader = $window.Ladda.create(element[0]);
