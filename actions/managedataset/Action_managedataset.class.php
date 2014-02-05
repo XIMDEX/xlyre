@@ -235,7 +235,7 @@ class Action_managedataset extends ActionAbstract {
             );
             $baseio = new XlyreBaseIO();
             $iddist = $baseio->build($data_dist);
-            
+
             if (isset($_POST['languages'])) {
                 $array_langs = json_decode($_POST['languages'], true);
                 if (is_array($array_langs)) {
@@ -311,8 +311,31 @@ class Action_managedataset extends ActionAbstract {
             for($i=0; $i<sizeof($values['languages']); $i++) {
                 $values['languages'][$i]['Checked'] = in_array($values['languages'][$i]['IdLanguage'], array_keys($values['languages_dataset'])) ? TRUE : FALSE;
             }
-            $dsmeta_node = new Node($idNode);
-            $values['id_catalog'] = $dsmeta_node->getParent();
+            $values['id_catalog'] = $dsmeta->getParent();
+            // Get Distributions
+            $node = new Node($idNode);
+            $distributions = $node->GetChildren(XlyreOpenDistribution::IDNODETYPE);
+            $dstList = array();
+            if ($distributions) {
+                foreach ($distributions as $distribution) {
+                    $languages_distribution = $xlrml->find('Title, IdLanguage', "IdNode = %s", array($distribution), MULTI);
+                    $languages_dist_array = array();
+                    foreach ($languages_distribution as $ld) {
+                        $languages_dist_array[$ld['IdLanguage']] = $ld['Title'];
+                    }
+                    $distro = new XlyreDistribution($distribution);
+                    $dstList[] = array(
+                        "file" => $distro->get("Filename"),
+                        "format" => $distro->get("MediaType"),
+                        "size" => $distro->get("ByteSize"),
+                        "issued" => $distro->get("Issued"),
+                        "modified" => $distro->get("Modified"),
+                        "languages" => $languages_dist_array,
+                    );
+                }
+            }
+            var_dump($dstList);
+            $values['distributions'] = $dstList;
         }
         else {
             $values['name'] = "";
@@ -329,6 +352,7 @@ class Action_managedataset extends ActionAbstract {
             for($i=0; $i<sizeof($values['languages']); $i++) {
                 $values['languages'][$i]['Checked'] = FALSE;
             }
+            $values['distributions'] = array();
         }
     }
 
