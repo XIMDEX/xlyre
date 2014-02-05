@@ -96,7 +96,6 @@ angular.module('ximdex.module.xlyre')
                 $timeout(function(){
                     file.$submit()
                         .success(function(data){
-                            console.log("Recieved data", data);
                             $scope.uploadButtonLabel = "Done";
                             $scope.newDistributions = $scope.newDistributions || [];
                             $scope.newDistributions.unshift(data.distribution);
@@ -109,3 +108,7 @@ angular.module('ximdex.module.xlyre')
         }
     }]);  
 
+//Start angular compile and binding
+X.actionLoaded(function(event, fn, params) {
+    X.angularTools.initView(params.context, params.tabId);    
+});
