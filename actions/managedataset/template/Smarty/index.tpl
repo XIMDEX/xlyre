@@ -192,7 +192,8 @@
         </div>
             
           
-    <div class="distributions" ng-show="dataset.id">
+    <div class="distributions"
+        ng-show="dataset.id">
         <h3>{t}Distributions{/t}</h3>
         <button type="button" class="add-button" id="new-distribution"
             ng-click="newDistribution = {}"
@@ -201,6 +202,7 @@
         </button>
         <div class="new distributions" 
             ng-controller="XLyreUploaderCtrl"
+            ng-init="distributions = '{$distributions}'"
             file-upload="fileUploaderOptions"
             xim-nodeid="[[dataset.id]]">
             <div class="row-item distribution_item new_distribution_item"
@@ -230,7 +232,8 @@
                     Save Distribution
                 </button>
             </div>
-            <div class="row-item distribution_item" ng-repeat="distribution in newDistributions">
+            <div class="row-item distribution_item"
+                ng-repeat="distribution in distributions">
                 <div class="translated_items">
                     <div class="default_title"
                         ng-hide="showAllTitles">

@@ -97,8 +97,8 @@ angular.module('ximdex.module.xlyre')
                     file.$submit()
                         .success(function(data){
                             $scope.uploadButtonLabel = "Done";
-                            $scope.newDistributions = $scope.newDistributions || [];
-                            $scope.newDistributions.unshift(data.distribution);
+                            $scope.distributions = $scope.distributions || [];
+                            $scope.distributions.unshift(data.distribution);
                             $scope.uploadButtonLabel = "Save Distribution";
                             $scope.$parent.newDistribution = null;
                             $scope.queue = [];
