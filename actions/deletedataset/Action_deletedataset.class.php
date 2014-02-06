@@ -84,12 +84,6 @@ class Action_deletedataset extends ActionAbstract {
 		$node = new Node($idNode);
 		$distributions = $node->getChildren(XlyreOpenDistribution::IDNODETYPE);
 		if ($distributions) {
-			$xlrml = new XlyreRelMetaLangs();
-			$rel_lang_distribution = $xlrml->find('IdRel', "IdNode = %s", array($idNode), MULTI);
-            foreach ($rel_lang_distribution as $rld) {
-            	$xlrml_delete = new XlyreRelMetaLangs($rld[0]);
-	            $xlrml_delete->delete();
-            }
 			foreach ($distributions as $distribution) {
 				$dist = new Node($distribution);
 				$dist->delete();
