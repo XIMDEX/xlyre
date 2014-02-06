@@ -282,7 +282,7 @@ class Action_managedataset extends ActionAbstract {
         $this->_getValues(new XlyreThemes(), $values['themes']);
         $this->_getValues(new XlyrePeriodicities(), $values['periodicities']);
         $this->_getValues(new XlyreSpatials(), $values['spatials']);
-
+        $values['default_language'] = 10002;
         $node = new Node();
         $linkfolder = $node->find('IdNode', "idnodetype = 5048 AND Name = 'Licenses'", array(), MONO);
         if ($linkfolder) {
