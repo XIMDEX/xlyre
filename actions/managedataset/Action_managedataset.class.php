@@ -258,6 +258,10 @@ class Action_managedataset extends ActionAbstract {
                 $values['errors'][] = _('Operation could not be successfully completed');
                 // $values['errors'][] = $baseio->messages();
             }
+            else {
+                $values['messages'] = _('The distribution was uploaded sucesfully');
+                $values['distribution']['id'] = $iddist;
+            }
         }
         else {
             $values['errors'][] = _("There is no file to upload. Please try again.");
@@ -334,7 +338,6 @@ class Action_managedataset extends ActionAbstract {
                     );
                 }
             }
-            var_dump($dstList);
             $values['distributions'] = $dstList;
         }
         else {
