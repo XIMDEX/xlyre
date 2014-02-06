@@ -28,6 +28,7 @@
 
 ModulesManager::file('/inc/sync/SynchroFacade.class.php');
 ModulesManager::file('/actions/browser3/inc/GenericDatasource.class.php');
+ModulesManager::file('/inc/nodetypes/xlyreopendistribution.inc', 'xlyre');
 
 class Action_deletedataset extends ActionAbstract {
 
@@ -41,7 +42,7 @@ class Action_deletedataset extends ActionAbstract {
 			$idNode = $this->request->getParam('nodeid');
 		}
 		$node = new Node($idNode);
-		$distributions = $node->GetChildren();
+		$distributions = $node->getChildren(XlyreOpenDistribution::IDNODETYPE);
 		$dstList = array();
 		if ($distributions) {
 			foreach ($distributions as $distribution) {
@@ -81,7 +82,7 @@ class Action_deletedataset extends ActionAbstract {
 		$parentID = $node->get('IdParent');
 
 		$node = new Node($idNode);
-		$distributions = $node->getChildren();
+		$distributions = $node->getChildren(XlyreOpenDistribution::IDNODETYPE);
 		if ($distributions) {
 			$xlrml = new XlyreRelMetaLangs();
 			$rel_lang_distribution = $xlrml->find('IdRel', "IdNode = %s", array($idNode), MULTI);
