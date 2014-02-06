@@ -329,6 +329,7 @@ class Action_managedataset extends ActionAbstract {
                     }
                     $distro = new XlyreDistribution($distribution);
                     $dstList[] = array(
+                        "id" => $distribution,
                         "file" => $distro->get("Filename"),
                         "format" => $distro->get("MediaType"),
                         "size" => $distro->get("ByteSize"),
