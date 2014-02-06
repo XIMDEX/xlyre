@@ -23,19 +23,25 @@
  *  @version $Revision$
  */
 angular.module('ximdex.module.xlyre')
-    .controller('XDistributionCtrl', ['$scope', '$attrs', 'xBackend', '$timeout', function($scope, $attrs, xBackend, $timeout){
+    .controller('XLyreDatasetCtrl', ['$scope', '$attrs', 'xBackend', '$timeout', function($scope, $attrs, xBackend, $timeout){
 
         $scope.selectedLanguages = {};
-        
+        $scope.distributions = [];
+
         $scope.$watch('dataset.languages', function(languages, oldLanguages){
             $scope.activeLanguages = 0;
-            $scope.defaultLanguage = null;
             for (key in languages) {
                 if (languages[key] != '')
                     $scope.activeLanguages++;
                     $scope.defaultLanguage = $scope.defaultLanguage || key;
             }
         }, true);
+
+        $scope.addDistribution = function(distribution) {
+            console.log("ADDINGo", distribution);
+            $scope.newDistributions = $scope.newDistributions || [];
+            $scope.newDistributions.unshift(distribution);   
+        }
 
         $scope.submitForm = function(form, dataset){
             var formData = angular.copy(dataset);
@@ -46,6 +52,7 @@ angular.module('ximdex.module.xlyre')
                 }
             }
             xBackend.sendFormData(formData, {action: $attrs.ximAction, method: $attrs.ximMethod, id: dataset.id, IDParent: dataset.IDParent}, function(data){ 
+                console.log("Recieved data: ", data);
                 $attrs.ximMethod = 'updatedataset';
                 if (!dataset.id && data && data.dataset && data.dataset.id) {
                     dataset.id = data.dataset.id;
@@ -65,7 +72,7 @@ angular.module('ximdex.module.xlyre')
     }]);
 
 angular.module('ximdex.module.xlyre')
-    .controller('XLyreUploaderCtrl', ['$scope', '$attrs', 'xUrlHelper', '$timeout', function($scope, $attrs, xUrlHelper, $timeout){
+    .controller('XLyreDistributionCtrl', ['$scope', '$attrs', 'xUrlHelper', '$timeout', function($scope, $attrs, xUrlHelper, $timeout){
         var progressCallback = function (event, data) {
             $scope.$apply(function(){
                 $scope.uploadProgress = parseInt(data.loaded / data.total * 100, 10);
@@ -96,9 +103,8 @@ angular.module('ximdex.module.xlyre')
                 $timeout(function(){
                     file.$submit()
                         .success(function(data){
+                            $scope.addDistribution(data.distribution);
                             $scope.uploadButtonLabel = "Done";
-                            $scope.distributions = $scope.distributions || [];
-                            $scope.distributions.unshift(data.distribution);
                             $scope.uploadButtonLabel = "Save Distribution";
                             $scope.$parent.newDistribution = null;
                             $scope.queue = [];
