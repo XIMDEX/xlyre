@@ -256,16 +256,35 @@ class Action_managedataset extends ActionAbstract {
             }
 
             if (!($iddist > 0)) {
-                $values['errors'][] = _('Operation could not be successfully completed');
+                $values['errors'][] = _('Operation could not be successfully completed.');
                 // $values['errors'][] = $baseio->messages();
             }
             else {
-                $values['messages'] = _('The distribution was uploaded sucesfully');
+                $values['messages'] = _('The distribution was uploaded sucesfully.');
                 $values['distribution']['id'] = $iddist;
             }
         }
         else {
             $values['errors'][] = _("There is no file to upload. Please try again.");
+        }
+        $this->sendJSON($values);
+    }
+
+
+    function deleteDistribution() {
+        $values = array();
+        if (isset($_POST['id'])) {
+            $dist = new Node($_POST['id']);
+            $result = $dist->delete();
+            if ($res != 0) {
+                $values['messages'] = _("The distribution was deleted sucesfully.");
+            }
+            else {
+                $values['errors'][] = _("There was a problem conecting with the server. Please try again.");
+            }
+        }
+        else {
+            $values['errors'][] = _("There was a problem conecting with the server. Please try again.");
         }
         $this->sendJSON($values);
     }
