@@ -277,26 +277,26 @@
 	// .title_language span {display: none;}
 }
 .distributions {
-	.upload-button, .add-button {
+	.upload-button, .add-button, .cancel-button {
 		@extend %button-default;
 	}
-	.save-button {
-		@extend %button-main-action-alt;
+	.upload-button, .save-button {
+		@extend %button-main-action;
 	}
 
-	.upload-button, .save-button {
+	.cancel-button, .save-button {
 		height: 40px;
-		width: 49%;
+		width: 100%;
 	}
-	
+	.upload-button {
+
+	}
 	.upload-button {
 		position: relative;
-		text-align: center;
-		display: inline-block!important;
-		vertical-align: top;
-		span {
-			font-size: 1.1em;
-			line-height: 1.2;
+		text-align: center;	
+		i {
+			@extend %icon;
+			@extend %upload;
 		}
 		input {
 			opacity: 0;
@@ -307,15 +307,25 @@
 			height: 100%;
 		}
 	}
+
+	.save-cancel-buttonset {
+		margin-top: 1em;
+		display: flex;
+		justify-content: space-between;
+	}
 }
 .distribution_actions {
 	display: flex;
 	justify-content: space-between;
 	.file {
-		font-size: 1.2em;
-		& > * {
-			display: inline-block!important;
+		width: 32%;
+		.upload-button,
+		.file_name {
+			display: inline-block;
 			vertical-align: middle;
+		}
+		.file_name {
+			font-size: 1.2em;
 		}
 	}
 	button, a {
@@ -335,12 +345,30 @@
 		@extend %icon;
 		@extend %upload;
 	}
-	.download_link {
-		@extend %icon;
-		@extend %download;
-	}
-	
 
+}
+.crud-actions {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 0.2em 0.4em;
+	font-size: 1.2em;
+	.edit-button, .delete-button {
+		@extend %icon-button;
+		margin: 0;
+		padding: 0;
+
+	}
+	.edit-button i{
+		@extend %icon;
+		@extend %pencil;
+		color: $c_grey;
+	}
+	.delete-button i{
+		@extend %icon;
+		@extend %cancel;
+		color: $c_delete;
+	}
 }
 #mdfdts_form {
 	.submit-button {

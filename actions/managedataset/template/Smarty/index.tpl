@@ -26,8 +26,10 @@
 
 <form method="post" id='mdfdts_form' name="mdfdts" action="{$base_url}"
     ng-controller="XLyreDatasetCtrl" 
-    ng-init="dataset.IDParent = '{$id_catalog}'; dataset.id = '{$id_dataset}'; defaultLanguage = '{$default_language}';"
+    ng-init="dataset.IDParent = '{$id_catalog}'; dataset.id = '{$id_dataset}'; defaultLanguage = '{$default_language}'"
     ng-cloak
+    xim-languages='{$json_languages}'
+    xim-distributions='{$json_distributions}'
     xim-method="{$go_method}"
     xim-action="{$action}">
     <div class="action_header">
@@ -52,7 +54,8 @@
                 
                 <div>
                     <select name="" id="" class="language_selector js_language_selector" 
-                            ng-model="selectedLanguage">
+                            ng-model="selectedLanguage"
+                            ng-show="activeLanguages">
                         <option value="" 
                             ng-selected="!dataset.languages[selectedLanguage]">
                             Select a language
@@ -194,172 +197,33 @@
           
     <div class="distributions"
         ng-show="dataset.id">
-        <h3>{t}Distributions{/t}</h3>
+        <h3>{t}Distributions{/t}</h3>     
         <button type="button" class="add-button" id="new-distribution"
-            ng-click="newDistribution = {}"
-            ng-hide="newDistribution">
+            ng-click="newDistribution()">
             {t}Add distribution{/t}
         </button>
-        <div class="new distributions" 
-            ng-controller="XLyreDistributionCtrl"
-            file-upload="fileUploaderOptions"
-            xim-nodeid="[[dataset.id]]">
-            <div class="row-item distribution_item new_distribution_item"
-                ng-show="newDistribution">
-                <div class="translated_items expanded">
-                    <ul>
-                        {foreach from=$languages item=l}
-                            <li class="translate_item" ng-show="dataset.languages.{$l.IdLanguage}">
-                                <input type="text" placeholder="Distribution title"  value="Distribution title"
-                                    ng-model="newDistribution['{$l.IdLanguage}']">
-                                <span class="language-label">{$l.Name}</span>
-                            </li>
-                        {/foreach}
-                    </ul>
-                </div>
-                <span type="button" class="upload-button">
-                    <span>[[queue[queue.length-1].name || 'Attach file']]</span>
-                    <input name="file" type="file" multi="false" class="xim-uploader"/>
-                </span>
-                <button class="save-button" 
-                    ng-click="uploadDistribution(newDistribution, queue[queue.length-1])"
-                    xim-button
-                    xim-label="uploadButtonLabel"
-                    xim-disabled = "allowSave"
-                    xim-progress = "uploadProgress"
-                    xim-state = "queue[queue.length-1].$state()">
-                    Save Distribution
-                </button>
-            </div>
-            <div class="row-item distribution_item"
-                ng-repeat="distribution in newDistributions">
-                <div class="translated_items">
-                    <div class="default_title"
-                        ng-hide="showAllTitles">
-                        [[distribution.languages[defaultLanguage] ]]
-                    </div>
-                    <ul ng-show="showAllTitles">
-                        {foreach from=$languages item=l}
-                            <li class="translate_item" ng-show="dataset.languages.{$l.IdLanguage}">
-                                <input type="text" placeholder="Distribution title"  value="[[distribution.languages.{$l.IdLanguage}]]"><span class="language-label">{$l.Name}</span>
-                            </li>
-                        {/foreach}
-                    </ul>
-                    <div class="title_language icon toggle"
-                        ng-click="showAllTitles = !showAllTitles"
-                        ng-show="activeLanguages">
-                    </div>
-                </div>
-                <div class="distribution_actions">
-                    <span class="file">
-                        <span class="file_name">[[distribution.file]]</span>
-                        <button type="button" class="name_uploader"></button>
-                        <a href="#" class="download_link"></a>
-                    </span>
-                    <span class="format_file">
-                        <span class="label_title">{t}Format{/t}</span>
-                        [[distribution.format]]
-                    </span>
-                    <span class="size_file">
-                        <span class="label_title">{t}Size{/t}</span>
-                        [[distribution.size | xBytes]]
-                    </span>
-                    <span class="creation_date">
-                        <span class="label_title">{t}Creation date{/t}</span>
-                        [[distribution.issued+'000' | date:'dd/MM/yyyy']]
-                    </span>
-                    <span class="modified_date">
-                        <span class="label_title">{t}Modification date {/t}</span>
-                        [[distribution.modified+'000' | date:'dd/MM/yyyy']]
-                    </span>
-                </div>
-            </div>
-        </div>
-        {foreach from=$distributions item=d name=distributions}
-            <div class="row-item distribution_item"
-                ng-init="distributions[{$smarty.foreach.distributions.iteration-1}] = {};
-                    distributions[{$smarty.foreach.distributions.iteration-1}].languages = {};
-                    distributions[{$smarty.foreach.distributions.iteration-1}].file='{$d.file}';
-                    distributions[{$smarty.foreach.distributions.iteration-1}].format='{$d.format}';
-                    distributions[{$smarty.foreach.distributions.iteration-1}].size='{$d.size}';
-                    distributions[{$smarty.foreach.distributions.iteration-1}].issued='{$d.issued}';
-                    distributions[{$smarty.foreach.distributions.iteration-1}].modified='{$d.modified}';"
-                    ng-controller="XLyreDistributionCtrl"
-                    file-upload="fileUploaderOptions"
-                    xim-nodeid="[[dataset.id]]">
-                <div class="translated_items">
-                    <div class="default_title"
-                        ng-hide="distributions[{$smarty.foreach.distributions.iteration-1}].$edit">
-                        [[distributions[{$smarty.foreach.distributions.iteration-1}].languages.{$default_language}]]</div>
-                    <ul ng-show="distributions[{$smarty.foreach.distributions.iteration-1}].$edit">
-                        {foreach from=$languages item=l}
-                            <li class="translate_item" ng-show="dataset.languages.{$l.IdLanguage}">
-                                <input type="text" placeholder="Distribution title"  value=""
-                                    ng-init="distributions[{$smarty.foreach.distributions.iteration-1}].languages.{$l.IdLanguage} = '{$d.languages[$l.IdLanguage]}'"
-                                    ng-model="distributions[{$smarty.foreach.distributions.iteration-1}].languages.{$l.IdLanguage}">
-                                <span class="language-label">{$l.Name}</span>
-                            </li>
-                        {/foreach}
-                    </ul>
-                    <div class="title_language icon toggle"
-                        ng-click="distributions[{$smarty.foreach.distributions.iteration-1}].$edit = !distributions[{$smarty.foreach.distributions.iteration-1}].$edit">
-                    </div>
-                </div>
-                <div ng-show="distributions[{$smarty.foreach.distributions.iteration-1}].$edit">
-                    <span type="button" class="upload-button">
-                        <span>[[queue[queue.length-1].name || 'Change File']]</span>
-                        <input name="file" type="file" multi="false" class="xim-uploader"/>
-                    </span>
-                    <button class="save-button" 
-                        ng-click="uploadDistribution(distributions[{$smarty.foreach.distributions.iteration-1}], queue[queue.length-1])"
-                        xim-button
-                        xim-label="uploadButtonLabel"
-                        xim-disabled = "allowSave"
-                        xim-progress = "uploadProgress"
-                        xim-state = "queue[queue.length-1].$state()">
-                        Save Distribution
-                    </button>
-                </div>
-                <div class="distribution_actions">
-                    <span class="file">
-                        <span class="file_name">[[queue[queue.length-1].name || distributions[{$smarty.foreach.distributions.iteration-1}].file]]</span>
-                    </span>
-                    <span class="format_file">
-                        <span class="label_title">{t}Format{/t}</span>
-                        [[queue[queue.length-1].format || distributions[{$smarty.foreach.distributions.iteration-1}].format]]
-                    </span>
-                    <span class="size_file">
-                        <span class="label_title">{t}Size{/t}</span>
-                        [[queue[queue.length-1].size || distributions[{$smarty.foreach.distributions.iteration-1}].size | xBytes ]]
-                    </span>
-                    <span class="creation_date">
-                        <span class="label_title">{t}Creation date{/t}</span>
-                        <span ng-hide="distributions[{$smarty.foreach.distributions.iteration-1}].$edit && queue.length">
-                            [[distributions[{$smarty.foreach.distributions.iteration-1}].issued | date:'dd/MM/yyyy']]
-                        </span>
-                    </span>
-                    <span class="modified_date">
-                        <span class="label_title">{t}Modification date {/t}</span>
-                        <span ng-hide="distributions[{$smarty.foreach.distributions.iteration-1}].$edit && queue.length">
-                            [[distributions[{$smarty.foreach.distributions.iteration-1}].modified | date:'dd/MM/yyyy']]
-                        </span>
-                    </span>
-                </div>
-            </div>
-        {/foreach}
+        <xlyre-distribution ng-repeat="distribution in distributions"
+                xim-distribution="distribution"
+                xim-default-language="{$default_language}"
+                xim-active-languages="dataset.languages"
+                xim-nodeid="[[dataset.id]]"> 
+        </xlyre-distribution>
+            
     </div> 
 
-<!--     <xlyre-distribution></xlyre-distribution> -->
+    <!-- {foreach from=$distributions item=d name=distributions}
+        
+            <ul>
+                {foreach from=$languages item=l}
+                    <li>DISTRO LOC TITLE: {$d.languages[$l.IdLanguage]}</li>
+                {/foreach}
+            </ul>
+        
+
+    {/foreach} -->
+
     </div>
     <fieldset class="buttons-form positioned_btn">
         <button type="button" class="submit-button" ng-click="submitForm(mdfdts, dataset)">Update</button>
     </fieldset>                
-    
-    <!-- <div style="position: absolute; z-index:99999; bottom: 0; right: 0;">
-        <ul>
-            <li ng-repeat="(key, value) in dataset">
-                <span>[[key]]:</span><span>[[value]]</span>
-            </li>
-        </ul>
-    </div> -->
 </form>
