@@ -1,10 +1,10 @@
-<div class="row-item distribution_item" ng-hide="deleted" file-upload="fileUploaderOptions">
+<form class="row-item distribution_item" ng-hide="deleted" file-upload="fileUploaderOptions" name="dist_form" xim-text="[[errorMsg]]" ng-class="{error: errorMsg}">
     <div class="translated_items">
         <div class="default_title"
-            ng-hide="edit">
+            ng-hide="editing">
 			[[defaultTitle]]
         </div>
-        <ul ng-show="edit">
+        <ul ng-show="editing">
             <li class="translate_item" ng-repeat="(key, value) in activeLanguages" ng-show="value">
                 <input type="text" placeholder="Distribution title"  value=""
                     ng-model="distribution.languages[key]">
@@ -18,7 +18,7 @@
         <span class="file">
             
             <span class="file_name">[[queue[queue.length-1].name || distribution.file]]</span>
-            <span class="upload-button" ng-show="edit">
+            <span class="upload-button" ng-show="editing">
                 <i></i>
                 <input name="file" type="file" multi="false" class="xim-uploader"/>
             </span>
@@ -33,23 +33,23 @@
         </span>
         <span class="creation_date">
             <span class="label_title">Creation date</span>
-            <span ng-hide="edit && queue.length">
+            <span ng-hide="editing && queue.length">
                 [[distribution.issued | date:'dd/MM/yyyy']]
             </span>
         </span>
         <span class="modified_date">
             <span class="label_title">Modification date</span>
-            <span ng-hide="edit && queue.length">
+            <span ng-hide="editing && queue.length">
                 [[distribution.modified | date:'dd/MM/yyyy']]
             </span>
         </span>
     </div>
-    <div ng-show="edit" class="save-cancel-buttonset">
+    <div ng-show="editing" class="save-cancel-buttonset">
         <button type="button" class="cancel-button"
-        	ng-click="edit = !edit">
+        	ng-click="cancelAction()">
         	<span>Cancel</span>
         </button>
-        <button class="save-button" 
+        <button class="save-button" ng-class="{hidded: (!distribution.id && !queue.length) || (distribution.id && (dist_form.$pristine && !queue.length))}"
             ng-click="saveDistribution(distribution, queue[queue.length-1])"
             xim-button
             xim-label="uploadButtonLabel"
@@ -60,14 +60,14 @@
     </div>
     <div class="crud-actions">
     	<button type="button" class="edit-button"
-        	ng-click="edit = !edit"
-        	ng-hide="edit">
+        	ng-click="editDistribution()"
+        	ng-hide="editing">
         	<i></i>
         </button>
         <button type="button" class="delete-button"
         	ng-click="deleteDistribution(distribution)"
-        	ng-show="distribution.id && !edit">
+        	ng-show="distribution.id && !editing">
         	<i></i>
         </button>
     </div>
-</div>
+</form>

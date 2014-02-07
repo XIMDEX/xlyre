@@ -32,8 +32,8 @@
     xim-distributions='{$json_distributions}'
     xim-method="{$go_method}"
     xim-action="{$action}">
-    <div class="action_header">
-            <h2>{t}{$title}{/t}</h2>  
+    <div class="action_header" ng-hide="submitMessages.length">
+            <h2>[[submitLabel]]</h2>  
     </div>
     <div class="message" ng-show="submitMessages.length">
         <p class="ui-state-primary ui-corner-all msg-info">
@@ -193,22 +193,29 @@
             
          
         </div>
-            
-          
-    <div class="distributions"
-        ng-show="dataset.id">
-        <h3>{t}Distributions{/t}</h3>     
-        <button type="button" class="add-button" id="new-distribution"
-            ng-click="newDistribution()">
-            {t}Add distribution{/t}
+        
+        <button class="submit-button" 
+            ng-click="submitForm(mdfdts, dataset)"
+            xim-button
+            xim-label="submitLabel"
+            xim-state = "submitStatus">
+            Update
         </button>
-        <xlyre-distribution ng-repeat="distribution in distributions"
-                xim-distribution="distribution"
-                xim-default-language="{$default_language}"
-                xim-active-languages="dataset.languages"
-                xim-nodeid="[[dataset.id]]"> 
-        </xlyre-distribution>
-            
+          
+        <div class="distributions"
+            ng-show="dataset.id">
+            <h3>{t}Distributions{/t}</h3>     
+            <button type="button" class="add-button" id="new-distribution"
+                ng-click="newDistribution()">
+                {t}Add distribution{/t}
+            </button>
+            <xlyre-distribution ng-repeat="distribution in distributions"
+                    xim-distribution="distribution"
+                    xim-default-language="{$default_language}"
+                    xim-active-languages="dataset.languages"
+                    xim-nodeid="[[dataset.id]]"> 
+            </xlyre-distribution>
+                
     </div> 
 
     <!-- {foreach from=$distributions item=d name=distributions}
@@ -222,8 +229,5 @@
 
     {/foreach} -->
 
-    </div>
-    <fieldset class="buttons-form positioned_btn">
-        <button type="button" class="submit-button" ng-click="submitForm(mdfdts, dataset)">Update</button>
-    </fieldset>                
+    </div>            
 </form>

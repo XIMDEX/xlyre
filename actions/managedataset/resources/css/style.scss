@@ -206,6 +206,24 @@
 
 .distribution_item{
 	color: $c_grey;
+	&.error {
+		position: relative;
+		&::before {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			border-raiuds: 3px;
+			background-color: white;
+			opacity: 0.9;
+			content: attr(xim-text);
+			z-index: 3;
+			line-height: 7;
+			text-align: center;
+			color: lighten(black, 20%);
+		}
+	}
 }
 
 
@@ -285,12 +303,14 @@
 	}
 
 	.cancel-button, .save-button {
-		height: 40px;
+		height: 36px;
 		width: 100%;
+		&.hidded {
+			width:0;
+			padding: 0;
+		}
 	}
-	.upload-button {
 
-	}
 	.upload-button {
 		position: relative;
 		text-align: center;	
@@ -307,7 +327,6 @@
 			height: 100%;
 		}
 	}
-
 	.save-cancel-buttonset {
 		margin-top: 1em;
 		display: flex;
@@ -375,11 +394,13 @@
 		@include btn;
 		@include radius(2px);
 		padding: 7px 14px 5px;
-		margin: 0 0 0 10px;
 		cursor: pointer;
 		font-size: 1.1rem;
 		border: 1px solid #d3d3d3;
 		@include btn-main;
+		width: 63%;
+		margin-top: 54px;
+		height: 36px;
 		&:hover, &:focus {
 			@include btn-hover;
 			@include btn-main-hover;

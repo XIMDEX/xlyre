@@ -246,6 +246,22 @@
 
 .distribution_item {
   color: #606060; }
+  .distribution_item.error {
+    position: relative; }
+    .distribution_item.error::before {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-raiuds: 3px;
+      background-color: white;
+      opacity: 0.9;
+      content: attr(xim-text);
+      z-index: 3;
+      line-height: 7;
+      text-align: center;
+      color: #333333; }
 
 .translate_item {
   margin-bottom: .5em; }
@@ -301,8 +317,11 @@
     top: 3px; }
 
 .distributions .cancel-button, .distributions .save-button {
-  height: 40px;
+  height: 36px;
   width: 100%; }
+  .distributions .cancel-button.hidded, .distributions .save-button.hidded {
+    width: 0;
+    padding: 0; }
 .distributions .upload-button {
   position: relative;
   text-align: center; }
@@ -367,7 +386,6 @@
   -moz-border-radius: 2px;
   border-radius: 2px;
   padding: 7px 14px 5px;
-  margin: 0 0 0 10px;
   cursor: pointer;
   font-size: 1.1rem;
   border: 1px solid #d3d3d3;
@@ -377,7 +395,10 @@
   background-image: -o-linear-gradient(#72c4b9, #7ccac0);
   background-image: linear-gradient(#72c4b9, #7ccac0);
   border-color: #74c6bb;
-  text-shadow: 0 -1px 0 #60b6aa, 0 1px 0 rgba(255, 255, 255, 0.2); }
+  text-shadow: 0 -1px 0 #60b6aa, 0 1px 0 rgba(255, 255, 255, 0.2);
+  width: 63%;
+  margin-top: 54px;
+  height: 36px; }
   #mdfdts_form .submit-button:hover, #mdfdts_form .submit-button:focus {
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4b4b4b), to(#707070));
     background-image: -webkit-linear-gradient(#4b4b4b, #707070);
