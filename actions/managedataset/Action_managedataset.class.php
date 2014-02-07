@@ -52,6 +52,7 @@ class Action_managedataset extends ActionAbstract {
         $language = new Language();
         $languages = $language->getLanguagesForNode($idNode);
         $values['languages'] = $languages;
+        $values['json_languages'] = json_encode($languages);
 
         $node = new Node($idNode);
         $nt = $node->GetNodeType();
@@ -340,6 +341,7 @@ class Action_managedataset extends ActionAbstract {
                 }
             }
             $values['distributions'] = $dstList;
+            $values['json_distributions'] = json_encode($dstList);
         }
         else {
             $values['name'] = "";
