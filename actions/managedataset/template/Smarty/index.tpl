@@ -31,7 +31,8 @@
     xim-languages='{$json_languages}'
     xim-distributions='{$json_distributions}'
     xim-method="{$go_method}"
-    xim-action="{$action}">
+    xim-action="{$action}"
+    novalidate>
     <div class="action_header" ng-hide="submitMessages.length">
             <h2>[[submitLabel]]</h2>  
     </div>
