@@ -117,7 +117,15 @@
                     }
 
                     var updateDistributionMetadata = function (distribution) {
-                        showErrorMessage("No se ha podido actualizar la distribucion");
+                        $http.post(xUrlHelper.getAction({action:'managedataset', method:'updateDistribution', id: distribution.id}), {languages: angular.toJson(distribution.languages)}).success(function(data){
+                            if (data) {
+                                if (data.errors){
+                                    shoErrorMessage(data.errors[0]);  
+                                } else {
+                                    $scope.editing = false;
+                                }
+                            }
+                        });
                     }
 
                     var uploadDistribution = function(distribution, file){
