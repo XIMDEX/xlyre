@@ -41,7 +41,7 @@
   border-color: #fff;
   background: #d6d8dd; }
 
-.distributions .save-button, .distributions .upload-button, .distributions .add-button {
+.distributions .upload-button, .distributions .save-button, .distributions .add-button, .distributions .cancel-button {
   background: #fff;
   border: 1px solid #dedede;
   display: inline-block;
@@ -57,24 +57,25 @@
   cursor: pointer !important;
   border-color: #fff;
   background: #d6d8dd; }
-  .distributions .save-button input, .distributions .upload-button input, .distributions .add-button input {
+  .distributions .upload-button input, .distributions .save-button input, .distributions .add-button input, .distributions .cancel-button input {
     cursor: pointer; }
-  .distributions .save-button:focus, .distributions .upload-button:focus, .distributions .add-button:focus, .distributions .save-button:active, .distributions .upload-button:active, .distributions .add-button:active, .distributions .active.save-button, .distributions .active.upload-button, .distributions .active.add-button, .distributions .save-button:hover, .distributions .upload-button:hover, .distributions .add-button:hover {
+  .distributions .upload-button:focus, .distributions .save-button:focus, .distributions .add-button:focus, .distributions .cancel-button:focus, .distributions .upload-button:active, .distributions .save-button:active, .distributions .add-button:active, .distributions .cancel-button:active, .distributions .active.upload-button, .distributions .active.save-button, .distributions .active.add-button, .distributions .active.cancel-button, .distributions .upload-button:hover, .distributions .save-button:hover, .distributions .add-button:hover, .distributions .cancel-button:hover {
     outline: none; }
-  .distributions .save-button:focus, .distributions .upload-button:focus, .distributions .add-button:focus, .distributions .save-button:hover, .distributions .upload-button:hover, .distributions .add-button:hover {
+  .distributions .upload-button:focus, .distributions .save-button:focus, .distributions .add-button:focus, .distributions .cancel-button:focus, .distributions .upload-button:hover, .distributions .save-button:hover, .distributions .add-button:hover, .distributions .cancel-button:hover {
     background: #babdc6; }
-  .distributions .save-button:active, .distributions .upload-button:active, .distributions .add-button:active, .distributions .active.save-button, .distributions .active.upload-button, .distributions .active.add-button {
+  .distributions .upload-button:active, .distributions .save-button:active, .distributions .add-button:active, .distributions .cancel-button:active, .distributions .active.upload-button, .distributions .active.save-button, .distributions .active.add-button, .distributions .active.cancel-button {
     box-shadow: inset 0 0 1px #464955; }
-  .distributions .save-button:disabled, .distributions .upload-button:disabled, .distributions .add-button:disabled, .distributions .disabled.save-button, .distributions .disabled.upload-button, .distributions .disabled.add-button {
+  .distributions .upload-button:disabled, .distributions .save-button:disabled, .distributions .add-button:disabled, .distributions .cancel-button:disabled, .distributions .disabled.upload-button, .distributions .disabled.save-button, .distributions .disabled.add-button, .distributions .disabled.cancel-button {
     background: #babdc6 !important;
     cursor: default !important; }
 
-.distributions .save-button {
-  background: #c2d43b; }
-  .distributions .save-button:focus, .distributions .save-button:hover {
-    background: #a4b428; }
-  .distributions .save-button:active {
-    box-shadow: inset 0 0 1px #0c0d03; }
+.distributions .upload-button, .distributions .save-button {
+  color: white !important;
+  background-image: linear-gradient(#72c4b9, #7ccac0); }
+  .distributions .upload-button:focus, .distributions .save-button:focus, .distributions .upload-button:hover, .distributions .save-button:hover {
+    background-image: linear-gradient(#4eb5a7, #58bbaf); }
+  .distributions .upload-button:active, .distributions .save-button:active {
+    background-image: linear-gradient(#7ccac0, #72c4b9); }
 
 .distribution_actions button, .distribution_actions a {
   width: 1.48em;
@@ -86,17 +87,22 @@
     outline: none;
     box-shadow: none; }
 
-.distributions .save-button, .distributions .upload-button, .distributions .add-button {
-  -webkit-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) background;
-  -moz-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) background;
-  -ms-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) background;
-  -o-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) background;
-  transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) background; }
+.crud-actions .edit-button, .crud-actions .delete-button {
+  cursor: pointer;
+  background: none;
+  border: none; }
+  .crud-actions .edit-button:active, .crud-actions .delete-button:active, .crud-actions .edit-button:focus, .crud-actions .delete-button:focus {
+    outline: none;
+    box-shadow: none; }
 
-/*******
-	ICON GENERIC STYLES
-*******/
-.distribution_actions .name_uploader::before, .distribution_actions .download_link::before {
+.distributions .upload-button, .distributions .save-button, .distributions .add-button, .distributions .cancel-button {
+  -webkit-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all;
+  -moz-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all;
+  -ms-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all;
+  -o-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all;
+  transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all; }
+
+.distributions .upload-button i::before, .distribution_actions .name_uploader::before, .crud-actions .edit-button i::before, .crud-actions .delete-button i::before {
   font-family: 'ximdex_icons' !important;
   speak: none;
   font-style: normal;
@@ -108,14 +114,14 @@
   -moz-osx-font-smoothing: grayscale;
   vertical-align: middle; }
 
-/*******
-	ICONS
-*******/
-.distribution_actions .download_link::before {
-  content: "\e610"; }
-
-.distribution_actions .name_uploader::before {
+.distributions .upload-button i::before, .distribution_actions .name_uploader::before {
   content: "\e611"; }
+
+.crud-actions .edit-button i::before {
+  content: "\45"; }
+
+.crud-actions .delete-button i::before {
+  content: "\63"; }
 
 .add_element {
   background: #c4e7e2;
@@ -240,6 +246,22 @@
 
 .distribution_item {
   color: #606060; }
+  .distribution_item.error {
+    position: relative; }
+    .distribution_item.error::before {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-raiuds: 3px;
+      background-color: white;
+      opacity: 0.9;
+      content: attr(xim-text);
+      z-index: 3;
+      line-height: 7;
+      text-align: center;
+      color: #333333; }
 
 .translate_item {
   margin-bottom: .5em; }
@@ -294,17 +316,15 @@
     right: 16px;
     top: 3px; }
 
-.distributions .upload-button, .distributions .save-button {
-  height: 40px;
-  width: 49%; }
+.distributions .cancel-button, .distributions .save-button {
+  height: 36px;
+  width: 100%; }
+  .distributions .cancel-button.hidded, .distributions .save-button.hidded {
+    width: 0;
+    padding: 0; }
 .distributions .upload-button {
   position: relative;
-  text-align: center;
-  display: inline-block !important;
-  vertical-align: top; }
-  .distributions .upload-button span {
-    font-size: 1.1em;
-    line-height: 1.2; }
+  text-align: center; }
   .distributions .upload-button input {
     opacity: 0;
     position: absolute;
@@ -312,15 +332,22 @@
     right: 0;
     width: 100%;
     height: 100%; }
+.distributions .save-cancel-buttonset {
+  margin-top: 1em;
+  display: flex;
+  justify-content: space-between; }
 
 .distribution_actions {
   display: flex;
   justify-content: space-between; }
   .distribution_actions .file {
-    font-size: 1.2em; }
-    .distribution_actions .file > * {
-      display: inline-block !important;
+    width: 32%; }
+    .distribution_actions .file .upload-button,
+    .distribution_actions .file .file_name {
+      display: inline-block;
       vertical-align: middle; }
+    .distribution_actions .file .file_name {
+      font-size: 1.2em; }
   .distribution_actions button, .distribution_actions a {
     background-color: #c2d43b; }
     .distribution_actions button:hover, .distribution_actions a:hover {
@@ -329,6 +356,20 @@
     line-height: 1.3; }
   .distribution_actions .label_title {
     padding-left: 0; }
+
+.crud-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.2em 0.4em;
+  font-size: 1.2em; }
+  .crud-actions .edit-button, .crud-actions .delete-button {
+    margin: 0;
+    padding: 0; }
+  .crud-actions .edit-button i {
+    color: #606060; }
+  .crud-actions .delete-button i {
+    color: #c56e50; }
 
 #mdfdts_form .submit-button {
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#6e6e6e), to(#7b7b7b));
@@ -345,7 +386,6 @@
   -moz-border-radius: 2px;
   border-radius: 2px;
   padding: 7px 14px 5px;
-  margin: 0 0 0 10px;
   cursor: pointer;
   font-size: 1.1rem;
   border: 1px solid #d3d3d3;
@@ -355,7 +395,10 @@
   background-image: -o-linear-gradient(#72c4b9, #7ccac0);
   background-image: linear-gradient(#72c4b9, #7ccac0);
   border-color: #74c6bb;
-  text-shadow: 0 -1px 0 #60b6aa, 0 1px 0 rgba(255, 255, 255, 0.2); }
+  text-shadow: 0 -1px 0 #60b6aa, 0 1px 0 rgba(255, 255, 255, 0.2);
+  width: 63%;
+  margin-top: 54px;
+  height: 36px; }
   #mdfdts_form .submit-button:hover, #mdfdts_form .submit-button:focus {
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4b4b4b), to(#707070));
     background-image: -webkit-linear-gradient(#4b4b4b, #707070);

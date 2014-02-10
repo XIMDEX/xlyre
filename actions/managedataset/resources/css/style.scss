@@ -206,6 +206,24 @@
 
 .distribution_item{
 	color: $c_grey;
+	&.error {
+		position: relative;
+		&::before {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			border-raiuds: 3px;
+			background-color: white;
+			opacity: 0.9;
+			content: attr(xim-text);
+			z-index: 3;
+			line-height: 7;
+			text-align: center;
+			color: lighten(black, 20%);
+		}
+	}
 }
 
 
@@ -277,26 +295,28 @@
 	// .title_language span {display: none;}
 }
 .distributions {
-	.upload-button, .add-button {
+	.upload-button, .add-button, .cancel-button {
 		@extend %button-default;
 	}
-	.save-button {
-		@extend %button-main-action-alt;
+	.upload-button, .save-button {
+		@extend %button-main-action;
 	}
 
-	.upload-button, .save-button {
-		height: 40px;
-		width: 49%;
+	.cancel-button, .save-button {
+		height: 36px;
+		width: 100%;
+		&.hidded {
+			width:0;
+			padding: 0;
+		}
 	}
-	
+
 	.upload-button {
 		position: relative;
-		text-align: center;
-		display: inline-block!important;
-		vertical-align: top;
-		span {
-			font-size: 1.1em;
-			line-height: 1.2;
+		text-align: center;	
+		i {
+			@extend %icon;
+			@extend %upload;
 		}
 		input {
 			opacity: 0;
@@ -307,15 +327,24 @@
 			height: 100%;
 		}
 	}
+	.save-cancel-buttonset {
+		margin-top: 1em;
+		display: flex;
+		justify-content: space-between;
+	}
 }
 .distribution_actions {
 	display: flex;
 	justify-content: space-between;
 	.file {
-		font-size: 1.2em;
-		& > * {
-			display: inline-block!important;
+		width: 32%;
+		.upload-button,
+		.file_name {
+			display: inline-block;
 			vertical-align: middle;
+		}
+		.file_name {
+			font-size: 1.2em;
 		}
 	}
 	button, a {
@@ -335,23 +364,43 @@
 		@extend %icon;
 		@extend %upload;
 	}
-	.download_link {
-		@extend %icon;
-		@extend %download;
-	}
-	
 
+}
+.crud-actions {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 0.2em 0.4em;
+	font-size: 1.2em;
+	.edit-button, .delete-button {
+		@extend %icon-button;
+		margin: 0;
+		padding: 0;
+
+	}
+	.edit-button i{
+		@extend %icon;
+		@extend %pencil;
+		color: $c_grey;
+	}
+	.delete-button i{
+		@extend %icon;
+		@extend %cancel;
+		color: $c_delete;
+	}
 }
 #mdfdts_form {
 	.submit-button {
 		@include btn;
 		@include radius(2px);
 		padding: 7px 14px 5px;
-		margin: 0 0 0 10px;
 		cursor: pointer;
 		font-size: 1.1rem;
 		border: 1px solid #d3d3d3;
 		@include btn-main;
+		width: 63%;
+		margin-top: 54px;
+		height: 36px;
 		&:hover, &:focus {
 			@include btn-hover;
 			@include btn-main-hover;
