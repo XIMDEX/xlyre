@@ -104,8 +104,8 @@
                 templateUrl : 'modules/xlyre/actions/managedataset/template/Angular/xlyreDistribution.html',
                 controller: ['$scope', '$element', '$attrs', '$transclude', '$http', '$timeout', 'xUrlHelper', 'xDialog', 'xBackend', function($scope, $element, $attrs, $transclude, $http, $timeout, xUrlHelper, xDialog, xBackend){
 
-                    $scope.uploadButtonLabel = 'Save Distribution';
-                    $scope.addFileLabel = 'Atach File';
+                    $scope.uploadButtonLabel = _('Save Distribution');
+                    $scope.addFileLabel = _('Atach File');
                     $scope.uploadState = 'pending';
                     $scope.distribution.languages = $scope.distribution.languages || []
                     if (!$scope.distribution.id) 
@@ -130,7 +130,7 @@
                     }
 
                     var uploadDistribution = function(distribution, file){
-                        $scope.uploadButtonLabel = "Uploading";
+                        $scope.uploadButtonLabel = _("Uploading");
                         $scope.uploadProgress = 0;
                         var formData = []
                         if (distribution){
@@ -162,12 +162,13 @@
                             file.$submit()
                                 .success(function(data){
                                     if (!data) {
-                                        showErrorMessage("predefined error");
+                                        showErrorMessage("Error");
                                     } else if (data.errors) {
                                         showErrorMessage(data.errors[0]);
                                     } else if (data.distribution) {
                                         angular.extend($scope.distribution, data.distribution);
                                         $scope.editing = false;
+                                        $scope.uploadButtonLabel = _('Save Distribution');
                                     }
                                     $scope.queue = [];
                             });
@@ -221,6 +222,7 @@
                         var file = $scope.queue[$scope.queue.length-1];
                         if (file && (file.$status == 'pending')) {
                             file.$cancel();
+                            $scope.uploadButtonLabel = _('Save Distribution');
                         } else if ($scope.distribution.id) {;
                             if ($scope.backupDistribution)    
                                 $scope.distribution = $scope.backupDistribution;
