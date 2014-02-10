@@ -60,30 +60,31 @@
             }
             
             $scope.submitForm = function(form, dataset){
-                var formData = angular.copy(dataset);
-                $scope.submitStatus = 'submitting';
-                formData.languages = [];
-                for (var language in dataset.languages) {
-                    if (language) {
-                        formData.languages.push(language);
+                if (form.$valid) {    
+                    var formData = angular.copy(dataset);
+                    $scope.submitStatus = 'submitting';
+                    formData.languages = [];
+                    for (var language in dataset.languages) {
+                        if (language) {
+                            formData.languages.push(language);
+                        }
                     }
-                }
-                xBackend.sendFormData(formData, {action: $attrs.ximAction, method: $scope.method, id: dataset.id, IDParent: dataset.IDParent}, function(data){ 
-                    if (!dataset.id && data && data.dataset && data.dataset.id) {
-                        $scope.method = 'updatedataset';
-                        dataset.id = data.dataset.id;
-                        dataset.issued = data.dataset.issued;
-                        dataset.modified = data.dataset.modified;
-                    }
-                    if (data && data.messages) {
-                        $scope.submitStatus = 'success';
-                        $scope.submitMessages = data.messages;
-                        $timeout(function(){
-                            $scope.submitMessages = null;
-                        }, 4000);
-                    }
-                });
-                    
+                    xBackend.sendFormData(formData, {action: $attrs.ximAction, method: $scope.method, id: dataset.id, IDParent: dataset.IDParent}, function(data){ 
+                        if (!dataset.id && data && data.dataset && data.dataset.id) {
+                            $scope.method = 'updatedataset';
+                            dataset.id = data.dataset.id;
+                            dataset.issued = data.dataset.issued;
+                            dataset.modified = data.dataset.modified;
+                        }
+                        if (data && data.messages) {
+                            $scope.submitStatus = 'success';
+                            $scope.submitMessages = data.messages;
+                            $timeout(function(){
+                                $scope.submitMessages = null;
+                            }, 4000);
+                        }
+                    });
+                }  
             }
         }]);
     angular.module('ximdex').registerItem('XLyreDatasetCtrl');
@@ -205,7 +206,7 @@
                                         }
                                     });    
                                 }
-                           }, _('The distribution and the attached file will be destroyed. Do you want to continue?'));//TODO: Write a translation service and filter
+                            }, _('The distribution and the attached file will be destroyed. Do you want to continue?'));//TODO: Write a translation service and filter
                         }
                     }
                     

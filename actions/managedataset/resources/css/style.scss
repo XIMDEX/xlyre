@@ -29,7 +29,6 @@
 @import "../../../../../../xmd/style/jquery/ximdex_theme/widgets/themes/_extends";
 @import "../../../../../../xmd/style/jquery/ximdex_theme/widgets/themes/_icons";
 
-
 .add_element{
 	background:lighten($c_mainlight, 20%);
 	border: 1px dashed $c_grey-pp;
@@ -407,12 +406,14 @@
 			outline: none;
 		}
 		&:active {
-			@include boxshadow(0 0  6px 3px darken($c_mainlight, 5%));
-		}
-		&:active {
 			@include boxshadow(inset 0 2px 4px $s_black);
 			outline: none;
 		}
+		&:disabled, &.disabled {
+            @include boxshadow(none);
+            background: lighten(#72c4b9, 10%)!important;
+            cursor: default!important;   
+        } 
 	}
 	.buttons-form {top: .5em;}
 }
