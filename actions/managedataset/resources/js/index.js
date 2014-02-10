@@ -165,7 +165,7 @@
                                     } else if (data.errors) {
                                         showErrorMessage(data.errors[0]);
                                     } else if (data.distribution) {
-                                        $scope.distribution = data.distribution;
+                                        angular.extend($scope.distribution, data.distribution);
                                         $scope.editing = false;
                                     }
                                     $scope.queue = [];
