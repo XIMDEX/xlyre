@@ -101,7 +101,7 @@
                 },
                 restrict: 'E',
                 templateUrl : 'modules/xlyre/actions/managedataset/template/Angular/xlyreDistribution.html',
-                controller: ['$scope', '$element', '$attrs', '$transclude', '$http', '$timeout', 'xUrlHelper', 'xDialog', function($scope, $element, $attrs, $transclude, $http, $timeout, xUrlHelper, xDialog){
+                controller: ['$scope', '$element', '$attrs', '$transclude', '$http', '$timeout', 'xUrlHelper', 'xDialog', 'xBackend', function($scope, $element, $attrs, $transclude, $http, $timeout, xUrlHelper, xDialog, xBackend){
 
                     $scope.uploadButtonLabel = 'Save Distribution';
                     $scope.addFileLabel = 'Atach File';
@@ -197,7 +197,7 @@
                         if(distribution && distribution.id) {
                             xDialog.openConfirmation(function(result){
                                 if (result) {
-                                    $http.post(xUrlHelper.getAction({action:'managedataset', method:'deleteDistribution', id: distribution.id}), {id:distribution.id}).success(function(data){
+                                    xBackend.sendFormData({id:distribution.id}, {action:'managedataset', method:'deleteDistribution', id: distribution.id}, function(data){
                                         if (data && data.errors){
                                             shoErrorMessage(data.errors[0]);  
                                         } else if (data && data.messages) {
