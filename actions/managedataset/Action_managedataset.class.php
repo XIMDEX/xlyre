@@ -272,14 +272,15 @@ class Action_managedataset extends ActionAbstract {
 
     function deleteDistribution() {
         $values = array();
-        if (isset($_POST['id'])) {
-            $dist = new Node($_POST['id']);
+        $dist_id = $this->request->getParam('nodeid');
+        if ($dist_id) {
+            $dist = new Node($dist_id);
             $result = $dist->delete();
-            if ($res != 0) {
+            if ($result != 0) {
                 $values['messages'] = _("The distribution was deleted sucesfully.");
             }
             else {
-                $values['errors'][] = _("There was a problem conecting with the server. Please try again.");
+                $values['errors'][] = _("The distribution could not be delete. Please try again.");
             }
         }
         else {
