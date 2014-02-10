@@ -22,18 +22,14 @@
  *  @author Ximdex DevTeam <dev@ximdex.com>
  *  @version $Revision$
  */
- if (angular.module('ximdex.module.xlyre')._invokeQueue.length == 0){
-    angular.module('ximdex.module.xlyre', []);
-    angular.module('ximdex.module.xlyre')
-        .controller('XLyreDatasetCtrl', ['$scope', '$attrs', 'xBackend', '$timeout', function($scope, $attrs, xBackend, $timeout){
-
+ if (angular.module('ximdex').notRegistred('XLyreDatasetCtrl')){
+    angular.module('ximdex')
+        .controllerProvider.register('XLyreDatasetCtrl', ['$scope', '$attrs', 'xBackend', '$timeout', function($scope, $attrs, xBackend, $timeout){
             $scope.selectedLanguages = {};
             $scope.languages = angular.fromJson($attrs.ximLanguages);
             if ($attrs.ximDistributions)
-                $scope.distributions = angular.fromJson($attrs.ximDistributions);
+                    $scope.distributions = angular.fromJson($attrs.ximDistributions);
             
-
-
             $scope.$watch('dataset.languages', function(languages, oldLanguages){
                 $scope.activeLanguages = 0;
                 for (key in languages) {
@@ -80,7 +76,7 @@
                         dataset.modified = data.dataset.modified;
                     }
                     if (data && data.messages) {
-                        $scope.submitStatus ='success'
+                        $scope.submitStatus = 'success';
                         $scope.submitMessages = data.messages;
                         $timeout(function(){
                             $scope.submitMessages = null;
@@ -90,9 +86,10 @@
                     
             }
         }]);
-
-    angular.module('ximdex.module.xlyre')
-        .directive('xlyreDistribution', ['$window', function ($window) {
+    angular.module('ximdex').registerItem('XLyreDatasetCtrl');
+    
+    angular.module('ximdex')
+        .compileProvider.directive('xlyreDistribution', ['$window', function ($window) {
             return {
                 replace: true,
                 scope: {
@@ -148,14 +145,16 @@
                             url: xUrlHelper.getAction({
                                 action:'managedataset', 
                                 method:method || 'addDistribution', 
-                                IDParent: $attrs.ximNodeid
+                                IDParent: $scope.IDParent
                             }),
                             progress: progressCallback
                         };
                         $timeout(function(){
                             file.$submit()
                                 .success(function(data){
-                                    if (!data || data.errors) {
+                                    if (!data) {
+                                        showErrorMessage("predefined error");
+                                    } else if (data.errors) {
                                         showErrorMessage(data.errors[0]);
                                     } else if (data.distribution) {
                                         $scope.distribution = data.distribution;
@@ -225,6 +224,7 @@
                 }]
             }
         }]);
+    angular.module('ximdex').registerItem('xlyreDistribution');
 }
 //Start angular compile and binding
 X.actionLoaded(function(event, fn, params) {
