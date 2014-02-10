@@ -213,7 +213,7 @@
                     xim-distribution="distribution"
                     xim-default-language="{$default_language}"
                     xim-active-languages="dataset.languages"
-                    xim-nodeid="[[dataset.id]]"> 
+                    xim-nodeid="dataset.id"> 
             </xlyre-distribution>
                 
     </div> 
