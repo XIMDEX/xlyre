@@ -144,6 +144,8 @@ class Action_managedataset extends ActionAbstract {
 
 
     function updatedataset() {
+        $errors = array();
+
         $nodeID =$this->request->getParam('id');
         $name = $this->request->getParam('name');
 
@@ -164,8 +166,8 @@ class Action_managedataset extends ActionAbstract {
         $result = $baseio->updateNode($data, "XLYREOPENDATASET");
 
         if (!($result > 0)) {
-            $this->messages->mergeMessages($baseio->messages);
-            $this->messages->add(_('Operation could not be successfully completed'), MSG_TYPE_ERROR);
+            //$this->messages->mergeMessages($baseio->messages);
+            $errors[] = _('Operation could not be successfully completed');
         }
         else {
             $xlrml = new XlyreRelMetaLangs();
@@ -202,12 +204,12 @@ class Action_managedataset extends ActionAbstract {
 
             $node = new Node($nodeID);
             $this->reloadNode($node->get("IdParent"));
-            $this->messages->sprintf(_('%s has been successfully updated'), $name);
+            $messages = sprintf(_('%s has been successfully updated'), $name);
         }
 
         $values = array(
-                'action_with_no_return' => $result > 0,
-                'messages' => $this->messages->messages
+                'errors' => $errors,
+                'messages' => $messages
         );
 
         $this->sendJSON($values);
@@ -241,15 +243,17 @@ class Action_managedataset extends ActionAbstract {
                 $array_langs = json_decode($_POST['languages'], true);
                 if (is_array($array_langs)) {
                     foreach ($array_langs as $key => $value) {
-                        // Save values in object to return
-                        $values['distribution']['languages'][$key] = $value;
-                        // Add i18n for title field
-                        if ($iddist > 0) {
-                            $xlrml = new XlyreRelMetaLangs();
-                            $xlrml->set('IdNode', $iddist);
-                            $xlrml->set('IdLanguage', $key);
-                            $xlrml->set('Title', $value);
-                            $xlrml->add();
+                        if ($value != '') {
+                            // Save values in object to return
+                            $values['distribution']['languages'][$key] = $value;
+                            // Add i18n for title field
+                            if ($iddist > 0) {
+                                $xlrml = new XlyreRelMetaLangs();
+                                $xlrml->set('IdNode', $iddist);
+                                $xlrml->set('IdLanguage', $key);
+                                $xlrml->set('Title', $value);
+                                $xlrml->add();
+                            }
                         }
                     }
                 }
@@ -273,14 +277,15 @@ class Action_managedataset extends ActionAbstract {
 
     function deleteDistribution() {
         $values = array();
-        if (isset($_POST['id'])) {
-            $dist = new Node($_POST['id']);
+        $dist_id = $this->request->getParam('nodeid');
+        if ($dist_id) {
+            $dist = new Node($dist_id);
             $result = $dist->delete();
-            if ($res != 0) {
+            if ($result != 0) {
                 $values['messages'] = _("The distribution was deleted sucesfully.");
             }
             else {
-                $values['errors'][] = _("There was a problem conecting with the server. Please try again.");
+                $values['errors'][] = _("The distribution could not be delete. Please try again.");
             }
         }
         else {
