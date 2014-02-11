@@ -118,7 +118,20 @@
                     }
 
                     var updateDistributionMetadata = function (distribution) {
-                        $http.post(xUrlHelper.getAction({action:'managedataset', method:'updateDistribution', module:'xlyre', id: distribution.id}), {languages: angular.toJson(distribution.languages)}).success(function(data){
+                        var crlf='\r\n';
+                        var body = "------ximdex"+crlf;
+                        body += 'Content-Disposition: form-data; ';
+                        body += ' name="languages"'+crlf;
+                        body += angular.toJson(distribution.languages)+crlf;
+                        body += "------ximdex--";
+                        $http({
+                            url: xUrlHelper.getAction({action:'managedataset', method:'updateDistribution', id: distribution.id}), 
+                            method: 'POST',
+                            data: body,
+                            headers: {
+                                "Content-Type": "multipart/form-data; boundary=------ximdex"
+                            }
+                        }).success(function(data){
                             if (data) {
                                 if (data.errors){
                                     shoErrorMessage(data.errors[0]);  
