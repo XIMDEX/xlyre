@@ -217,6 +217,7 @@ class Action_managedataset extends ActionAbstract {
     }
 
 
+    //Note: This method only works for browsers supporting sendAsBinary()
     function addDistribution() {
         $values = array();
         if (isset($_FILES)) {
@@ -232,9 +233,10 @@ class Action_managedataset extends ActionAbstract {
             $nt = new NodeType(XlyreOpenDistribution::IDNODETYPE);
             $data_dist = array(
                 'NODETYPENAME' => $nt->get('Name'),
-                'NAME' => $this->_toSlug($values['distribution']['file']),
+                'NAME' => $values['distribution']['file'],
                 'PARENTID' => $this->request->getParam('nodeid'),
-                'FILENAME' => $values['distribution']['file']
+                'FILENAME' => $values['distribution']['file'],
+                'TMPSRC' => $_FILES['file']['tmp_name'],
             );
             $baseio = new XlyreBaseIO();
             $iddist = $baseio->build($data_dist);
@@ -401,21 +403,6 @@ class Action_managedataset extends ActionAbstract {
         switch($nodetype){
             case "4001": return "A dataset should be for a single data in several formats.";
         }
-    }
-
-
-
-    private function _generateRandomString($length = 10) {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, strlen($characters) - 1)];
-        }
-        return $randomString;
-    }
-
-    private function _toSlug($string) {
-        return preg_replace('/[^a-z\d-]/', '-', strtolower(trim($string)));
     }
 
 

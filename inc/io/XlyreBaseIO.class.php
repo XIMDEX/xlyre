@@ -56,6 +56,11 @@ class XlyreBaseIO extends BaseIO{
 				break;
 			case 'OPENDISTRIBUTION':
 				$idNode = $instance->CreateNode($data['NAME'], $data['PARENTID'], XlyreOpenDistribution::IDNODETYPE, NULL,array(false), $data["FILENAME"]);
+				if ($idNode) {
+					// Creating the phisical file
+					$node = new Node($idNode);
+					$node->setContent(FsUtils::file_get_contents($data['TMPSRC']));
+				}
 				break;
 			default:
 				break;

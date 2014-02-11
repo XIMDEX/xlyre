@@ -65,10 +65,11 @@ class XlyreOpenDistribution extends FileNode {
         $distribution = new XlyreDistribution();
 
         //Settings properties for the distribution
+        $slugname = $this->_toSlug($name);
         $distribution->set("IdDistribution", $this->nodeID);
         $distribution->set("IdDataset", $parentID);
-        $distribution->set("AccessURL", $name);
-        $distribution->set("Identifier", $name);
+        $distribution->set("AccessURL", $slugname);
+        $distribution->set("Identifier", $slugname);
         $distribution->set("Filename", $filename);
         $distribution->set("Issued", time());
         $distribution->set("Modified", time());
@@ -89,7 +90,8 @@ class XlyreOpenDistribution extends FileNode {
         $distribution = new XlyreDistribution($idnode);
 
         //Settings properties for the distribution.
-        $distribution->set("AccessURL", $name);
+        $slugname = $this->_toSlug($name);
+        $distribution->set("AccessURL", $slugname);
         $distribution->set("Identifier", $name);
         $distribution->set("Filename", $filename);
         $distribution->set("Issued", time());
@@ -100,6 +102,12 @@ class XlyreOpenDistribution extends FileNode {
 
         return $distribution->update();
     }
+
+
+    private function _toSlug($string) {
+        return preg_replace('/[^a-z\d-]/', '-', strtolower(trim($string)));
+    }
+
 
 
 }
