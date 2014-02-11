@@ -118,7 +118,7 @@
                     }
 
                     var updateDistributionMetadata = function (distribution) {
-                        $http.post(xUrlHelper.getAction({action:'managedataset', method:'updateDistribution', id: distribution.id}), {languages: angular.toJson(distribution.languages)}).success(function(data){
+                        $http.post(xUrlHelper.getAction({action:'managedataset', method:'updateDistribution', module:'xlyre', id: distribution.id}), {languages: angular.toJson(distribution.languages)}).success(function(data){
                             if (data) {
                                 if (data.errors){
                                     shoErrorMessage(data.errors[0]);  
@@ -199,7 +199,7 @@
                         if(distribution && distribution.id) {
                             xDialog.openConfirmation(function(result){
                                 if (result) {
-                                    xBackend.sendFormData({id:distribution.id}, {action:'managedataset', method:'deleteDistribution', id: distribution.id}, function(data){
+                                    xBackend.sendFormData({id:distribution.id}, {action:'managedataset', method:'deleteDistribution', module:'xlyre', id: distribution.id}, function(data){
                                         if (data && data.errors){
                                             shoErrorMessage(data.errors[0]);  
                                         } else if (data && data.messages) {
