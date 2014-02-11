@@ -31,7 +31,8 @@
     xim-languages='{$json_languages}'
     xim-distributions='{$json_distributions}'
     xim-method="{$go_method}"
-    xim-action="{$action}">
+    xim-action="{$action}"
+    novalidate>
     <div class="action_header" ng-hide="submitMessages.length">
             <h2>[[submitLabel]]</h2>  
     </div>
@@ -46,7 +47,8 @@
         
                 <input type="text" name="name" id="name" maxlength="100" class="validable not_empty full-size" placeholder="{t}Name of your dataset{/t}"
                     ng-model="dataset.name"
-                    ng-init="dataset.name = '{$name}'">
+                    ng-init="dataset.name = '{$name}'"
+                    required xim-alphanumeric>
             </div>
 
             <h3>{t}Metadata{/t}</h3>
@@ -171,9 +173,9 @@
                 <h3>
                     <label for="reference">{t}Url más información{/t}</label>
                 </h3>
-            <input type="text" name="reference" id="reference" maxlength="50" class="full_size validable not_empty" placeholder="{t}Reference{/t}"
+            <input type="url" name="reference" id="reference" maxlength="50" class="full_size validable not_empty" placeholder="{t}Reference{/t}"
                 ng-model="dataset.reference"
-                ng-init="dataset.reference='{$reference}'">
+                ng-init="dataset.reference='{$reference}'" required>
             </div>
 
             <div class="creation_date"
@@ -198,7 +200,8 @@
             ng-click="submitForm(mdfdts, dataset)"
             xim-button
             xim-label="submitLabel"
-            xim-state = "submitStatus">
+            xim-state = "submitStatus"
+            xim-disabled = "mdfdts.$invalid || mdfdts.$pristine">
             Update
         </button>
           

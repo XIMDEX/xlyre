@@ -60,30 +60,31 @@
             }
             
             $scope.submitForm = function(form, dataset){
-                var formData = angular.copy(dataset);
-                $scope.submitStatus = 'submitting';
-                formData.languages = [];
-                for (var language in dataset.languages) {
-                    if (language) {
-                        formData.languages.push(language);
+                if (form.$valid) {    
+                    var formData = angular.copy(dataset);
+                    $scope.submitStatus = 'submitting';
+                    formData.languages = [];
+                    for (var language in dataset.languages) {
+                        if (language) {
+                            formData.languages.push(language);
+                        }
                     }
-                }
-                xBackend.sendFormData(formData, {action: $attrs.ximAction, method: $scope.method, id: dataset.id, IDParent: dataset.IDParent}, function(data){ 
-                    if (!dataset.id && data && data.dataset && data.dataset.id) {
-                        $scope.method = 'updatedataset';
-                        dataset.id = data.dataset.id;
-                        dataset.issued = data.dataset.issued;
-                        dataset.modified = data.dataset.modified;
-                    }
-                    if (data && data.messages) {
-                        $scope.submitStatus = 'success';
-                        $scope.submitMessages = data.messages;
-                        $timeout(function(){
-                            $scope.submitMessages = null;
-                        }, 4000);
-                    }
-                });
-                    
+                    xBackend.sendFormData(formData, {action: $attrs.ximAction, method: $scope.method, id: dataset.id, IDParent: dataset.IDParent}, function(data){ 
+                        if (!dataset.id && data && data.dataset && data.dataset.id) {
+                            $scope.method = 'updatedataset';
+                            dataset.id = data.dataset.id;
+                            dataset.issued = data.dataset.issued;
+                            dataset.modified = data.dataset.modified;
+                        }
+                        if (data && data.messages) {
+                            $scope.submitStatus = 'success';
+                            $scope.submitMessages = data.messages;
+                            $timeout(function(){
+                                $scope.submitMessages = null;
+                            }, 4000);
+                        }
+                    });
+                }  
             }
         }]);
     angular.module('ximdex').registerItem('XLyreDatasetCtrl');
@@ -101,10 +102,10 @@
                 },
                 restrict: 'E',
                 templateUrl : 'modules/xlyre/actions/managedataset/template/Angular/xlyreDistribution.html',
-                controller: ['$scope', '$element', '$attrs', '$transclude', '$http', '$timeout', 'xUrlHelper', 'xDialog', function($scope, $element, $attrs, $transclude, $http, $timeout, xUrlHelper, xDialog){
+                controller: ['$scope', '$element', '$attrs', '$transclude', '$http', '$timeout', 'xUrlHelper', 'xDialog', 'xBackend', function($scope, $element, $attrs, $transclude, $http, $timeout, xUrlHelper, xDialog, xBackend){
 
-                    $scope.uploadButtonLabel = 'Save Distribution';
-                    $scope.addFileLabel = 'Atach File';
+                    $scope.uploadButtonLabel = _('Save Distribution');
+                    $scope.addFileLabel = _('Atach File');
                     $scope.uploadState = 'pending';
                     $scope.distribution.languages = $scope.distribution.languages || []
                     if (!$scope.distribution.id) 
@@ -117,11 +118,19 @@
                     }
 
                     var updateDistributionMetadata = function (distribution) {
-                        showErrorMessage("No se ha podido actualizar la distribucion");
+                        $http.post(xUrlHelper.getAction({action:'managedataset', method:'updateDistribution', id: distribution.id}), {languages: angular.toJson(distribution.languages)}).success(function(data){
+                            if (data) {
+                                if (data.errors){
+                                    shoErrorMessage(data.errors[0]);  
+                                } else {
+                                    $scope.editing = false;
+                                }
+                            }
+                        });
                     }
 
                     var uploadDistribution = function(distribution, file){
-                        $scope.uploadButtonLabel = "Uploading";
+                        $scope.uploadButtonLabel = _("Uploading");
                         $scope.uploadProgress = 0;
                         var formData = []
                         if (distribution){
@@ -153,12 +162,13 @@
                             file.$submit()
                                 .success(function(data){
                                     if (!data) {
-                                        showErrorMessage("predefined error");
+                                        showErrorMessage("Error");
                                     } else if (data.errors) {
                                         showErrorMessage(data.errors[0]);
                                     } else if (data.distribution) {
-                                        $scope.distribution = data.distribution;
+                                        angular.extend($scope.distribution, data.distribution);
                                         $scope.editing = false;
+                                        $scope.uploadButtonLabel = _('Save Distribution');
                                     }
                                     $scope.queue = [];
                             });
@@ -189,7 +199,7 @@
                         if(distribution && distribution.id) {
                             xDialog.openConfirmation(function(result){
                                 if (result) {
-                                    $http.post(xUrlHelper.getAction({action:'managedataset', method:'deleteDistribution', id: distribution.id}), {id:distribution.id}).success(function(data){
+                                    xBackend.sendFormData({id:distribution.id}, {action:'managedataset', method:'deleteDistribution', id: distribution.id}, function(data){
                                         if (data && data.errors){
                                             shoErrorMessage(data.errors[0]);  
                                         } else if (data && data.messages) {
@@ -197,7 +207,7 @@
                                         }
                                     });    
                                 }
-                           }, _('The distribution and the attached file will be destroyed. Do you want to continue?'));//TODO: Write a translation service and filter
+                            }, _('The distribution and the attached file will be destroyed. Do you want to continue?'));//TODO: Write a translation service and filter
                         }
                     }
                     
@@ -212,6 +222,7 @@
                         var file = $scope.queue[$scope.queue.length-1];
                         if (file && (file.$status == 'pending')) {
                             file.$cancel();
+                            $scope.uploadButtonLabel = _('Save Distribution');
                         } else if ($scope.distribution.id) {;
                             if ($scope.backupDistribution)    
                                 $scope.distribution = $scope.backupDistribution;
