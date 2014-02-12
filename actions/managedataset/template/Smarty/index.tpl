@@ -25,17 +25,20 @@
 
 
 <form method="post" id='mdfdts_form' name="mdfdts" action="{$base_url}"
-    ng-controller="XDistributionCtrl" 
-    ng-init="dataset.IDParent = '{$id_catalog}'; dataset.id = '{$id_dataset}';"
+    ng-controller="XLyreDatasetCtrl" 
+    ng-init="dataset.IDParent = '{$id_catalog}'; dataset.id = '{$id_dataset}'; defaultLanguage = '{$default_language}'"
     ng-cloak
+    xim-languages='{$json_languages}'
+    xim-distributions='{$json_distributions}'
     xim-method="{$go_method}"
-    xim-action="{$action}">
-    <div class="action_header">
-            <h2>{t}{$title}{/t}</h2>  
+    xim-action="{$action}"
+    novalidate>
+    <div class="action_header" ng-hide="submitMessages.length">
+            <h2>[[submitLabel]]</h2>  
     </div>
     <div class="message" ng-show="submitMessages.length">
-        <p class="ui-state-primary ui-corner-all msg-info" ng-repeat="message in submitMessages">
-            [[message.message]]
+        <p class="ui-state-primary ui-corner-all msg-info">
+            [[submitMessages]]
         </p>
     </div>
     <div class="action_content dataset_action">
@@ -44,7 +47,8 @@
         
                 <input type="text" name="name" id="name" maxlength="100" class="validable not_empty full-size" placeholder="{t}Name of your dataset{/t}"
                     ng-model="dataset.name"
-                    ng-init="dataset.name = '{$name}'">
+                    ng-init="dataset.name = '{$name}'"
+                    required xim-alphanumeric>
             </div>
 
             <h3>{t}Metadata{/t}</h3>
@@ -52,7 +56,8 @@
                 
                 <div>
                     <select name="" id="" class="language_selector js_language_selector" 
-                            ng-model="selectedLanguage">
+                            ng-model="selectedLanguage"
+                            ng-show="activeLanguages">
                         <option value="" 
                             ng-selected="!dataset.languages[selectedLanguage]">
                             Select a language
@@ -168,9 +173,9 @@
                 <h3>
                     <label for="reference">{t}Url más información{/t}</label>
                 </h3>
-            <input type="text" name="reference" id="reference" maxlength="50" class="full_size validable not_empty" placeholder="{t}Reference{/t}"
+            <input type="url" name="reference" id="reference" maxlength="50" class="full_size validable not_empty" placeholder="{t}Reference{/t}"
                 ng-model="dataset.reference"
-                ng-init="dataset.reference='{$reference}'">
+                ng-init="dataset.reference='{$reference}'" required>
             </div>
 
             <div class="creation_date"
@@ -190,147 +195,42 @@
             
          
         </div>
-            
-          
-    <div class="distributions" ng-show="dataset.id">
-        <h3>{t}Distributions{/t}</h3>
-        <button type="button" class="add-button" id="new-distribution"
-            ng-click="newDistribution = {}"
-            ng-hide="newDistribution">
-            {t}Add distribution{/t}
+        
+        <button class="submit-button" 
+            ng-click="submitForm(mdfdts, dataset)"
+            xim-button
+            xim-label="submitLabel"
+            xim-state = "submitStatus"
+            xim-disabled = "mdfdts.$invalid || mdfdts.$pristine">
+            Update
         </button>
-        <div class="new distributions" 
-            ng-controller="XLyreUploaderCtrl"
-            file-upload="fileUploaderOptions"
-            xim-nodeid="[[dataset.id]]">
-            <div class="row-item distribution_item new_distribution_item"
-                ng-show="newDistribution">
-                <div class="translated_items expanded">
-                    <ul>
-                        {foreach from=$languages item=l}
-                            <li class="translate_item" ng-show="dataset.languages.{$l.IdLanguage}">
-                                <input type="text" placeholder="Distribution title"  value="Distribution title"
-                                    ng-model="newDistribution['{$l.IdLanguage}']">
-                                <span class="language-label">{$l.Name}</span>
-                            </li>
-                        {/foreach}
-                    </ul>
-                </div>
-                <span type="button" class="upload-button">
-                    <span>[[queue[queue.length-1].name || 'Attach file']]</span>
-                    <input name="file" type="file" multi="false" class="xim-uploader"/>
-                </span>
-                <button class="save-button" 
-                    ng-click="uploadDistribution(newDistribution, queue[queue.length-1])"
-                    xim-button
-                    xim-label="uploadButtonLabel"
-                    xim-disabled = "allowSave"
-                    xim-progress = "uploadProgress"
-                    xim-state = "queue[queue.length-1].$state()">
-                    Save Distribution
-                </button>
-            </div>
-            <div class="row-item distribution_item" ng-repeat="distribution in newDistributions">
-                <div class="translated_items">
-                    <div class="default_title"
-                        ng-hide="showAllTitles">
-                        [[ distribution.languages[defaultLanguage] ]]
-                    </div>
-                    <ul ng-show="showAllTitles">
-                        {foreach from=$languages item=l}
-                            <li class="translate_item" ng-show="dataset.languages.{$l.IdLanguage}">
-                                <input type="text" placeholder="Distribution title"  value="[[distribution.languages.{$l.IdLanguage}]]"><span class="language-label">{$l.Name}</span>
-                            </li>
-                        {/foreach}
-                    </ul>
-                    <div class="title_language icon toggle"
-                        ng-click="showAllTitles = !showAllTitles"
-                        ng-show="activeLanguages">
-                        <span ng-hide="showAllTitles">Default language</span>
-                    </div>
-                </div>
-                <div class="distribution_actions">
-                    <span class="file">
-                        <span class="file_name">[[distribution.file]]</span>
-                        <button type="button" class="name_uploader"></button>
-                        <a href="#" class="download_link"></a>
-                    </span>
-                    <span class="format_file">
-                        <span class="label_title">{t}Format{/t}</span>
-                        [[distribution.format]]
-                    </span>
-                    <span class="size_file">
-                        <span class="label_title">{t}Size{/t}</span>
-                        [[distribution.size | xBytes]]
-                    </span>
-                    <span class="creation_date">
-                        <span class="label_title">{t}Creation date{/t}</span>
-                        [[distribution.issued+'000' | date:'dd/MM/yyyy']]
-                    </span>
-                    <span class="modified_date">
-                        <span class="label_title">{t}Modification date {/t}</span>
-                        [[distribution.modified+'000' | date:'dd/MM/yyyy']]
-                    </span>
-                </div>
-            </div>
-        </div>
-
-
-         <!-- <div class="row-item distribution_item">
-            <div class="translated_items">
-                <div class="default_title"
-                    ng-hide="showAllTitles">
-                    Default distribution title</div>
-                <ul ng-show="showAllTitles">
-                    {foreach from=$languages item=l}
-                        <li class="translate_item" ng-show="dataset.languages.{$l.IdLanguage}">
-                            <input type="text" placeholder="Distribution title"  value="Distribution title"><span class="language-label">{$l.Name}</span>
-                        </li>
-                    {/foreach}
-                </ul>
-                <div class="title_language icon toggle"
-                    ng-click="showAllTitles = !showAllTitles"
-                    ng-show="activeLanguages">
-                    <span ng-hide="showAllTitles">Default language</span>
-                </div>
-            </div>
-            <div class="distribution_actions">
-                <span class="file">
-                    <span class="file_name">File name</span>
-                    <button type="button" class="name_uploader"></button>
-                    <a href="#" class="download_link"></a>
-                </span>
-                <span class="format_file">
-                    <span class="label_title">{t}Format{/t}</span>
-                    .CSV
-                </span>
-                <span class="size_file">
-                    <span class="label_title">{t}Size{/t}</span>
-                    16.3k
-                </span>
-                <span class="creation_date">
-                    <span class="label_title">{t}Creation date{/t}</span>
-                    09/10/2014
-                </span>
-                <span class="modified_date">
-                    <span class="label_title">{t}Modification date {/t}</span>
-                    09/10/2014
-                </span>
-            </div>
-        </div> -->
+          
+        <div class="distributions"
+            ng-show="dataset.id">
+            <h3>{t}Distributions{/t}</h3>     
+            <button type="button" class="add-button" id="new-distribution"
+                ng-click="newDistribution()">
+                {t}Add distribution{/t}
+            </button>
+            <xlyre-distribution ng-repeat="distribution in distributions"
+                    xim-distribution="distribution"
+                    xim-default-language="{$default_language}"
+                    xim-active-languages="dataset.languages"
+                    xim-nodeid="dataset.id"> 
+            </xlyre-distribution>
+                
     </div> 
 
-    
-    </div>
-    <fieldset class="buttons-form positioned_btn">
-        <button type="button" class="submit-button" ng-click="submitForm(mdfdts, dataset)">Update</button>
-    </fieldset>                
-    
-    <!-- <div style="position: absolute; z-index:99999; bottom: 0; right: 0;">
-        <ul>
-            <li ng-repeat="(key, value) in dataset">
-                <span>[[key]]:</span><span>[[value]]</span>
-            </li>
-        </ul>
-    </div> -->
+    <!-- {foreach from=$distributions item=d name=distributions}
+        
+            <ul>
+                {foreach from=$languages item=l}
+                    <li>DISTRO LOC TITLE: {$d.languages[$l.IdLanguage]}</li>
+                {/foreach}
+            </ul>
+        
+
+    {/foreach} -->
+
+    </div>            
 </form>

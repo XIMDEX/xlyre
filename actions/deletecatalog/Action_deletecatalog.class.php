@@ -29,6 +29,7 @@
 ModulesManager::file('/inc/sync/SynchroFacade.class.php');
 ModulesManager::file('/actions/browser3/inc/GenericDatasource.class.php');
 ModulesManager::file('/actions/deletedataset/Action_deletedataset.class.php', "xlyre");
+ModulesManager::file('/inc/nodetypes/xlyreopendataset.inc', 'xlyre');
 
 
 class Action_deletecatalog extends ActionAbstract {
@@ -43,7 +44,7 @@ class Action_deletecatalog extends ActionAbstract {
 			$idNode = $this->request->getParam('nodeid');
 		}
 		$node = new Node($idNode);
-		$datasets = $node->GetChildren();
+		$datasets = $node->getChildren(XlyreOpenDataset::IDNODETYPE);
 		$dtsList = array();
 		if ($datasets) {
 			foreach ($datasets as $dataset) {
@@ -77,7 +78,7 @@ class Action_deletecatalog extends ActionAbstract {
 		$idNode	= $this->request->getParam("nodeid");
 		$node = new Node($idNode);
 
-		$datasets = $node->GetChildren();
+		$datasets = $node->getChildren(XlyreOpenDataset::IDNODETYPE);
 
 		$action_deletedataset = new Action_deletedataset();
 

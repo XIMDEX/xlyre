@@ -55,7 +55,12 @@ class XlyreBaseIO extends BaseIO{
 				$idNode = $instance->CreateNode($data['NAME'], $data['PARENTID'], XlyreOpenDataSet::IDNODETYPE, NULL, array(false), $data["THEME"], $data["PERIODICITY"], $data["LICENSE"], $data["SPATIAL"], $data["REFERENCE"]);
 				break;
 			case 'OPENDISTRIBUTION':
-				$idNode = $instance->CreateNode($data['NAME'], $data['PARENTID'], XlyreOpenDistribution::IDNODETYPE, NULL,array(false), $data["FILENAME"]);
+				$idNode = $instance->CreateNode($data['NAME'], $data['PARENTID'], XlyreOpenDistribution::IDNODETYPE, NULL,array(false), $data["FILENAME"], $data["FILESIZE"]);
+				if ($idNode) {
+					// Creating the phisical file
+					$node = new Node($idNode);
+					$node->setContent(FsUtils::file_get_contents($data['TMPSRC']));
+				}
 				break;
 			default:
 				break;
@@ -87,12 +92,40 @@ class XlyreBaseIO extends BaseIO{
 			case 'OPENDATASET':
 				$nodeDataset = new Node($data["IDNODE"]);
 				$nodeDataset->set("Name", $data['NAME']);
-				$nodeDataset->set("ModificationDate", time());
 				$ok = $nodeDataset->update();
 				if ($ok) {
 					$idNode = $nodeDataset->class->updateNode($data["IDNODE"], $data['NAME'], $data["THEME"], $data["PERIODICITY"], $data["LICENSE"], $data["SPATIAL"], $data["REFERENCE"]);
 					if (!($idNode > 0)) {
 						return ERROR_INCORRECT_DATA;
+					}
+					return $idNode;
+				}
+				else {
+					return ERROR_INCORRECT_DATA;
+				}
+				break;
+			case 'OPENDISTRIBUTION':
+				$nodeDistribution = new Node($data["IDNODE"]);
+
+				// We delete old file before uploading new one
+				if (!is_null($data['TMPSRC'])) {
+					$absPath = Config::GetValue("AppRoot") . Config::GetValue("NodeRoot");
+					$deletablePath = $nodeDistribution->class->GetPathList();
+					FsUtils::delete($absPath . $deletablePath);
+				}
+
+				$nodeDistribution->set("Name", $data['NAME']);
+				$ok = $nodeDistribution->update();
+				if ($ok) {
+					$idNode = $nodeDistribution->class->updateNode($data["IDNODE"], $data['NAME'], $data["FILENAME"], $data["FILESIZE"]);
+					if (!($idNode > 0)) {
+						return ERROR_INCORRECT_DATA;
+					}
+					else {
+						if (!is_null($data['TMPSRC'])) {
+							// Updating the phisical file
+							$nodeDistribution->setContent(FsUtils::file_get_contents($data['TMPSRC']));
+						}
 					}
 					return $idNode;
 				}

@@ -52,6 +52,7 @@ class Action_managedataset extends ActionAbstract {
         $language = new Language();
         $languages = $language->getLanguagesForNode($idNode);
         $values['languages'] = $languages;
+        $values['json_languages'] = json_encode($languages);
 
         $node = new Node($idNode);
         $nt = $node->GetNodeType();
@@ -143,6 +144,8 @@ class Action_managedataset extends ActionAbstract {
 
 
     function updatedataset() {
+        $errors = array();
+
         $nodeID =$this->request->getParam('id');
         $name = $this->request->getParam('name');
 
@@ -163,8 +166,8 @@ class Action_managedataset extends ActionAbstract {
         $result = $baseio->updateNode($data, "XLYREOPENDATASET");
 
         if (!($result > 0)) {
-            $this->messages->mergeMessages($baseio->messages);
-            $this->messages->add(_('Operation could not be successfully completed'), MSG_TYPE_ERROR);
+            //$this->messages->mergeMessages($baseio->messages);
+            $errors[] = _('Operation could not be successfully completed');
         }
         else {
             $xlrml = new XlyreRelMetaLangs();
@@ -192,7 +195,7 @@ class Action_managedataset extends ActionAbstract {
                     }
                 }
             }
-            foreach ($i18n_dataset_values as $key => $value) {
+            foreach ($i18n_dataset_values as $value) {
                 #Delete language
                 $rel = $xlrml->find('IdRel', "IdNode = %s AND IdLanguage = %s", array($nodeID, $value), MONO);
                 $xlrml_delete = new XlyreRelMetaLangs($rel[0]);
@@ -201,12 +204,12 @@ class Action_managedataset extends ActionAbstract {
 
             $node = new Node($nodeID);
             $this->reloadNode($node->get("IdParent"));
-            $this->messages->add(sprintf(_('%s has been successfully updated'), $name), MSG_TYPE_NOTICE);
+            $messages = sprintf(_('%s has been successfully updated'), $name);
         }
 
         $values = array(
-                'action_with_no_return' => $result > 0,
-                'messages' => $this->messages->messages
+                'errors' => $errors,
+                'messages' => $messages
         );
 
         $this->sendJSON($values);
@@ -214,6 +217,7 @@ class Action_managedataset extends ActionAbstract {
     }
 
 
+    //Note: This method only works for browsers supporting sendAsBinary()
     function addDistribution() {
         $values = array();
         if (isset($_FILES)) {
@@ -229,38 +233,153 @@ class Action_managedataset extends ActionAbstract {
             $nt = new NodeType(XlyreOpenDistribution::IDNODETYPE);
             $data_dist = array(
                 'NODETYPENAME' => $nt->get('Name'),
-                'NAME' => $this->_toSlug($values['distribution']['file']),
+                'NAME' => $values['distribution']['file'],
                 'PARENTID' => $this->request->getParam('nodeid'),
-                'FILENAME' => $values['distribution']['file']
+                'FILENAME' => $values['distribution']['file'],
+                'TMPSRC' => $_FILES['file']['tmp_name'],
             );
             $baseio = new XlyreBaseIO();
             $iddist = $baseio->build($data_dist);
-            
+
             if (isset($_POST['languages'])) {
                 $array_langs = json_decode($_POST['languages'], true);
                 if (is_array($array_langs)) {
                     foreach ($array_langs as $key => $value) {
-                        // Save values in object to return
-                        $values['distribution']['languages'][$key] = $value;
-                        // Add i18n for title field
-                        if ($iddist > 0) {
-                            $xlrml = new XlyreRelMetaLangs();
-                            $xlrml->set('IdNode', $iddist);
-                            $xlrml->set('IdLanguage', $key);
-                            $xlrml->set('Title', $value);
-                            $xlrml->add();
+                        if ($value != '') {
+                            // Save values in object to return
+                            $values['distribution']['languages'][$key] = $value;
+                            // Add i18n for title field
+                            if ($iddist > 0) {
+                                $xlrml = new XlyreRelMetaLangs();
+                                $xlrml->set('IdNode', $iddist);
+                                $xlrml->set('IdLanguage', $key);
+                                $xlrml->set('Title', $value);
+                                $xlrml->add();
+                            }
                         }
                     }
                 }
             }
 
             if (!($iddist > 0)) {
-                $values['errors'][] = _('Operation could not be successfully completed');
+                $values['errors'][] = _('Operation could not be successfully completed.');
                 // $values['errors'][] = $baseio->messages();
+            }
+            else {
+                $values['messages'] = _('The distribution was uploaded sucesfully.');
+                $values['distribution']['id'] = $iddist;
             }
         }
         else {
             $values['errors'][] = _("There is no file to upload. Please try again.");
+        }
+        $this->sendJSON($values);
+    }
+
+
+
+    function updateDistribution() {
+        $values = array();
+        // $dist_id = $this->request->getParam('nodeid');
+        $dist_id = trim($_POST['id'], '\"');
+
+        $distribution = new XlyreDistribution($dist_id);
+        $values['distribution']['id'] = $dist_id;
+        $values['distribution']['issued'] = $distribution->get('Issued');
+
+        if (isset($_FILES['file'])) {
+            $values['distribution']['file'] = $_FILES['file']['name'];
+            #TODO: Change this method because the filename can contains more than one '.'
+            $mt = explode('.', $values['distribution']['file']);
+            $values['distribution']['format'] = $mt[1];
+            $values['distribution']['size'] = $_FILES['file']['size'];
+            $values['distribution']['modified'] = time();
+            $name = $_FILES['file']['name'];
+            $filename = $_FILES['file']['name'];
+            $filesize = $_FILES['file']['size'];
+            $tmpfile = $_FILES['file']['tmp_name'];
+        }
+        else {
+            $values['distribution']['file'] = $distribution->get('Filename');
+            $values['distribution']['format'] = $distribution->get('MediaType');;
+            $values['distribution']['size'] = $distribution->get('ByteSize');
+            $values['distribution']['modified'] = $distribution->get('Modified');
+            $name = $distribution->get('Identifier');
+            $filename = NULL;
+            $filesize = NULL;
+            $tmpfile = NULL;
+        }
+
+        $nt = new NodeType(XlyreOpenDistribution::IDNODETYPE);
+        $data_dist = array(
+            'NODETYPENAME' => $nt->get('Name'),
+            'IDNODE' => $dist_id,
+            'NAME' => $name,
+            'FILENAME' => $filename,
+            'FILESIZE' => $filesize,
+            'TMPSRC' => $tmpfile,
+        );
+
+        $baseio = new XlyreBaseIO();
+        $result = $baseio->updateNode($data_dist, "XLYREOPENDISTRIBUTION");
+
+        if (isset($_POST['languages'])) {
+            $i18n_distribution_new = json_decode($_POST['languages'], true);
+            $xlrml = new XlyreRelMetaLangs();
+            $i18n_distribution_old = $xlrml->find('IdLanguage', "IdNode = %s", array($dist_id), MONO);
+            //Updating title based on languages
+            foreach ($i18n_distribution_new as $key => $value) {
+                if (in_array($key, $i18n_distribution_old)) {
+                    #Update language
+                    $rel = $xlrml->find('IdRel', "IdNode = %s AND IdLanguage = %s", array($dist_id, $key), MONO);
+                    $xlrml_update = new XlyreRelMetaLangs($rel[0]);
+                    $xlrml_update->set('Title', $value);
+                    $xlrml_update->update();
+                    unset($i18n_distribution_old[array_search($key, $i18n_distribution_old)]);
+                }
+                else {
+                    #Add language
+                    $xlrml_add = new XlyreRelMetaLangs();
+                    $xlrml_add->set('IdNode', $dist_id);
+                    $xlrml_add->set('IdLanguage', $key);
+                    $xlrml_add->set('Title', $value);
+                    $xlrml_add->add();
+                }
+            }
+            foreach ($i18n_distribution_old as $value) {
+                #Delete language
+                $rel = $xlrml->find('IdRel', "IdNode = %s AND IdLanguage = %s", array($dist_id, $value), MONO);
+                $xlrml_delete = new XlyreRelMetaLangs($rel[0]);
+                $xlrml_delete->delete();
+            }
+        }
+
+        if (!($result > 0)) {
+            $values['errors'][] = _('Operation could not be successfully completed.');
+        }
+        else {
+            $values['messages'] = _('The distribution was uploaded sucesfully.');
+        }
+        
+        $this->sendJSON($values);
+    }
+
+
+    function deleteDistribution() {
+        $values = array();
+        $dist_id = $this->request->getParam('nodeid');
+        if ($dist_id) {
+            $dist = new Node($dist_id);
+            $result = $dist->delete();
+            if ($result != 0) {
+                $values['messages'] = _("The distribution was deleted sucesfully.");
+            }
+            else {
+                $values['errors'][] = _("The distribution could not be delete. Please try again.");
+            }
+        }
+        else {
+            $values['errors'][] = _("There was a problem conecting with the server. Please try again.");
         }
         $this->sendJSON($values);
     }
@@ -278,7 +397,7 @@ class Action_managedataset extends ActionAbstract {
         $this->_getValues(new XlyreThemes(), $values['themes']);
         $this->_getValues(new XlyrePeriodicities(), $values['periodicities']);
         $this->_getValues(new XlyreSpatials(), $values['spatials']);
-
+        $values['default_language'] = 10002;
         $node = new Node();
         $linkfolder = $node->find('IdNode', "idnodetype = 5048 AND Name = 'Licenses'", array(), MONO);
         if ($linkfolder) {
@@ -311,8 +430,32 @@ class Action_managedataset extends ActionAbstract {
             for($i=0; $i<sizeof($values['languages']); $i++) {
                 $values['languages'][$i]['Checked'] = in_array($values['languages'][$i]['IdLanguage'], array_keys($values['languages_dataset'])) ? TRUE : FALSE;
             }
-            $dsmeta_node = new Node($idNode);
-            $values['id_catalog'] = $dsmeta_node->getParent();
+            $values['id_catalog'] = $dsmeta->getParent();
+            // Get Distributions
+            $node = new Node($idNode);
+            $distributions = $node->GetChildren(XlyreOpenDistribution::IDNODETYPE);
+            $dstList = array();
+            if ($distributions) {
+                foreach ($distributions as $distribution) {
+                    $languages_distribution = $xlrml->find('Title, IdLanguage', "IdNode = %s", array($distribution), MULTI);
+                    $languages_dist_array = array();
+                    foreach ($languages_distribution as $ld) {
+                        $languages_dist_array[$ld['IdLanguage']] = $ld['Title'];
+                    }
+                    $distro = new XlyreDistribution($distribution);
+                    $dstList[] = array(
+                        "id" => $distribution,
+                        "file" => $distro->get("Filename"),
+                        "format" => $distro->get("MediaType"),
+                        "size" => $distro->get("ByteSize"),
+                        "issued" => $distro->get("Issued"),
+                        "modified" => $distro->get("Modified"),
+                        "languages" => $languages_dist_array,
+                    );
+                }
+            }
+            $values['distributions'] = $dstList;
+            $values['json_distributions'] = json_encode($dstList);
         }
         else {
             $values['name'] = "";
@@ -329,6 +472,7 @@ class Action_managedataset extends ActionAbstract {
             for($i=0; $i<sizeof($values['languages']); $i++) {
                 $values['languages'][$i]['Checked'] = FALSE;
             }
+            $values['distributions'] = array();
         }
     }
 
@@ -347,21 +491,6 @@ class Action_managedataset extends ActionAbstract {
         switch($nodetype){
             case "4001": return "A dataset should be for a single data in several formats.";
         }
-    }
-
-
-
-    private function _generateRandomString($length = 10) {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, strlen($characters) - 1)];
-        }
-        return $randomString;
-    }
-
-    private function _toSlug($string) {
-        return preg_replace('/[^a-z\d-]/', '-', strtolower(trim($string)));
     }
 
 

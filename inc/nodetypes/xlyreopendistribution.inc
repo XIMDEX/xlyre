@@ -59,23 +59,23 @@ class XlyreOpenDistribution extends FileNode {
      * Create node for the current nodetype.
      * It must create the Distribution.
      */     
-    public function createNode($name, $parentID, $nodeTypeID, $stateID=null,$subfolders=array(), $filename) {
+    public function createNode($name, $parentID, $nodeTypeID, $stateID=null,$subfolders=array(), $filename, $filesize) {
 
         //Adding a new Distribution
         $distribution = new XlyreDistribution();
 
         //Settings properties for the distribution
+        $slugname = $this->_toSlug($name);
         $distribution->set("IdDistribution", $this->nodeID);
         $distribution->set("IdDataset", $parentID);
-        $distribution->set("AccessURL", $name);
-        $distribution->set("Identifier", $name);
+        $distribution->set("AccessURL", $slugname);
+        $distribution->set("Identifier", $slugname);
         $distribution->set("Filename", $filename);
         $distribution->set("Issued", time());
         $distribution->set("Modified", time());
         $filenameparts = explode('.', $filename);
         $distribution->set("MediaType", $filenameparts[sizeof($filenameparts)-1]);
-        $bs = file_exists($filename) ? filesize($filename) : 0;
-        $distribution->set("ByteSize", $bs);
+        $distribution->set("ByteSize", $filesize);
         // $this->setContent(file_get_contents($filename)):
 
         return $distribution->add();
@@ -84,22 +84,30 @@ class XlyreOpenDistribution extends FileNode {
     /**
      * Update node.
      */
-    public function updateNode($idnode, $name, $filename) {
+    public function updateNode($idnode, $name, $filename, $filesize) {
         //Updating the Distribution
         $distribution = new XlyreDistribution($idnode);
 
         //Settings properties for the distribution.
-        $distribution->set("AccessURL", $name);
-        $distribution->set("Identifier", $name);
-        $distribution->set("Filename", $filename);
-        $distribution->set("Issued", time());
+        $slugname = $this->_toSlug($name);
+        $distribution->set("AccessURL", $slugname);
+        $distribution->set("Identifier", $slugname);
+        if (!is_null($filename)) {
+            $distribution->set("Filename", $filename);
+            $filenameparts = explode('.', $filename);
+            $distribution->set("MediaType", $filenameparts[sizeof($filenameparts)-1]);
+            $distribution->set("ByteSize", $filesize);
+        }
         $distribution->set("Modified", time());
-        $filenameparts = explode('.', $filename);
-        $distribution->set("MediaType", $filenameparts[sizeof($filenameparts)-1]);
-        $distribution->set("ByteSize", filesize($filename));
 
         return $distribution->update();
     }
+
+
+    private function _toSlug($string) {
+        return preg_replace('/[^a-z\d-]/', '-', strtolower(trim($string)));
+    }
+
 
 
 }
