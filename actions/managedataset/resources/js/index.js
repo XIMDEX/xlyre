@@ -118,28 +118,29 @@
                     }
 
                     var updateDistributionMetadata = function (distribution) {
-                        var crlf='\r\n';
-                        var body = "------ximdex"+crlf;
-                        body += 'Content-Disposition: form-data; ';
-                        body += ' name="languages"'+crlf;
-                        body += angular.toJson(distribution.languages)+crlf;
-                        body += "------ximdex--";
-                        $http({
-                            url: xUrlHelper.getAction({action:'managedataset', method:'updateDistribution', id: distribution.id}), 
-                            method: 'POST',
-                            data: body,
-                            headers: {
-                                "Content-Type": "multipart/form-data; boundary=------ximdex"
-                            }
-                        }).success(function(data){
-                            if (data) {
-                                if (data.errors){
-                                    shoErrorMessage(data.errors[0]);  
-                                } else {
+                        var formData = {
+                            languages: angular.toJson(distribution.languages),
+                            id: angular.toJson(distribution.id)
+
+                        };
+                        // Note: Adding distribution.id in formData because it is not being sent over action url
+                        xBackend.sendFormData(formData,
+                            {
+                                action: "managedataset",
+                                method: "updateDistribution",
+                                module: "xlyre",
+                                id: distribution.id
+                            },
+                            function(data){
+                                if (data && data.errors) {
+                                    showErrorMessage(data.errors[0]);
+                                }
+                                else {
                                     $scope.editing = false;
                                 }
                             }
-                        });
+
+                        );
                     }
 
                     var uploadDistribution = function(distribution, file){
@@ -166,7 +167,8 @@
                         $scope.fileUploaderOptions = {
                             url: xUrlHelper.getAction({
                                 action:'managedataset', 
-                                method:method || 'addDistribution', 
+                                method:method || 'addDistribution',
+                                module:'xlyre', 
                                 IDParent: $scope.IDParent
                             }),
                             progress: progressCallback

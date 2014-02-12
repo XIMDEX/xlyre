@@ -195,7 +195,7 @@ class Action_managedataset extends ActionAbstract {
                     }
                 }
             }
-            foreach ($i18n_dataset_values as $key => $value) {
+            foreach ($i18n_dataset_values as $value) {
                 #Delete language
                 $rel = $xlrml->find('IdRel', "IdNode = %s AND IdLanguage = %s", array($nodeID, $value), MONO);
                 $xlrml_delete = new XlyreRelMetaLangs($rel[0]);
@@ -273,6 +273,94 @@ class Action_managedataset extends ActionAbstract {
         else {
             $values['errors'][] = _("There is no file to upload. Please try again.");
         }
+        $this->sendJSON($values);
+    }
+
+
+
+    function updateDistribution() {
+        $values = array();
+        // $dist_id = $this->request->getParam('nodeid');
+        $dist_id = trim($_POST['id'], '\"');
+
+        $distribution = new XlyreDistribution($dist_id);
+        $values['distribution']['id'] = $dist_id;
+        $values['distribution']['issued'] = $distribution->get('Issued');
+
+        if (isset($_FILES['file'])) {
+            $values['distribution']['file'] = $_FILES['file']['name'];
+            #TODO: Change this method because the filename can contains more than one '.'
+            $mt = explode('.', $values['distribution']['file']);
+            $values['distribution']['format'] = $mt[1];
+            $values['distribution']['size'] = $_FILES['file']['size'];
+            $values['distribution']['modified'] = time();
+            $name = $_FILES['file']['name'];
+            $filename = $_FILES['file']['name'];
+            $filesize = $_FILES['file']['size'];
+            $tmpfile = $_FILES['file']['tmp_name'];
+        }
+        else {
+            $values['distribution']['file'] = $distribution->get('Filename');
+            $values['distribution']['format'] = $distribution->get('MediaType');;
+            $values['distribution']['size'] = $distribution->get('ByteSize');
+            $values['distribution']['modified'] = $distribution->get('Modified');
+            $name = $distribution->get('Identifier');
+            $filename = NULL;
+            $filesize = NULL;
+            $tmpfile = NULL;
+        }
+
+        $nt = new NodeType(XlyreOpenDistribution::IDNODETYPE);
+        $data_dist = array(
+            'NODETYPENAME' => $nt->get('Name'),
+            'IDNODE' => $dist_id,
+            'NAME' => $name,
+            'FILENAME' => $filename,
+            'FILESIZE' => $filesize,
+            'TMPSRC' => $tmpfile,
+        );
+
+        $baseio = new XlyreBaseIO();
+        $result = $baseio->updateNode($data_dist, "XLYREOPENDISTRIBUTION");
+
+        if (isset($_POST['languages'])) {
+            $i18n_distribution_new = json_decode($_POST['languages'], true);
+            $xlrml = new XlyreRelMetaLangs();
+            $i18n_distribution_old = $xlrml->find('IdLanguage', "IdNode = %s", array($dist_id), MONO);
+            //Updating title based on languages
+            foreach ($i18n_distribution_new as $key => $value) {
+                if (in_array($key, $i18n_distribution_old)) {
+                    #Update language
+                    $rel = $xlrml->find('IdRel', "IdNode = %s AND IdLanguage = %s", array($dist_id, $key), MONO);
+                    $xlrml_update = new XlyreRelMetaLangs($rel[0]);
+                    $xlrml_update->set('Title', $value);
+                    $xlrml_update->update();
+                    unset($i18n_distribution_old[array_search($key, $i18n_distribution_old)]);
+                }
+                else {
+                    #Add language
+                    $xlrml_add = new XlyreRelMetaLangs();
+                    $xlrml_add->set('IdNode', $dist_id);
+                    $xlrml_add->set('IdLanguage', $key);
+                    $xlrml_add->set('Title', $value);
+                    $xlrml_add->add();
+                }
+            }
+            foreach ($i18n_distribution_old as $value) {
+                #Delete language
+                $rel = $xlrml->find('IdRel', "IdNode = %s AND IdLanguage = %s", array($dist_id, $value), MONO);
+                $xlrml_delete = new XlyreRelMetaLangs($rel[0]);
+                $xlrml_delete->delete();
+            }
+        }
+
+        if (!($result > 0)) {
+            $values['errors'][] = _('Operation could not be successfully completed.');
+        }
+        else {
+            $values['messages'] = _('The distribution was uploaded sucesfully.');
+        }
+        
         $this->sendJSON($values);
     }
 
