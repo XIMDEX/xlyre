@@ -183,6 +183,13 @@ CREATE TABLE `XlyreThemes` (
   UNIQUE KEY `Name` (`Name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Themes that can be selected from Dataset UI - XLyre Module';
 
+INSERT INTO `XlyreThemes` VALUES (NULL, 'Ayuda');
+INSERT INTO `XlyreThemes` VALUES (NULL, 'Normativa');
+INSERT INTO `XlyreThemes` VALUES (NULL, 'Contratación');
+INSERT INTO `XlyreThemes` VALUES (NULL, 'Estadísticas');
+INSERT INTO `XlyreThemes` VALUES (NULL, 'Información sectorial');
+INSERT INTO `XlyreThemes` VALUES (NULL, 'Formación');
+
 -- XlyrePeriodicities Table - it implements periodicities for XLyre
 DROP TABLE IF EXISTS `XlyrePeriodicities`;
 CREATE TABLE `XlyrePeriodicities` (
@@ -193,6 +200,11 @@ CREATE TABLE `XlyrePeriodicities` (
   UNIQUE KEY `Name` (`Name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Periodicities that can be selected from Dataset UI - XLyre Module';
 
+INSERT INTO `XlyrePeriodicities` VALUES (NULL, '1');
+INSERT INTO `XlyrePeriodicities` VALUES (NULL, '3');
+INSERT INTO `XlyrePeriodicities` VALUES (NULL, '6');
+INSERT INTO `XlyrePeriodicities` VALUES (NULL, '12');
+
 -- XlyreSpatials Table - it implements spatials for XLyre
 DROP TABLE IF EXISTS `XlyreSpatials`;
 CREATE TABLE `XlyreSpatials` (
@@ -202,3 +214,8 @@ CREATE TABLE `XlyreSpatials` (
   KEY `Id` (`Id`),
   UNIQUE KEY `Name` (`Name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Spatials that can be selected from Dataset UI - XLyre Module';
+
+INSERT INTO `XlyreSpatials` VALUES (NULL, 'Estatal');
+INSERT INTO `XlyreSpatials` VALUES (NULL, 'Autonómico');
+INSERT INTO `XlyreSpatials` VALUES (NULL, 'Provincial');
+INSERT INTO `XlyreSpatials` VALUES (NULL, 'Local');
