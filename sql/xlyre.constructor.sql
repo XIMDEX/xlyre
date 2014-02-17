@@ -6,8 +6,6 @@ INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `
 INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4001, 'OpenDataDataset', 'xlyreopendataset', 'dataset_xlyre.png', 'Open Data Dataset', 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, "xlyre");
 INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4002, 'OpenDataDistribution', 'xlyreopendistribution', 'binary_file.png', 'Open Data Distribution', 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, "xlyre");
 INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4003, 'OpenDataConfig', 'root', 'modulesconfig.png', 'Xlyre Configuration', 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, NULL);
-INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4004, 'OpenDataSectionPub', 'xlyreopendatasectionpub', 'catalog_xlyre.png', 'Open Data Section to Publish', 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, "xlyre");
-INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4005, 'OpenDataDatasetPub', 'xlyreopendatasetpub', 'dataset_xlyre.png', 'Open Data Dataset to Publish', 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, "xlyre");
 -- INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4001, 'OpenDataDatasetSection', 'sectionnode', 'folder_xlyre.png', 'Dataset Section', 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, NULL);
 -- INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4002, 'OpenDataDataset', 'foldernode', 'folder_xlyre.png', 'Dataset', 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, NULL);
 -- INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4003, 'OpenDataCatalogSection', 'sectionnode', 'folder_xlyre.png', 'Open Data Catalog Section', 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, NULL);
@@ -39,9 +37,9 @@ LOCK TABLES `NodeAllowedContents` WRITE;
 INSERT INTO `NodeAllowedContents` VALUES (NULL,5014,4000,0);
 insert into `NodeAllowedContents` VALUES (NULL,5015,4000,0);
 INSERT INTO `NodeAllowedContents` VALUES (NULL,4000,4001,0);
-INSERT INTO `NodeAllowedContents` VALUES (NULL,4000,4004,0);
+INSERT INTO `NodeAllowedContents` VALUES (NULL,4000,5032,0);
 INSERT INTO `NodeAllowedContents` VALUES (NULL,4001,4002,0);
-INSERT INTO `NodeAllowedContents` VALUES (NULL,4001,4005,0);
+INSERT INTO `NodeAllowedContents` VALUES (NULL,4001,5032,0);
 INSERT INTO `NodeAllowedContents` VALUES (NULL,5002,4003,1);
 
 
