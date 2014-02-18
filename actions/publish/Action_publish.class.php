@@ -36,59 +36,36 @@ ModulesManager::file('/actions/workflow_forward/Action_workflow_forward.class.ph
 class Action_publish extends Action_workflow_forward {
 
 	 function index () {
-
         parent::index();
-
-	// 	$idNode = $this->request->getParam("nodeid");
- //        $node = new Node($idNode);
- //        $values['nameNode'] = $node->get('Name');
- //        $nt = $node->GetNodeType();
- //        if ($nt == XlyreOpenDataSection::IDNODETYPE) {
- //            $values['go_method'] = 'publish_catalog';
- //            $values['title'] = 'Publish Catalog';
- //        }
- //        elseif ($nt == XlyreOpenDataset::IDNODETYPE) {
- //            $values['go_method'] = 'publish_dataset';
- //            $values['title'] = 'Publish Dataset';
- //        }
- //        $childrens = $node->GetChildren();
-	// 	$list = array();
-	// 	if ($childrens) {
-	// 		foreach ($childrens as $children) {
-	// 			$tmpNode = new Node($children);
-	// 			$list[] = array('id' => $children, "name" => $tmpNode->get("Name"));
-	// 		}
-	// 	}
- //        $values['id_node'] = $idNode;
- //        $values['list'] = $list;
-
-	// 	// Add default core css for delete elements
-	// 	$this->addCss('/actions/deletenode/resources/css/style.css');
-
-	// 	$this->render($values, null, 'default-3.0.tpl');
 	 }
+
 
     protected function sendToPublish($idNode, $up, $down, $markEnd, $republish, $structure, $deepLevel, $sendNotifications, $notificableUsers, $idState, $texttosend){
         $node = new Node($idNode);
         $nt = $node->GetNodeType();
-        $data = new DataFactory($idNode);
         if ($nt == XlyreOpenDataSection::IDNODETYPE) {
-            $catalog = new XlyreCatalog($idNode);
-            $retid = $data->SetContent($catalog->ToXml());
+            $ok = $this->publish_catalog($idNode);
         }
         elseif ($nt == XlyreOpenDataset::IDNODETYPE) {
-            $dataset = new XlyreDataset($idNode);
-            $retid = $data->SetContent($dataset->ToXml());
+            $ok = $this->publish_dataset($idNode);
         }
-        if ($retid > 0) {
+        if ($ok) {
             parent::sendToPublish($idNode, $up, $down, $markEnd, $republish, $structure, $deepLevel, $sendNotifications, $notificableUsers, $idState, $texttosend);
         }
-
+        else {
+            $this->messages->add(_('There was an error while publishing nodes'), MSG_TYPE_ERROR);
+            $values = array(
+                'action_with_no_return' => 1,
+                'messages' => $this->messages->messages
+            );
+            $this->render($values, NULL, 'messages.tpl');
+        }
     }
 
 
-	function publish_catalog() {
-		$catalog = new XlyreCatalog($this->request->getParam("nodeid"));
+	function publish_catalog($idNode = 0) {
+        $idcatalog = $idNode;
+        $catalog = new XlyreCatalog($idcatalog);
 
 		$data = new DataFactory($this->request->getParam("nodeid"));
 		$retid = $data->SetContent($catalog->ToXml());
@@ -109,26 +86,63 @@ class Action_publish extends Action_workflow_forward {
 	}
 
 
-	function publish_dataset() {
-		$dataset = new XlyreDataset($this->request->getParam("nodeid"));
-
-		$data = new DataFactory($this->request->getParam("nodeid"));
-		$retid = $data->SetContent($dataset->ToXml());
-		if ($retid > 0) {
-			#The version was created sucessfully
-            #Publish
-
-			$this->messages->add(htmlentities($dataset->ToXml()), MSG_TYPE_NOTICE);
-		}
-		else {
-			$this->messages->add(_('There was an error while creating a data version for this dataset'), MSG_TYPE_ERROR);
-		}
-
-		$values = array(
-        	'action_with_no_return' => 1,
-            'messages' => $this->messages->messages
-        );
-        $this->render($values, NULL, 'messages.tpl');
+	function publish_dataset($idNode = 0) {
+        $iddataset = $idNode;
+		$dataset = new XlyreDataset($iddataset);
+        $xlrml = new XlyreRelMetaLangs();
+        $i18n_dataset_values = $xlrml->find('IdLanguage', "IdNode = %s", array($idNode), MONO);
+        foreach ($i18n_dataset_values as $i18n_value) {
+            $language = new Language($i18n_value);
+            $nodename = $dataset->get('Identifier');
+            $nodename_search = $dataset->get('Identifier')."-id".$language->get("IsoName");
+            unset($language);
+            $node = new Node();
+            $result = $node->find('IdNode', "IdParent = %s && IdNodeType = %s && Name = %s", array($iddataset, NodetypeService::XML_DOCUMENT, $nodename_search), MONO);
+            unset($node);
+            if ($result) {
+                #Update
+                $node = new Node($result[0]);
+                $node->update();
+                $node->setContent($dataset->ToXml($i18n_value));
+                $ok = true;
+            }
+            else {
+                #Create
+                $ch = new Channel();
+                $html_ch = $ch->find('IdChannel', "name = %s", array('html'), MONO);
+                $nt = new NodeType(NodetypeService::XML_DOCUMENT);
+                $node_search = new Node();
+                $template_val = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s", array("rng-dataset.xml", NodetypeService::RNG_VISUAL_TEMPLATE), MONO);
+                if ($template_val) {
+                    $data = array(
+                        'NODETYPENAME' => $nt->get('Name'),
+                        'NAME' => $nodename,
+                        'PARENTID' => $iddataset,
+                        'FORCENEW' => true,
+                        "CHILDRENS" => array (
+                            array ("NODETYPENAME" => "VISUALTEMPLATE", "ID" => $template_val[0]),
+                            array ("NODETYPENAME" => "CHANNEL", "ID" => $html_ch[0]),
+                            array ("NODETYPENAME" => "LANGUAGE", "ID" => $i18n_value),
+                        )
+                    );
+                    $nodetopublish = new baseIO();
+                    $nodeid = $nodetopublish->build($data);
+                    if ($nodeid) {
+                        $node = new Node($nodeid);
+                        $node->setContent($dataset->ToXml($i18n_value));
+                        $ok = true;
+                    }
+                    else {
+                        #do something when it fails
+                        $ok = false;
+                    }
+                }
+                else {
+                    $ok = false;
+                }
+            }
+        }
+        return $ok;
 	}
 
 
