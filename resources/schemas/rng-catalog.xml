@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<grammar xmlns='http://relaxng.org/ns/structure/1.0' xmlns:xim='http://ximdex.com/schema/1.0'>
+  <start>
+    <element name ="docxap">
+      <ref name="catalog.class"/>
+    </element>
+  </start>
+
+  <define name="catalog.class">
+    <element name="catalog">
+      <ref name="identifier.class"/>
+      <ref name="issued.class"/>
+      <ref name="modified.class"/>
+      <ref name="datasets.class"/>
+      <xim:description>Catalog</xim:description>
+    </element>
+  </define>
+
+  <define name="identifier.class">
+    <element name="identifier">
+      <text/>
+      <xim:description>Identifier</xim:description>
+    </element>
+  </define>
+
+  <define name="issued.class" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <element name="issued">
+      <data type="date"/>
+      <text/>
+      <xim:description>Issued</xim:description>
+    </element>
+  </define>
+
+  <define name="modified.class" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <element name="modified">
+      <data type="date"/>
+      <text/>
+      <xim:description>Modified</xim:description>
+    </element>
+  </define>
+
+  <define name="datasets.class">
+    <element name="datasets">
+      <zeroOrMore>
+        <ref name="dataset.class">
+      <zeroOrMore>
+      <xim:description>List of Datasets</xim:description>
+    </element>
+  </define>
+
+  <define name="dataset.class">
+    <element name="dataset">
+      <ref name="id.class"/>  
+      <ref name="identifier.class"/>
+      <ref name="language_title_description.class"/>
+      <ref name="formats.class"/>
+      <xim:description>Dataset</xim:description>
+    </element>
+  </define>
+
+  <define name="id.class">
+    <element name="id">
+      <text/>
+      <xim:description>Dataset Identifier</xim:description>
+    </element>
+  </define>
+
+  <define name="language_title_description.class">
+    <element name="language">
+      <ref name="idlang.class"/>
+      <ref name="title.class"/>
+      <ref name="description.class"/>
+    </element>
+  </define>
+
+  <define name="idlang.class">
+    <element name="id">
+      <text/>
+      <xim:description>Language Identifier</xim:description>
+    </element>
+  </define>
+
+  <define name="title.class">
+    <element name="title">
+      <text/>
+      <xim:description>Name</xim:description>
+    </element>
+  </define>
+
+  <define name="description.class">
+    <element name="description">
+      <text/>
+      <xim:description>Description</xim:description>
+    </element>
+  </define>
+
+  <define name="formats.class">
+    <element name="formats">
+      <zeroOrMore>
+        <ref name="format.class">
+      <zeroOrMore>
+      <xim:description>Dataset formats available</xim:description>
+    </element>
+  </define>
+
+  <define name="format.class">
+    <element name="format">
+      <text/>
+      <xim:description>Dataset format available</xim:description>
+    </element>
+  </define>
+
+</grammar>
