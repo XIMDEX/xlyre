@@ -62,12 +62,39 @@ class XlyreOpenDataSection extends SectionNode{
 		$time = time();
 		$catalog->set("Modified",$time);
 		$catalog->set("Issued",$time);
+
+		if (!$this->_existRNGs()) {
+			$this->_loadRngs($parentID);
+		}
 		
 		return $catalog->add();
 	}
 
-	public function getDatasets(){
 
+	/**
+	 * Check if Xlyre RNGs already exist
+	 */
+	private function _existRNGs() {
+		// Check if RNGs do not exist yet
+		$node_search = new Node();
+		$template_catalog = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s", array("rng-catalog.xml", NodetypeService::RNG_VISUAL_TEMPLATE), MONO);
+        $template_dataset = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s", array("rng-dataset.xml", NodetypeService::RNG_VISUAL_TEMPLATE), MONO);
+        return ($template_catalog && $template_dataset) ? true : false;
+	}
+
+	/**
+	 * Load RNGs for Xlyre (catalog and dataset) when the user has the 1st interaction with the module
+	 */
+	private function _loadRngs($parentID){
+
+		error_log(print_r($parentID, true));
+
+    	$nodeParent = new Node($parentID);
+		$idProject = $nodeParent->getProject();
+		$nodeProject = new Node($idProject);
+		$idSchemesFolder = $nodeProject->getChildren(NodetypeService::TEMPLATE_VIEW_FOLDER);
+		$path = "/modules/xlyre/resources/schemas/";
+		$this->buildDefaultRngFromPath($idSchemesFolder[0], $path);
 	}
 
 }
