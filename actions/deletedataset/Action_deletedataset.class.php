@@ -82,11 +82,12 @@ class Action_deletedataset extends ActionAbstract {
 		$parentID = $node->get('IdParent');
 
 		$node = new Node($idNode);
-		$distributions = $node->getChildren(XlyreOpenDistribution::IDNODETYPE);
-		if ($distributions) {
-			foreach ($distributions as $distribution) {
-				$dist = new Node($distribution);
-				$dist->delete();
+		// Delete all childrens (distributions and published nodes)
+		$childrens = $node->getChildren();
+		if ($childrens) {
+			foreach ($childrens as $child) {
+				$c = new Node($child);
+				$c->delete();
 			}
 		}
 		$result = $node->delete();
