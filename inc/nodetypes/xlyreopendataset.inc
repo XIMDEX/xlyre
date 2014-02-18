@@ -124,6 +124,10 @@ class XlyreOpenDataSet extends FolderNode{
 		return $fileName;
 	}
 
+	public function GetPublishedPath($channeId, $addFolder){
+		return "/CatalogoOpenData";
+	}
+
 	/**
 	 * Required method for publishing.
 	 * Return available channels for the current node.
