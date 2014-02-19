@@ -24,7 +24,7 @@ DELETE FROM NodeDefaultContents where IdNodeType in (4000);
 DELETE FROM NodeDefaultContents where NodeType in (4003);
 
 -- Deleting all Xlyre Actions
-DELETE FROM Actions where IdAction in (7501,7502,7503,7504,7505,7506,7507);
+DELETE FROM Actions where IdAction in (7501,7502,7503,7504,7505,7506,7507,7508);
 
 -- Deleting all RelRolesActions (Permissions) for Xlyre Actions
 DELETE FROM RelRolesActions where IdAction in (7501,7502,7503,7504,7505,7506,7507);

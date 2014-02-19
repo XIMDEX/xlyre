@@ -86,6 +86,8 @@ INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Desc
 INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7505,  4003,"Configure Xlyre", "configure", "modulesconfig.png","It configures Xlyre module", 99, 'xlyre', 0, NULL);
 INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7506,  4000,"Publish Catalog", "publish", "change_next_state.png","It publishes the current Catalog", 99, 'xlyre', 0, NULL);
 INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7507,  4001,"Publish Dataset", "publish", "change_next_state.png","It publishes the current Dataset", 99, 'xlyre', 0, NULL);
+INSERT INTO `Actions` (`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`) VALUES (7508, 4000, "Modify properties", "manageproperties", "xix.png", "Modify properties", 80);
+
 UNLOCK TABLES;
 
 -- Roles for these actions
@@ -97,6 +99,7 @@ INSERT INTO RelRolesActions VALUES (NULL,201,7504,0,1,3);
 INSERT INTO RelRolesActions VALUES (NULL,201,7505,0,1,3);
 INSERT INTO RelRolesActions VALUES (NULL,201,7506,0,1,3);
 INSERT INTO RelRolesActions VALUES (NULL,201,7507,0,1,3);
+INSERT INTO RelRolesActions VALUES (NULL,201,7508,0,1,3);
 UNLOCK TABLES;
 
 -- XlyreCatalog Table
