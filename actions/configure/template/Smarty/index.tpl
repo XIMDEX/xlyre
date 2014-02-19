@@ -37,7 +37,7 @@
                 <input type="text" name="themes" id="themes" maxlength="100" class="cajaxg full-size" value="{$themes}">
             </div>
     		<div class="input-select">
-                <label class="label_title" for="periodicities">{t}Periodicities{/t}*</label>
+                <label class="label_title" for="periodicities">{t}Periodicities (in months){/t}*</label>
                 <input type="text" name="periodicities" id="periodicities" maxlength="100" class="cajaxg full-size" value="{$periodicities}">
             </div>
             {*<div class="input-select">

@@ -100,7 +100,7 @@
                     </select>
                 </p>
                 <p>
-                    <label for="periodicity_label"  class="label_title">{t}Periodicity{/t}</label>
+                    <label for="periodicity_label"  class="label_title">{t}Periodicity (in months){/t}</label>
                     <select class="not_empty full_size" name="periodicity" id="periodicity"
                         ng-model="dataset.periodicity"
                         ng-init="dataset.periodicity = '{$periodicity}' || '{$periodicities[0].id|gettext}'">
