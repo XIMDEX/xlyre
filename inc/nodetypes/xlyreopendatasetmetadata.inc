@@ -55,7 +55,7 @@ class XlyreOpenDataSetMetadata extends AbstractStructuredDocument{
 	}
 
 	function getPathToDeep(){
-		if (in_array(Config::getValue("PublishPathFormat"), array("prefix","sufix")))
+		if (in_array(Config::getValue("PublishPathFormat"), array("prefix","suffix")))
 			return 1;
 		return 2;
 	}
