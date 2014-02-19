@@ -125,11 +125,6 @@ class XlyreDataset extends XlyreDataset_ORM {
         $stringxml .= "<id>$this->IdDataset</id>";
         $stringxml .= "<identifier>$this->Identifier</identifier>";
 
-        $stringxml .= "<issued>$issued_date</issued>";
-        $modified_date = date($format, $this->Modified);
-        $stringxml .= "<modified>$modified_date</modified>";
-        $stringxml .= "<reference>$this->Reference</reference>";
-
         $stringxml .= "<language>";
         $xlrml = new XlyreRelMetaLangs();
         $language_dataset = $xlrml->find('Title, Description', "IdNode = %s AND IdLanguage = %s", array($this->IdDataset, $language), MULTI);
