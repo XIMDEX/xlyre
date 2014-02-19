@@ -27,7 +27,10 @@
 
 ModulesManager::file('/inc/nodetypes/xlyreopendataset.inc', 'xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendatasection.inc', 'xlyre');
+ModulesManager::file('/inc/nodetypes/xlyreopendatasectionmetadata.inc', 'xlyre');
+ModulesManager::file('/inc/nodetypes/xlyreopendatasetmetadata.inc', 'xlyre');
 ModulesManager::file('/inc/io/XlyreBaseIOConstants.class.php', "xlyre");
+ModulesManager::file('/inc/io/XlyreBaseIO.class.php', "xlyre");
 ModulesManager::file('/inc/model/XlyreCatalog.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyreDataset.php', 'xlyre');
 ModulesManager::file('/actions/workflow_forward/Action_workflow_forward.class.php');
@@ -87,7 +90,7 @@ class Action_publish extends Action_workflow_forward {
             #Create
             $ch = new Channel();
             $html_ch = $ch->find('IdChannel', "name = %s", array('html'), MONO);
-            $nt = new NodeType(NodetypeService::XML_DOCUMENT);
+            $nt = new NodeType(XlyreOpenDataSectionMetadata::IDNODETYPE);
             $node_search = new Node();
             $template_val = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s", array("rng-catalog.xml", NodetypeService::RNG_VISUAL_TEMPLATE), MONO);
             if ($template_val) {
@@ -119,28 +122,32 @@ class Action_publish extends Action_workflow_forward {
             }
         }
         # Publish all datasets
-        $datasets = $catalog->getChildren(XlyreOpenDataset::IDNODETYPE);
+        $catalog_node = new Node($idcatalog);
+        $datasets = $catalog_node->GetChildren(XlyreOpenDataset::IDNODETYPE);
+        error_log("****************************");
         if ($datasets) {
             foreach ($datasets as $dataset) {
-                error_log(" --- $dataset --- ");
+                error_log("Dataset $dataset");
                 $ok = $this->publish_dataset($dataset);
             }
         }
+        error_log("****************************");
         return $ok;    
 	}
+
 
 
 	function publish_dataset($iddataset = 0) {
 		$dataset = new XlyreDataset($iddataset);
         $xlrml = new XlyreRelMetaLangs();
-        $i18n_dataset_values = $xlrml->find('IdLanguage', "IdNode = %s", array($idNode), MONO);
+        $i18n_dataset_values = $xlrml->find('IdLanguage', "IdNode = %s", array($iddataset), MONO);
         foreach ($i18n_dataset_values as $i18n_value) {
             $language = new Language($i18n_value);
             $nodename = $dataset->get('Identifier');
             $nodename_search = $dataset->get('Identifier')."-id".$language->get("IsoName");
             unset($language);
             $node = new Node();
-            $result = $node->find('IdNode', "IdParent = %s && IdNodeType = %s && Name = %s", array($iddataset, NodetypeService::XML_DOCUMENT, $nodename_search), MONO);
+            $result = $node->find('IdNode', "IdParent = %s && IdNodeType = %s && Name = %s", array($iddataset, XlyreOpenDataSetMetadata::IDNODETYPE, $nodename_search), MONO);
             unset($node);
             if ($result) {
                 #Update
@@ -153,7 +160,7 @@ class Action_publish extends Action_workflow_forward {
                 #Create
                 $ch = new Channel();
                 $html_ch = $ch->find('IdChannel', "name = %s", array('html'), MONO);
-                $nt = new NodeType(NodetypeService::XML_DOCUMENT);
+                $nt = new NodeType(XlyreOpenDataSetMetadata::IDNODETYPE);
                 $node_search = new Node();
                 $template_val = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s", array("rng-dataset.xml", NodetypeService::RNG_VISUAL_TEMPLATE), MONO);
                 if ($template_val) {
@@ -168,7 +175,7 @@ class Action_publish extends Action_workflow_forward {
                             array ("NODETYPENAME" => "LANGUAGE", "ID" => $i18n_value),
                         )
                     );
-                    $nodetopublish = new baseIO();
+                    $nodetopublish = new XlyreBaseIO();
                     $nodeid = $nodetopublish->build($data);
                     if ($nodeid) {
                         $node = new Node($nodeid);
@@ -177,7 +184,6 @@ class Action_publish extends Action_workflow_forward {
                     }
                     else {
                         #do something when it fails
-                        error_log("FAILSSSSSSSSSSSSS");
                         $ok = false;
                     }
                 }

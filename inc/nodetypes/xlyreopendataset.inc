@@ -116,10 +116,8 @@ class XlyreOpenDataSet extends FolderNode{
 	 * @param int $channel Channel id
 	 */
 	function GetPublishedNodeName($channel = null) {
-
-		$channel = new Channel($channel);
-		$sufix = "-id".$channel->GetName() . "." . $channel->GetExtension();
-		$fileName = $this->parent->GetNodeName() . $sufix;
+		
+		$fileName = $this->parent->GetNodeName();
 
 		return $fileName;
 	}
