@@ -89,7 +89,8 @@ class Action_createcatalog extends Action_addsectionnode {
                         // Creating Licenses subfolder in links folder
                         $catalognode = new Node($id);
                         $projectnode = new Node($catalognode->getProject());
-                        $this->_createLicenseLinksFolder($projectnode->getChildren(NodetypeService::LINK_MANAGER)[0]);
+                        $folder = $projectnode->getChildren(NodetypeService::LINK_MANAGER);
+                        $this->_createLicenseLinksFolder($folder[0]);
 
 
                         $this->reloadNode($nodeID);
