@@ -29,7 +29,7 @@ ModulesManager::file('/inc/nodetypes/structureddocument.inc');
 
 class XlyreOpenDataSetMetadata extends AbstractStructuredDocument{
 
-	const IDNODETYPE=4004;
+	const IDNODETYPE=4005;
 
 	function GetPublishedPath($channelID = NULL, $addNodeName) {
 
