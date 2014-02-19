@@ -122,7 +122,7 @@ class XlyreDataset extends XlyreDataset_ORM {
     public function ToXmlReduced($language = 0, $exportdomdoc = false) {
         
         $stringxml = "<dataset>";
-        $stringxml .= "<id>IdDataset</id>";
+        $stringxml .= "<id>$this->IdDataset</id>";
         $stringxml .= "<identifier>$this->Identifier</identifier>";
 
         $stringxml .= "<issued>$issued_date</issued>";
