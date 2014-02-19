@@ -59,7 +59,7 @@ class XlyreCatalog extends XlyreCatalog_ORM {
         $stringxml .= "<modified>$modified_date</modified>";
         $stringxml .= "<datasets>";
         $node = new Node($this->IdCatalog);
-        $datasets = $node->GetChildren();
+        $datasets = $node->GetChildren(XlyreOpenDataset::IDNODETYPE);
         foreach ($datasets as $value) {
             $dataset = new XlyreDataset($value);
             $stringxml .= $dataset->ToXmlReduced($language);
