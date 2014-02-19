@@ -24,15 +24,30 @@
  *  @version $Revision$
  */
 
- class XlyreBaseIOConstants{
+ModulesManager::file('/inc/model/XlyreCatalog.php', 'xlyre');
+ModulesManager::file('/inc/nodetypes/structureddocument.inc');
 
- 	public static $metaTypesArray = array(
- 			"XLYREOPENDATASECTION" => "OPENDATASECTION",
- 			"XLYREOPENDATASET" => "OPENDATASET",
-            "XLYREOPENDISTRIBUTION" => "OPENDISTRIBUTION",
- 			"XLYREOPENDATASECTIONMETADATA" => "XMLDOCUMENTNODE",
-            "XLYREOPENDATASETMETADATA" => "XMLDOCUMENTNODE"
- 		);
- }
+class XlyreOpenDataSetMetadata extends AbstractStructuredDocument{
 
-?>
+	const IDNODETYPE=4004;
+
+	function GetPublishedPath($channelID = NULL, $addNodeName) {
+
+		$path = parent::GetPublishedPath();
+		$idNode = $this->parent->get('IdNode');
+		$structuredDocument = new structureddocument($idNode);
+		$idLanguage = $structuredDocument->get("IdLanguage");
+		$language = new Language($idLanguage);
+		return "/".$language->get("IsoName").$path;
+	}
+
+	function GetPublishedNodeName($idChannel){
+
+		$channel = new Channel($idChannel);
+		//Cleaning sufix. 
+		//TODO: Add config option		
+		$posLastMinusCharacter = strrpos($this->parent->getNodeName(), "-");
+		$publishableName = substr($this->parent->getNodeName(), 0, $posLastMinusCharacter);
+		return $publishableName.".".$channel->get("DefaultExtension");
+	}
+}
