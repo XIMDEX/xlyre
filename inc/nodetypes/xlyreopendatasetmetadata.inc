@@ -43,11 +43,14 @@ class XlyreOpenDataSetMetadata extends AbstractStructuredDocument{
 
 	function GetPublishedNodeName($idChannel){
 
-		$channel = new Channel($idChannel);
-		//Cleaning sufix. 
-		//TODO: Add config option		
-		$posLastMinusCharacter = strrpos($this->parent->getNodeName(), "-");
-		$publishableName = substr($this->parent->getNodeName(), 0, $posLastMinusCharacter);
-		return $publishableName.".".$channel->get("DefaultExtension");
+		// Default name for clean urls
+        $nodename = "index";
+        
+        $channel = new Channel($idChannel);
+        
+        // $posLastMinusCharacter = strrpos($this->parent->getNodeName(), "-");
+        // $publishableName = substr($this->parent->getNodeName(), 0, $posLastMinusCharacter);
+        // return $publishableName.".".$channel->get("DefaultExtension");
+        return $nodename.".".$channel->get("DefaultExtension");
 	}
 }

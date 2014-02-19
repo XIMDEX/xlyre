@@ -33,6 +33,24 @@ class XlyreOpenDataSectionMetadata extends AbstractStructuredDocument{
 
 	function GetPublishedPath($channelID = NULL, $addNodeName) {
 
-		return "/dataset";
-	}
+        $path = parent::GetPublishedPath();
+        $idNode = $this->parent->get('IdNode');
+        $structuredDocument = new structureddocument($idNode);
+        $idLanguage = $structuredDocument->get("IdLanguage");
+        $language = new Language($idLanguage);
+        return "/".$language->get("IsoName").$path;
+    }
+
+    function GetPublishedNodeName($idChannel){
+
+        // Default name for clean urls
+        $nodename = "index";
+        
+        $channel = new Channel($idChannel);
+        
+        // $posLastMinusCharacter = strrpos($this->parent->getNodeName(), "-");
+        // $publishableName = substr($this->parent->getNodeName(), 0, $posLastMinusCharacter);
+        // return $publishableName.".".$channel->get("DefaultExtension");
+        return $nodename.".".$channel->get("DefaultExtension");
+    }
 }
