@@ -45,23 +45,24 @@ class XlyreCatalog extends XlyreCatalog_ORM {
 
     /**
      * Export catalog info to its XML format
+     * @param integer $language A integer value that indicates the language fields to export
      * @param boolean $exportdomdoc A boolean value that indicates if the result is string or XML string
      * @return string A string that contains XML file
      */
-    public function ToXml($exportdomdoc = false) {
+    public function ToXml($language = 0, $exportdomdoc = false) {
         $format = _('m-d-Y');
         $stringxml = "<catalog>";
-        $stringxml .= "<identifier>$this->Identifier</identifier>";
+        $stringxml .= "<identifier>".$this->Identifier."</identifier>";
         $issued_date = date($format, $this->Issued);
         $stringxml .= "<issued>$issued_date</issued>";
         $modified_date = date($format, $this->Modified);
         $stringxml .= "<modified>$modified_date</modified>";
         $stringxml .= "<datasets>";
         $node = new Node($this->IdCatalog);
-        $datasets = $node->GetChildren();
+        $datasets = $node->GetChildren(XlyreOpenDataset::IDNODETYPE);
         foreach ($datasets as $value) {
             $dataset = new XlyreDataset($value);
-            $stringxml .= $dataset->ToXml();
+            $stringxml .= $dataset->ToXmlReduced($language);
         }
         $stringxml .= "</datasets>";
         $stringxml .= "</catalog>";

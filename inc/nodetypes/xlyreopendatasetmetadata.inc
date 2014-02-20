@@ -24,15 +24,12 @@
  *  @version $Revision$
  */
 
- class XlyreBaseIOConstants{
+ModulesManager::file('/inc/model/XlyreCatalog.php', 'xlyre');
+ModulesManager::file('/inc/nodetypes/xlyremetadata.inc', 'xlyre');
+ModulesManager::file('/inc/nodetypes/structureddocument.inc');
 
- 	public static $metaTypesArray = array(
- 			"XLYREOPENDATASECTION" => "OPENDATASECTION",
- 			"XLYREOPENDATASET" => "OPENDATASET",
-            "XLYREOPENDISTRIBUTION" => "OPENDISTRIBUTION",
- 			"XLYREOPENDATASECTIONMETADATA" => "XMLDOCUMENTNODE",
-            "XLYREOPENDATASETMETADATA" => "XMLDOCUMENTNODE"
- 		);
- }
+class XlyreOpenDataSetMetadata extends XlyreMetadata{
 
-?>
+	const IDNODETYPE=4005;
+	
+}
