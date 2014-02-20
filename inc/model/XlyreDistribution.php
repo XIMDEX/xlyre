@@ -31,10 +31,11 @@ class XlyreDistribution extends XlyreDistribution_ORM {
 
     /**
      * Export distribution info to its XML format
+     * @param integer $language A integer value that indicates the language fields to export
      * @param boolean $exportdomdoc A boolean value that indicates if the result is string or XML string
      * @return string A string that contains XML file
      */
-    public function ToXml($exportdomdoc = false) {
+    public function ToXml($language = 0, $exportdomdoc = false) {
         $format = _('m-d-Y');
         $stringxml = "<distribution>";
         $stringxml .= "<identifier>$this->Identifier</identifier>";
@@ -45,19 +46,17 @@ class XlyreDistribution extends XlyreDistribution_ORM {
         $stringxml .= "<modified>$modified_date</modified>";
         $stringxml .= "<mediatype>$this->MediaType</mediatype>";
         $stringxml .= "<bytesize>$this->ByteSize</bytesize>";
-        $stringxml .= "<languages>";
+        $stringxml .= "<language>";
         $xlrml = new XlyreRelMetaLangs();
-        $languages_distribution = $xlrml->find('Title, Description, IdLanguage', "IdNode = %s", array($this->IdDistribution), MULTI);
-        foreach ($languages_distribution as $ld) {
-            $lang = new Language($ld['IdLanguage']);
+        $language_distribution = $xlrml->find('Title, Description', "IdNode = %s AND IdLanguage = %s", array($this->IdDistribution, $language), MULTI);
+        foreach ($language_distribution as $ld) {
+            $lang = new Language($language);
             $lang_iso = $lang->Get('IsoName');
             $title = $ld['Title'];
-            $stringxml .= "<language>";
             $stringxml .= "<id>$lang_iso</id>";
             $stringxml .= "<title>$title</title>";
-            $stringxml .= "</language>";
         }
-        $stringxml .= "</languages>";
+        $stringxml .= "</language>";
         $stringxml .= "</distribution>";
         if ($exportdomdoc) {
             $doc = new DOMDocument();

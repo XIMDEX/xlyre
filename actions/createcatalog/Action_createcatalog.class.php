@@ -125,7 +125,6 @@ class Action_createcatalog extends Action_addsectionnode {
 
 
     private function _createLicenseLinksFolder($links_id) {
-
         $nodeaux = new Node();
         $linkfolder = $nodeaux->find('IdNode', "idnodetype = %s AND Name = 'Licenses'", array(NodetypeService::LINK_FOLDER), MONO);
         if (!$linkfolder) {
@@ -133,9 +132,25 @@ class Action_createcatalog extends Action_addsectionnode {
             $nodeType->SetByName('LinkFolder');
             $folder = new Node();
             $idFolder = $folder->CreateNode('Licenses', $links_id, $nodeType->GetID(), null);
+            $this->_createLicenseLinks("ODbL", "http://opendatacommons.org/licenses/odbl/", "Open Data Commons Open Database License (ODbL)", $idFolder);
         }
-
     }
+
+    private function _createLicenseLinks($link_name, $link_url, $link_description, $idFolder) {
+        $data = array(
+            'NODETYPENAME' => 'LINK',
+            'NAME' => $link_name,
+            'PARENTID' => $idFolder,
+            'IDSTATE' => 0,
+            'CHILDRENS' => array (
+                array ('URL' => $link_url),
+                array ('DESCRIPTION' => $link_description)
+            )
+        );    
+        $bio = new baseIO();
+        $result = $bio->build($data);
+    }
+    
 
 }
 

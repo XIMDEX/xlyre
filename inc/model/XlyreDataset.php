@@ -30,6 +30,7 @@ ModulesManager::file('/inc/model/XlyreThemes.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyrePeriodicities.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyreSpatials.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyreRelMetaLangs.php', 'xlyre');
+ModulesManager::file('/inc/nodetypes/xlyreopendistribution.inc', 'xlyre');
 
 class XlyreDataset extends XlyreDataset_ORM {
     
@@ -50,10 +51,11 @@ class XlyreDataset extends XlyreDataset_ORM {
 
     /**
      * Export dataset info to its XML format
+     * @param integer $language A integer value that indicates the language fields to export
      * @param boolean $exportdomdoc A boolean value that indicates if the result is string or XML string
      * @return string A string that contains XML file
      */
-    public function ToXml($exportdomdoc = false) {
+    public function ToXml($language = 0, $exportdomdoc = false) {
         $format = _('m-d-Y');
         $stringxml = "<dataset>";
         $stringxml .= "<identifier>$this->Identifier</identifier>";
@@ -76,30 +78,75 @@ class XlyreDataset extends XlyreDataset_ORM {
         $stringxml .= "<modified>$modified_date</modified>";
         $stringxml .= "<reference>$this->Reference</reference>";
 
-        $stringxml .= "<languages>";
+        $stringxml .= "<language>";
         $xlrml = new XlyreRelMetaLangs();
-        $languages_dataset = $xlrml->find('Title, Description, IdLanguage', "IdNode = %s", array($this->IdDataset), MULTI);
-        foreach ($languages_dataset as $ld) {
-            $lang = new Language($ld['IdLanguage']);
+        $language_dataset = $xlrml->find('Title, Description', "IdNode = %s AND IdLanguage = %s", array($this->IdDataset, $language), MULTI);
+        foreach ($language_dataset as $ld) {
+            $lang = new Language($language);
             $lang_iso = $lang->Get('IsoName');
             $title = $ld['Title'];
             $description = $ld['Description'];
-            $stringxml .= "<language>";
             $stringxml .= "<id>$lang_iso</id>";
             $stringxml .= "<title>$title</title>";
             $stringxml .= "<description>$description</description>";
-            $stringxml .= "</language>";
         }
-        $stringxml .= "</languages>";
+        $stringxml .= "</language>";
 
         $stringxml .= "<distributions>";
         $node = new Node($this->IdDataset);
-        $distributions = $node->GetChildren();
+        $distributions = $node->GetChildren(XlyreOpenDistribution::IDNODETYPE);
         foreach ($distributions as $value) {
             $dist = new XlyreDistribution($value);
-            $stringxml .= $dist->ToXml();
+            $stringxml .= $dist->ToXml($language);
         }
         $stringxml .= "</distributions>";
+        $stringxml .= "</dataset>";
+
+        if ($exportdomdoc) {
+            $doc = new DOMDocument();
+            $doc->loadXML($stringxml);
+            return $doc->saveXML();
+        }
+        else {
+            return $stringxml;
+        }
+    }
+
+
+    /**
+     * Export dataset info to its XML format (reduced)
+     * @param integer $language A integer value that indicates the language fields to export
+     * @param boolean $exportdomdoc A boolean value that indicates if the result is string or XML string
+     * @return string A string that contains XML file
+     */
+    public function ToXmlReduced($language = 0, $exportdomdoc = false) {
+        
+        $stringxml = "<dataset>";
+        $stringxml .= "<id>$this->IdDataset</id>";
+        $stringxml .= "<identifier>$this->Identifier</identifier>";
+
+        $stringxml .= "<language>";
+        $xlrml = new XlyreRelMetaLangs();
+        $language_dataset = $xlrml->find('Title, Description', "IdNode = %s AND IdLanguage = %s", array($this->IdDataset, $language), MULTI);
+        foreach ($language_dataset as $ld) {
+            $lang = new Language($language);
+            $lang_iso = $lang->Get('IsoName');
+            $title = $ld['Title'];
+            $description = $ld['Description'];
+            $stringxml .= "<id>$lang_iso</id>";
+            $stringxml .= "<title>$title</title>";
+            $stringxml .= "<description>$description</description>";
+        }
+        $stringxml .= "</language>";
+
+        $stringxml .= "<formats>";
+        $node = new Node($this->IdDataset);
+        $distributions = $node->GetChildren(XlyreOpenDistribution::IDNODETYPE);
+        foreach ($distributions as $value) {
+            $dist = new XlyreDistribution($value);
+            $stringxml .= "<format>".$dist->get("MediaType")."</format>";
+        }
+        $stringxml .= "</formats>";
         $stringxml .= "</dataset>";
 
         if ($exportdomdoc) {

@@ -236,6 +236,7 @@ class Action_managedataset extends ActionAbstract {
                 'NAME' => $values['distribution']['file'],
                 'PARENTID' => $this->request->getParam('nodeid'),
                 'FILENAME' => $values['distribution']['file'],
+                'FILESIZE' => $values['distribution']['size'],
                 'TMPSRC' => $_FILES['file']['tmp_name'],
             );
             $baseio = new XlyreBaseIO();
