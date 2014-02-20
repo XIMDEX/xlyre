@@ -78,7 +78,7 @@ class Action_publish extends Action_workflow_forward {
             $nodename_search = $catalog->get('Identifier')."-id".$language->get("IsoName");
             unset($language);
             $node = new Node();
-            $result = $node->find('IdNode', "IdParent = %s && IdNodeType = %s && Name = %s", array($idcatalog, NodetypeService::XML_DOCUMENT, $nodename_search), MONO);
+            $result = $node->find('IdNode', "IdParent = %s && IdNodeType = %s && Name = %s", array($idcatalog, XlyreOpenDataSectionMetadata::IDNODETYPE, $nodename_search), MONO);
             unset($node);
             if ($result) {
                 #Update
