@@ -152,7 +152,7 @@
                     {/foreach}
                     
                 {else}
-                    <p>{t}There are no channels associated to this catalog{/t}</p>
+                    <p>{t}There are no channels associated to this catalog{/t}.</p>
                 {/if}
             </div>
             <div class="languages-available"><h3>{t}Languages{/t}</h3>
@@ -174,13 +174,13 @@
                         </div>
                     {/foreach}
                 {else}
-                    <p>{t}There are no languages associated to this catalog{/t}</p>
+                    <p>{t}There are no languages associated to this catalog{/t}.</p>
                 {/if}
             </div>
 
             <div class="reference_url">
                 <h3>
-                    <label for="reference">{t}Url más información{/t}</label>
+                    <label for="reference">{t}More Info Url{/t}</label>
                 </h3>
             <input type="url" name="reference" id="reference" maxlength="50" class="full_size validable" placeholder="{t}Reference{/t}"
                 ng-model="dataset.reference"
@@ -229,17 +229,6 @@
             </xlyre-distribution>
                 
     </div> 
-
-    <!-- {foreach from=$distributions item=d name=distributions}
-        
-            <ul>
-                {foreach from=$languages item=l}
-                    <li>DISTRO LOC TITLE: {$d.languages[$l.IdLanguage]}</li>
-                {/foreach}
-            </ul>
-        
-
-    {/foreach} -->
 
     </div>            
 </form>

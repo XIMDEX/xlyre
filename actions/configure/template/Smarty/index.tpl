@@ -48,10 +48,10 @@
                 <label class="label_title" for="spatials">{t}Spatials{/t}*</label>
                 <input type="text" name="spatials" id="spatials" maxlength="100" class="cajaxg full-size" value="{$spatials}">
             </div>
-            <strong><small class="right">{t}Licenses can be managed using Ximdex links{/t}</small></strong>
+            <strong><small class="right">{t}Licenses can be managed using Ximdex links{/t}.</small></strong>
             <br>
             <br>
-            <small class="right">(*) {t}Please enter comma separated values in all fields{/t}</small>
+            <small class="right">(*) {t}Please, enter comma separated values in all fields{/t}.</small>
         </fieldset>
 	</div>
 
