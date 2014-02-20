@@ -18,27 +18,24 @@
         <span class="file">
             
             <span class="file_name">[[queue[queue.length-1].name || distribution.file]]</span>
-            <span class="upload-button" ng-show="editing">
-                <i></i>
-                <input name="file" type="file" multi="false" class="xim-uploader"/>
+            <span class="upload-button icon" ng-show="editing">
+              <span class="tooltip"> Upload file</span>                <input name="file" type="file" multi="false" class="xim-uploader"/>
             </span>
         </span>
         <span class="format_file">
-            <span class="label_title">Format</span>
             [[queue[queue.length-1].type || distribution.format]]
         </span>
         <span class="size_file">
-            <span class="label_title">Size</span>
             [[queue[queue.length-1].size || distribution.size | xBytes ]]
         </span>
         <span class="creation_date">
-            <span class="label_title">Creation date</span>
+            Created at
             <span ng-hide="editing && queue.length">
                 [[distribution.issued | date:'dd/MM/yyyy']]
             </span>
         </span>
         <span class="modified_date">
-            <span class="label_title">Modification date</span>
+            Modified at 
             <span ng-hide="editing && queue.length">
                 [[distribution.modified | date:'dd/MM/yyyy']]
             </span>
@@ -59,15 +56,13 @@
         </button>
     </div>
     <div class="crud-actions">
-    	<button type="button" class="edit-button"
+    	<button type="button" class="edit-button icon btn-unlabel-rounded"
         	ng-click="editDistribution()"
         	ng-hide="editing">
-        	<i></i>
         </button>
-        <button type="button" class="delete-button"
+        <button type="button" class="delete-button icon btn-unlabel-rounded"
         	ng-click="deleteDistribution(distribution)"
         	ng-show="distribution.id && !editing">
-        	<i></i>
         </button>
     </div>
 </form>

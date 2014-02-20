@@ -41,7 +41,7 @@
   border-color: #fff;
   background: #d6d8dd; }
 
-.distributions .upload-button, .distributions .save-button, .distributions .add-button, .distributions .cancel-button {
+.distributions .save-button, .distribution_actions .file .file_name:empty + .upload-button, .distributions .add-button, .distributions .cancel-button {
   background: #fff;
   border: 1px solid #dedede;
   display: inline-block;
@@ -57,26 +57,26 @@
   cursor: pointer !important;
   border-color: #fff;
   background: #d6d8dd; }
-  .distributions .upload-button input, .distributions .save-button input, .distributions .add-button input, .distributions .cancel-button input {
+  .distributions .save-button input, .distribution_actions .file .file_name:empty + .upload-button input, .distributions .add-button input, .distributions .cancel-button input {
     cursor: pointer; }
-  .distributions .upload-button:focus, .distributions .save-button:focus, .distributions .add-button:focus, .distributions .cancel-button:focus, .distributions .upload-button:active, .distributions .save-button:active, .distributions .add-button:active, .distributions .cancel-button:active, .distributions .active.upload-button, .distributions .active.save-button, .distributions .active.add-button, .distributions .active.cancel-button, .distributions .upload-button:hover, .distributions .save-button:hover, .distributions .add-button:hover, .distributions .cancel-button:hover {
+  .distributions .save-button:focus, .distribution_actions .file .file_name:empty + .upload-button:focus, .distributions .add-button:focus, .distributions .cancel-button:focus, .distributions .save-button:active, .distribution_actions .file .file_name:empty + .upload-button:active, .distributions .add-button:active, .distributions .cancel-button:active, .distributions .active.save-button, .distribution_actions .file .file_name:empty + .active.upload-button, .distributions .active.add-button, .distributions .active.cancel-button, .distributions .save-button:hover, .distribution_actions .file .file_name:empty + .upload-button:hover, .distributions .add-button:hover, .distributions .cancel-button:hover {
     outline: none; }
-  .distributions .upload-button:focus, .distributions .save-button:focus, .distributions .add-button:focus, .distributions .cancel-button:focus, .distributions .upload-button:hover, .distributions .save-button:hover, .distributions .add-button:hover, .distributions .cancel-button:hover {
+  .distributions .save-button:focus, .distribution_actions .file .file_name:empty + .upload-button:focus, .distributions .add-button:focus, .distributions .cancel-button:focus, .distributions .save-button:hover, .distribution_actions .file .file_name:empty + .upload-button:hover, .distributions .add-button:hover, .distributions .cancel-button:hover {
     background: #babdc6; }
-  .distributions .upload-button:active, .distributions .save-button:active, .distributions .add-button:active, .distributions .cancel-button:active, .distributions .active.upload-button, .distributions .active.save-button, .distributions .active.add-button, .distributions .active.cancel-button {
+  .distributions .save-button:active, .distribution_actions .file .file_name:empty + .upload-button:active, .distributions .add-button:active, .distributions .cancel-button:active, .distributions .active.save-button, .distribution_actions .file .file_name:empty + .active.upload-button, .distributions .active.add-button, .distributions .active.cancel-button {
     box-shadow: inset 0 0 1px #464955; }
-  .distributions .upload-button:disabled, .distributions .save-button:disabled, .distributions .add-button:disabled, .distributions .cancel-button:disabled, .distributions .disabled.upload-button, .distributions .disabled.save-button, .distributions .disabled.add-button, .distributions .disabled.cancel-button {
+  .distributions .save-button:disabled, .distribution_actions .file .file_name:empty + .upload-button:disabled, .distributions .add-button:disabled, .distributions .cancel-button:disabled, .distributions .disabled.save-button, .distribution_actions .file .file_name:empty + .disabled.upload-button, .distributions .disabled.add-button, .distributions .disabled.cancel-button {
     background: #babdc6 !important;
     cursor: default !important; }
 
-.distributions .upload-button, .distributions .save-button {
+.distributions .save-button, .distribution_actions .file .file_name:empty + .upload-button {
   color: white !important;
   background-image: linear-gradient(#72c4b9, #7ccac0); }
-  .distributions .upload-button:focus, .distributions .save-button:focus, .distributions .upload-button:hover, .distributions .save-button:hover {
+  .distributions .save-button:focus, .distribution_actions .file .file_name:empty + .upload-button:focus, .distributions .save-button:hover, .distribution_actions .file .file_name:empty + .upload-button:hover {
     background-image: linear-gradient(#4eb5a7, #58bbaf); }
-  .distributions .upload-button:active, .distributions .save-button:active {
+  .distributions .save-button:active, .distribution_actions .file .file_name:empty + .upload-button:active {
     background-image: linear-gradient(#7ccac0, #72c4b9); }
-  .distributions .upload-button:disabled, .distributions .save-button:disabled, .distributions .disabled.upload-button, .distributions .disabled.save-button {
+  .distributions .save-button:disabled, .distribution_actions .file .file_name:empty + .upload-button:disabled, .distributions .disabled.save-button, .distribution_actions .file .file_name:empty + .disabled.upload-button {
     background: #96d3cb !important;
     cursor: default !important; }
 
@@ -90,41 +90,36 @@
     outline: none;
     box-shadow: none; }
 
-.crud-actions .edit-button, .crud-actions .delete-button {
-  cursor: pointer;
-  background: none;
-  border: none; }
-  .crud-actions .edit-button:active, .crud-actions .delete-button:active, .crud-actions .edit-button:focus, .crud-actions .delete-button:focus {
-    outline: none;
-    box-shadow: none; }
+.file_name:not(:empty) + .upload-button {
+  display: block;
+  text-indent: 110%;
+  white-space: nowrap;
+  overflow: hidden; }
 
-.distributions .upload-button, .distributions .save-button, .distributions .add-button, .distributions .cancel-button {
+.distributions .save-button, .distribution_actions .file .file_name:empty + .upload-button, .distributions .add-button, .distributions .cancel-button {
   -webkit-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all;
   -moz-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all;
   -ms-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all;
   -o-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all;
   transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all; }
 
-.distributions .upload-button i::before, .distribution_actions .name_uploader::before, .crud-actions .edit-button i::before, .crud-actions .delete-button i::before {
-  font-family: 'ximdex_icons' !important;
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  vertical-align: middle; }
-
-.distributions .upload-button i::before, .distribution_actions .name_uploader::before {
+.distribution_actions .file .file_name:empty + .upload-button::before {
   content: "\e611"; }
 
-.crud-actions .edit-button i::before {
+.crud-actions .edit-button::before {
   content: "\45"; }
 
-.crud-actions .delete-button i::before {
+.crud-actions .delete-button::before {
   content: "\63"; }
+
+.hidden-focus:checked + .reduced_label::before {
+  content: "\79"; }
+
+.distributions .upload-button::before {
+  content: "\e016"; }
+
+.dataset_action .empty_state .title::before, .dataset_action .empty_state .title::after {
+  content: "\6c"; }
 
 .add_element {
   background: #c4e7e2;
@@ -166,12 +161,63 @@
 .input-select.folder-data::before {
   color: #c2d43b; }
 
+.dataset_action .language_selector:not(.ng-hide) + .empty_state {
+  display: none; }
+.dataset_action .empty_state {
+  padding: 9em 1.5em 7em 3.5em; }
+  .dataset_action .empty_state span {
+    text-align: center;
+    display: block;
+    color: #4f5d65; }
+  .dataset_action .empty_state .title {
+    text-transform: uppercase;
+    position: relative;
+    padding: .5em; }
+    .dataset_action .empty_state .title::before, .dataset_action .empty_state .title::after {
+      position: absolute;
+      color: #cfd6d9;
+      font-size: 3.4em;
+      top: -1.3em;
+      left: 20%;
+      text-shadow: 5px 0 0 #e3e7e9;
+      z-index: 2; }
+    .dataset_action .empty_state .title::after {
+      color: #c6cfd3;
+      -moz-transform: scaleX(-1);
+      -o-transform: scaleX(-1);
+      -webkit-transform: scaleX(-1);
+      transform: scaleX(-1);
+      filter: FlipH;
+      -ms-filter: "FlipH";
+      font-size: 4.5em;
+      top: -1.2em;
+      left: 40%;
+      z-index: 1; }
 .dataset_action .language_selector {
-  float: right;
+  position: absolute;
+  right: 0;
   border: none;
   background: none;
   padding: 0;
-  margin-top: -1.5em; }
+  z-index: 2; }
+.dataset_action .headline {
+  position: relative;
+  padding: 1.5em 1em; }
+  .dataset_action .headline span {
+    background: #e3e7e9;
+    position: relative;
+    z-index: 2;
+    padding: 0 1em;
+    text-transform: uppercase;
+    font-family: "Ubuntu Condensed";
+    font-weight: bold; }
+  .dataset_action .headline::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    border-top: 1px solid #cccccc;
+    top: 50%;
+    left: 0; }
 
 .dataset_data {
   width: 63%; }
@@ -212,19 +258,18 @@
     display: none; }
 
 .reduced_label {
-  color: #606060;
-  font-size: 1.9rem;
+  color: #fff !important;
+  /*font-size: 1.9rem;*/
   line-height: 1.4;
-  padding: .1em .5em !important; }
+  padding-left: 1em; }
   .reduced_label:hover {
     color: #c2d43b; }
 
 .hidden-focus:checked + .reduced_label {
-  background: #393939;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-  color: #cacaca; }
+  color: #fff;
+  padding-left: 0; }
+  .hidden-focus:checked + .reduced_label::before {
+    color: #c2d43b; }
 
 .editable_data, .non_editable_data {
   width: 46%; }
@@ -242,7 +287,8 @@
     right: -8.5%; }
 
 .distributions {
-  clear: both; }
+  clear: both;
+  padding-bottom: 2em; }
   .distributions #new-distribution {
     display: inline-block;
     margin-bottom: .5em; }
@@ -283,7 +329,7 @@
 
 .translate_item input, .default_title {
   border: none;
-  color: #91a023;
+  color: #47b1a3;
   font-size: 1.2em;
   font-family: "Ubuntu Condensed";
   padding: 0;
@@ -340,17 +386,62 @@
   display: flex;
   justify-content: space-between; }
 
+.file_name:not(:empty) + .upload-button {
+  width: 1.4em;
+  height: 1.4em;
+  background: #728ad7;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  margin-left: .5em;
+  cursor: pointer; }
+  .file_name:not(:empty) + .upload-button:hover {
+    background: #9aabe2; }
+  .file_name:not(:empty) + .upload-button::before {
+    text-indent: 0;
+    display: block;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    font-size: 1.1em;
+    padding-top: .1em; }
+
 .distribution_actions {
   display: flex;
-  justify-content: space-between; }
+  justify-content: space-between;
+  position: relative;
+  padding-top: .3em;
+  /*.name_uploader {
+  	@extend %icon;
+  	@extend %upload;
+  }*/ }
+  .distribution_actions span {
+    -webkit-box-flex: 1.0;
+    -moz-box-flex: 1.0;
+    -webkit-flex: 1.0;
+    -ms-flex: 1.0;
+    flex: 1.0; }
   .distribution_actions .file {
-    width: 32%; }
+    width: 32%;
+    -webkit-box-flex: 2.0;
+    -moz-box-flex: 2.0;
+    -webkit-flex: 2.0;
+    -ms-flex: 2.0;
+    flex: 2.0; }
     .distribution_actions .file .upload-button,
     .distribution_actions .file .file_name {
       display: inline-block;
+      font-weight: bold;
       vertical-align: middle; }
-    .distribution_actions .file .file_name {
-      font-size: 1.2em; }
+    .distribution_actions .file .file_name:empty + .upload-button {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      margin-top: -1em; }
+  .distribution_actions .format_file::before {
+    content: "."; }
+  .distribution_actions .modified_date {
+    text-align: right; }
   .distribution_actions button, .distribution_actions a {
     background-color: #c2d43b; }
     .distribution_actions button:hover, .distribution_actions a:hover {
@@ -362,17 +453,36 @@
 
 .crud-actions {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: .5em;
+  right: .5em;
   padding: 0.2em 0.4em;
-  font-size: 1.2em; }
+  font-size: 1.2em;
+  /*.edit-button i{
+  	@extend %icon;
+  	@extend %pencil;
+  	color: $c_grey;
+  }
+  .delete-button i{
+  	@extend %icon;
+  	@extend %cancel;
+  	color: $c_delete;
+  }*/ }
+  .crud-actions .edit-button {
+    background: #7bcabf; }
+  .crud-actions .delete-button {
+    background: #c56e50; }
   .crud-actions .edit-button, .crud-actions .delete-button {
-    margin: 0;
-    padding: 0; }
-  .crud-actions .edit-button i {
-    color: #606060; }
-  .crud-actions .delete-button i {
-    color: #c56e50; }
+    margin: 0 0 0 .5em;
+    padding: 0;
+    cursor: pointer; }
+    .crud-actions .edit-button::before, .crud-actions .delete-button::before {
+      line-height: 1;
+      top: 50%;
+      -webkit-transform: translateY(-50%);
+      -moz-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+      -o-transform: translateY(-50%);
+      transform: translateY(-50%); }
 
 #mdfdts_form .submit-button {
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#6e6e6e), to(#7b7b7b));
@@ -400,8 +510,8 @@
   border-color: #74c6bb;
   text-shadow: 0 -1px 0 #60b6aa, 0 1px 0 rgba(255, 255, 255, 0.2);
   width: 63%;
-  margin-top: 54px;
-  height: 36px; }
+  margin: 3em 0 5em;
+  height: 3.5em; }
   #mdfdts_form .submit-button:hover, #mdfdts_form .submit-button:focus {
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4b4b4b), to(#707070));
     background-image: -webkit-linear-gradient(#4b4b4b, #707070);
@@ -431,7 +541,10 @@
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
-    background: #96d3cb !important;
-    cursor: default !important; }
+    background: #828699;
+    color: #d6d8dd;
+    border: none;
+    cursor: default !important;
+    text-shadow: none; }
 #mdfdts_form .buttons-form {
   top: .5em; }

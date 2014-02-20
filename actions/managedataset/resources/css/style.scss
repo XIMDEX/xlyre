@@ -88,18 +88,89 @@
 ***************/
 
 .dataset_action{
+
+	.language_selector:not(.ng-hide) + .empty_state{
+		display: none;
+	}
+
+	.empty_state{
+		padding: 9em 1.5em 7em 3.5em;
+		span{
+			text-align: center;
+			display: block;
+			color: darken($c_background, 55%);
+		}
+
+		.title{
+			text-transform: uppercase;
+			position: relative;
+			padding: .5em;
+			@extend %language;
+			&::before, &::after{
+				position: absolute;
+				color: darken($c_background, 7%);
+				font-size: 3.4em;
+				top: -1.3em;
+				left: 20%;
+				text-shadow:  5px 0 0 $c_background;
+				z-index: 2;
+			}
+
+			 &::after{
+			 	color: darken($c_background, 10%);
+				-moz-transform: scaleX(-1);
+				-o-transform: scaleX(-1);
+				-webkit-transform: scaleX(-1);
+				transform: scaleX(-1);
+				filter: FlipH;
+				-ms-filter: "FlipH";
+				font-size: 4.5em;
+				top: -1.2em;
+				left: 40%;
+				z-index: 1;
+			 }
+		}
+
+
+	}
+
 	.language_selector{
-		float: right;
+		position: absolute;
+		right: 0;
 		border: none;
 		background: none;
 		padding: 0;
-		margin-top: -1.5em;		
+		z-index: 2;
+	}
+
+	.headline{
+		position: relative;
+		padding: 1.5em 1em;
+		span{
+			background:$c_background;
+			position: relative;
+			z-index: 2;
+			padding: 0 1em;
+			text-transform: uppercase;
+			font-family: $t_text;
+			font-weight: bold;
+		}
+		&::before{
+			content: "";
+			position: absolute;
+			width: 100%;
+			border-top: 1px solid $c_grey-pp;
+			top: 50%;	
+			left: 0;
+		}
 	}
 }
 
 .dataset_data{
 	width: 63%;
 }
+
+
 
 .dataset{
 	&::after{
@@ -154,10 +225,10 @@
 }
 
 	.reduced_label{
-		color: #606060;
-		font-size: 1.9rem;
+		color: #fff !important;
+		/*font-size: 1.9rem;*/
 		line-height: 1.4;
-		padding: .1em .5em !important;
+		padding-left: 1em;
 		&:hover{
 			color: #c2d43b;
 		}
@@ -165,11 +236,12 @@
 	}
 
 .hidden-focus:checked + .reduced_label{
-	background:darken($c_grey-l, 5%);
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	border-radius: 2px;
-	color: #cacaca;
+	color: #fff;
+	padding-left: 0;
+	&::before{
+		@extend %tic;
+		color: #c2d43b;
+	}
 }
 
 .editable_data, .non_editable_data{
@@ -197,6 +269,7 @@
 
 .distributions{
 	clear: both;
+	padding-bottom: 2em;
 	#new-distribution {
 		display: inline-block;
 		margin-bottom: .5em;
@@ -248,7 +321,7 @@
 
 .translate_item input, .default_title {
 	border: none;
-	color: darken(#c2d43b, 15%);
+	color: darken($c_mainlight, 15%);
 	font-size: 1.2em;
 	font-family: $t_text;	
 	padding: 0;
@@ -294,10 +367,10 @@
 	// .title_language span {display: none;}
 }
 .distributions {
-	.upload-button, .add-button, .cancel-button {
+	.add-button, .cancel-button {
 		@extend %button-default;
 	}
-	.upload-button, .save-button {
+	.save-button {
 		@extend %button-main-action;
 	}
 
@@ -313,10 +386,10 @@
 	.upload-button {
 		position: relative;
 		text-align: center;	
-		i {
-			@extend %icon;
-			@extend %upload;
-		}
+		@extend %reload;
+
+		
+	
 		input {
 			opacity: 0;
 			position: absolute;
@@ -332,19 +405,82 @@
 		justify-content: space-between;
 	}
 }
+
+.file_name:not(:empty) + .upload-button{
+			@extend %hide-text;
+			width: 1.4em;
+			height: 1.4em;
+			background:$c_bluelight;
+			-webkit-border-radius: 50%;
+			-moz-border-radius: 50%;
+			border-radius: 50%;
+			margin-left: .5em;
+			cursor: pointer;
+
+			&:hover{
+				background:lighten($c_bluelight, 10%);
+			}
+
+			&::before{
+				text-indent: 0;
+				display: block;
+				width: 100%;
+				text-align: center;
+				color: #fff;
+				font-size: 1.1em;
+				padding-top: .1em;
+			}
+		}
 .distribution_actions {
 	display: flex;
 	justify-content: space-between;
+	position: relative;
+	padding-top: .3em;
+	span{
+ 		-webkit-box-flex: 1.0;
+		-moz-box-flex:  1.0;
+		-webkit-flex:  1.0;
+		-ms-flex:  1.0;
+		flex:  1.0;				
+	}
 	.file {
 		width: 32%;
+		 -webkit-box-flex: 2.0;
+		-moz-box-flex:  2.0;
+		-webkit-flex:  2.0;
+		-ms-flex:  2.0;
+		flex:  2.0;	
 		.upload-button,
 		.file_name {
 			display: inline-block;
+			font-weight: bold;
 			vertical-align: middle;
 		}
 		.file_name {
-			font-size: 1.2em;
+
+			&:empty{
+				& + .upload-button{
+					@extend %button-main-action;
+					@extend %upload;
+					position: absolute;
+					left: 0;
+					width: 100%;
+					margin-top: -1em;
+
+				}
+			}
 		}
+	}
+
+	.format_file{
+		&::before{
+			content: ".";
+			
+		}
+	}
+
+	.modified_date{
+		text-align: right;
 	}
 	button, a {
 		@extend %tiny-square-button;
@@ -359,25 +495,47 @@
 	.label_title{
 		padding-left: 0;
 	}
-	.name_uploader {
+	/*.name_uploader {
 		@extend %icon;
 		@extend %upload;
-	}
+	}*/
 
 }
 .crud-actions {
 	position: absolute;
-	top: 0;
-	right: 0;
+	top: .5em;
+	right: .5em;
 	padding: 0.2em 0.4em;
 	font-size: 1.2em;
+
+	.edit-button{
+		background:$c_mainlight;
+		@extend %pencil;
+	}
+
+	.delete-button{
+		background:$c_delete;
+		@extend %cancel;
+	}
+
 	.edit-button, .delete-button {
-		@extend %icon-button;
-		margin: 0;
+		margin: 0 0 0 .5em;
 		padding: 0;
+		cursor: pointer;
+
+		&::before{
+			line-height: 1;
+			top: 50%;
+			-webkit-transform: translateY(-50%);
+			-moz-transform: translateY(-50%);
+			-ms-transform: translateY(-50%);
+			-o-transform: translateY(-50%);
+			transform: translateY(-50%);
+			
+		}
 
 	}
-	.edit-button i{
+	/*.edit-button i{
 		@extend %icon;
 		@extend %pencil;
 		color: $c_grey;
@@ -386,10 +544,13 @@
 		@extend %icon;
 		@extend %cancel;
 		color: $c_delete;
-	}
+	}*/
 }
 #mdfdts_form {
 	.submit-button {
+		
+
+
 		@include btn;
 		@include radius(2px);
 		padding: 7px 14px 5px;
@@ -398,8 +559,8 @@
 		border: 1px solid #d3d3d3;
 		@include btn-main;
 		width: 63%;
-		margin-top: 54px;
-		height: 36px;
+		margin: 3em 0 5em;
+		height: 3.5em;
 		&:hover, &:focus {
 			@include btn-hover;
 			@include btn-main-hover;
@@ -411,8 +572,11 @@
 		}
 		&:disabled, &.disabled {
             @include boxshadow(none);
-            background: lighten(#72c4b9, 10%)!important;
+		background: darken($c_greymain, 15%);
+		color: lighten($c_greymain, 15%);
+           	border: none;
             cursor: default!important;   
+            text-shadow: none;
         } 
 	}
 	.buttons-form {top: .5em;}

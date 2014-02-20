@@ -51,10 +51,10 @@
                     required xim-alphanumeric>
             </div>
 
-            <h3>{t}Metadata{/t}</h3>
+            <h3 class="headline"><span>{t}Metadata{/t}</span></h3>
             <div class="editable_data col1_2">
                 
-                <div>
+               
                     <select name="" id="" class="language_selector js_language_selector" 
                             ng-model="selectedLanguage"
                             ng-show="activeLanguages">
@@ -69,19 +69,28 @@
                             [[label]]
                         </option>
                     </select>
-                </div>
+
+                    <div class="empty_state">
+                        <span class="title icon language">{t}No language selected{/t}</span>
+                        <span>Select at less one in the Dataset Info box at the right</span>
+                    </div>
+               
                 <div class="js_form_sections">
                     {foreach from=$languages item=l}
                         <div class="js_form_section" id="language_selector_{$l.IdLanguage}" 
                             ng-show="selectedLanguage == {$l.IdLanguage} && dataset.languages.{$l.IdLanguage}">
-                            <label for="languages_dataset[{$l.IdLanguage}][title]" class="label_title">{t}Dataset title{/t}</label>
-                            <input name="languages_dataset[{$l.IdLanguage}][title]" type="text" class="full_size"
-                                ng-model="dataset.languages_dataset.{$l.IdLanguage}.title"
-                                ng-init="dataset.languages_dataset.{$l.IdLanguage}.title = '{$languages_dataset[$l.IdLanguage].title}'">
-                            <label for="languages_dataset[{$l.IdLanguage}][description]"  class="label_title">{t}Dataset description{/t}</label>
-                            <textarea name="languages_dataset[{$l.IdLanguage}][description]" id="" cols="30" rows="9" class="full_size"
-                                ng-model="dataset.languages_dataset.{$l.IdLanguage}.description"
-                                ng-init="dataset.languages_dataset.{$l.IdLanguage}.description = '{$languages_dataset[$l.IdLanguage].description}'">
+                            <p>
+                                <label for="languages_dataset[{$l.IdLanguage}][title]" class="label_title">{t}Dataset title{/t}</label>
+                                <input name="languages_dataset[{$l.IdLanguage}][title]" type="text" class="full_size"
+                                    ng-model="dataset.languages_dataset.{$l.IdLanguage}.title"
+                                    ng-init="dataset.languages_dataset.{$l.IdLanguage}.title = '{$languages_dataset[$l.IdLanguage].title}'">
+                            </p>
+                            <p>
+                                <label for="languages_dataset[{$l.IdLanguage}][description]"  class="label_title">{t}Dataset description{/t}</label>
+                                <textarea name="languages_dataset[{$l.IdLanguage}][description]" id="" cols="30" rows="9" class="full_size"
+                                    ng-model="dataset.languages_dataset.{$l.IdLanguage}.description"
+                                    ng-init="dataset.languages_dataset.{$l.IdLanguage}.description = '{$languages_dataset[$l.IdLanguage].description}'">
+                            </p>
                                 
                             </textarea>
                         </div>
@@ -173,9 +182,9 @@
                 <h3>
                     <label for="reference">{t}Url más información{/t}</label>
                 </h3>
-            <input type="url" name="reference" id="reference" maxlength="50" class="full_size validable not_empty" placeholder="{t}Reference{/t}"
+            <input type="url" name="reference" id="reference" maxlength="50" class="full_size validable" placeholder="{t}Reference{/t}"
                 ng-model="dataset.reference"
-                ng-init="dataset.reference='{$reference}'" required>
+                ng-init="dataset.reference='{$reference}'">
             </div>
 
             <div class="creation_date"
@@ -207,7 +216,7 @@
           
         <div class="distributions"
             ng-show="dataset.id">
-            <h3>{t}Distributions{/t}</h3>     
+            <h3 class="headline"><span>{t}Distributions{/t}</span></h3>     
             <button type="button" class="add-button" id="new-distribution"
                 ng-click="newDistribution()">
                 {t}Add distribution{/t}
