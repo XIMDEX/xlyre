@@ -31,13 +31,13 @@
         <span class="creation_date">
             Created at
             <span ng-hide="editing && queue.length">
-                [[distribution.issued | date:'dd/MM/yyyy']]
+                [[distribution.issued*1000 | date:'dd/MM/yyyy']]
             </span>
         </span>
         <span class="modified_date">
             Modified at 
             <span ng-hide="editing && queue.length">
-                [[distribution.modified | date:'dd/MM/yyyy']]
+                [[distribution.modified*1000 | date:'dd/MM/yyyy']]
             </span>
         </span>
     </div>
