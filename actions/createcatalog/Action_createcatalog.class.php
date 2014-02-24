@@ -59,12 +59,17 @@ class Action_createcatalog extends Action_addsectionnode {
         $id = $baseio->build($data);
         
                 if ($id > 0) {
+                    $nt = new NodeType(XlyreOpenDataSet::IDNODETYPE);
                     foreach ($datasets as $datasetName) {
                         $datasetData = array(
-                            'NODETYPENAME' => 'OpenDataDataset',
+                            'NODETYPENAME' => $nt->get('Name'),
                             'NAME' => $datasetName,
                             'PARENTID' => $id,
-                            'FORCENEW' => true
+                            'THEME' => 0,
+                            'PERIODICITY' => 0,
+                            'LICENSE' => 0,
+                            'SPATIAL' => 0,
+                            'REFERENCE' => '',
                         ); 
                         $baseio->build($datasetData); 
                     }
