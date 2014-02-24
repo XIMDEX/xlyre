@@ -27,17 +27,17 @@ That's it! Now you will see specific actions and configuraitons for Xlyre on Xim
 
 * Create a catalog with one dataset:
 
-![Xlyre Catalog screenshot](https://www.dropbox.com/s/af6yfyll7l9u1fp/catalog.png "Xlyre Catalog screenshot")
+![Xlyre Catalog screenshot](https://dl.dropboxusercontent.com/s/af6yfyll7l9u1fp/catalog.png "Xlyre Catalog screenshot")
 
 * Edit a dataset:
 
-![Xlyre Dataset screenshot](https://www.dropbox.com/s/7ixej7lavzdu99w/dataset.png "Xlyre Dataset screenshot")
+![Xlyre Dataset screenshot](https://dl.dropboxusercontent.com/s/7ixej7lavzdu99w/dataset.png "Xlyre Dataset screenshot")
 
 * Add new distribution in a specific dataset:
 
-![Xlyre Add Distribution screenshot](https://www.dropbox.com/s/58k4gko5aie3oaz/distribution1.png "Xlyre Add Distribution screenshot")
+![Xlyre Add Distribution screenshot](https://dl.dropboxusercontent.com/s/58k4gko5aie3oaz/distribution1.png "Xlyre Add Distribution screenshot")
 
 * Show distribution in a specific dataset:
 
-![Xlyre Show Distribution screenshot](https://www.dropbox.com/s/98jydnmdja63c8c/distribution2.png "Xlyre Show Distribution screenshot")
+![Xlyre Show Distribution screenshot](https://dl.dropboxusercontent.com/s/98jydnmdja63c8c/distribution2.png "Xlyre Show Distribution screenshot")
 
