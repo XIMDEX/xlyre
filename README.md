@@ -18,7 +18,7 @@ Before install Xlyre you have to edit a file called install-modules.conf that it
 
 Once this line is added to install-modules.conf file you can install Xlyre. First go to modules folder and copy module files into it. Then go to install folder in Ximdex path and execute:
 
-    ./module.sh intall xlyre
+    ./module.sh install xlyre
 
 That's it! Now you will see specific actions and configuraitons for Xlyre on Ximdex CMS.
 
