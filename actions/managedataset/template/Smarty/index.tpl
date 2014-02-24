@@ -53,27 +53,25 @@
 
             <h3 class="headline"><span>{t}Metadata{/t}</span></h3>
             <div class="editable_data col1_2">
-                
-               
-                    <select name="" id="" class="language_selector js_language_selector" 
-                            ng-model="selectedLanguage"
-                            ng-show="activeLanguages">
-                        <option value="" 
-                            ng-selected="!dataset.languages[selectedLanguage]">
-                            Select a language
-                        </option>
-                        <option 
-                            ng-repeat="(id, label) in dataset.languages" 
-                            ng-disabled="!label" 
-                            value="[[id]]">
-                            [[label]]
-                        </option>
-                    </select>
+                <select name="" id="" class="language_selector js_language_selector" 
+                        ng-model="selectedLanguage"
+                        ng-show="activeLanguages">
+                    <option value="" 
+                        ng-selected="!dataset.languages[selectedLanguage]">
+                        {t}Select a language{/t}
+                    </option>
+                    <option 
+                        ng-repeat="(id, label) in dataset.languages" 
+                        ng-disabled="!label" 
+                        value="[[id]]">
+                        [[label]]
+                    </option>
+                </select>
 
-                    <div class="empty_state">
-                        <span class="title icon language">{t}No language selected{/t}</span>
-                        <span>Select at less one in the Dataset Info box at the right</span>
-                    </div>
+                <div class="empty_state">
+                    <span class="title icon language">{t}No language selected{/t}</span>
+                    <span>{t}Select at less one in the Dataset Info box at the right{/t}</span>
+                </div>
                
                 <div class="js_form_sections">
                     {foreach from=$languages item=l}
@@ -211,7 +209,7 @@
             xim-label="submitLabel"
             xim-state = "submitStatus"
             xim-disabled = "mdfdts.$invalid || mdfdts.$pristine">
-            Update
+            {t}Update{/t}
         </button>
           
         <div class="distributions"

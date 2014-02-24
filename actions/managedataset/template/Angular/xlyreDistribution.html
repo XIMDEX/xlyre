@@ -15,27 +15,27 @@
     </div>
     
     <div class="distribution_actions">
-        <span class="file">
-            
+        <span class="file"> 
             <span class="file_name">[[queue[queue.length-1].name || distribution.file]]</span>
             <span class="upload-button icon" ng-show="editing">
-              <span class="tooltip"> Upload file</span>                <input name="file" type="file" multi="false" class="xim-uploader"/>
+              <span class="tooltip"> [['xlyre.actions.managedataset.distribution.upload' | xI18n ]]</span>
+              <input name="file" type="file" multi="false" class="xim-uploader"/>
             </span>
         </span>
-        <span class="format_file">
+        <span class="format_file" ng-show="queue.length || distribution.id">
             [[queue[queue.length-1].type || distribution.format]]
         </span>
-        <span class="size_file">
+        <span class="size_file" ng-show="queue.length || distribution.id">
             [[queue[queue.length-1].size || distribution.size | xBytes ]]
         </span>
-        <span class="creation_date">
-            Created at
+        <span class="creation_date" ng-show="distribution.id">
+            [['xlyre.actions.managedataset.distribution.created' | xI18n ]]
             <span ng-hide="editing && queue.length">
                 [[distribution.issued*1000 | date:'dd/MM/yyyy']]
             </span>
         </span>
-        <span class="modified_date">
-            Modified at 
+        <span class="modified_date" ng-show="distribution.id">
+            [['xlyre.actions.managedataset.distribution.modified' | xI18n ]] 
             <span ng-hide="editing && queue.length">
                 [[distribution.modified*1000 | date:'dd/MM/yyyy']]
             </span>
@@ -44,7 +44,7 @@
     <div ng-show="editing" class="save-cancel-buttonset">
         <button type="button" class="cancel-button"
         	ng-click="cancelAction()">
-        	<span>Cancel</span>
+        	<span>[['xlyre.actions.managedataset.distribution.cancel' | xI18n ]]</span>
         </button>
         <button class="save-button" ng-class="{hidded: (!distribution.id && !queue.length) || (distribution.id && (dist_form.$pristine && !queue.length))}"
             ng-click="saveDistribution(distribution, queue[queue.length-1])"
@@ -52,7 +52,7 @@
             xim-label="uploadButtonLabel"
             xim-progress = "uploadProgress"
             xim-state = "queue[queue.length-1].$state()">
-            Save Distribution
+            [['xlyre.actions.managedataset.distribution.save' | xI18n ]]
         </button>
     </div>
     <div class="crud-actions">
