@@ -113,7 +113,7 @@ CREATE TABLE `XlyreCatalog` (
   `Publisher` int(12) unsigned NOT NULL DEFAULT '0' COMMENT 'Ximdex User',
   `License` varchar(100) NOT NULL DEFAULT '',
   `Spatial` varchar(100) NOT NULL DEFAULT '',
-  `Homepage` varchar(255) NOT NULL DEFAULT '',
+  `Homepage` varchar(255) DEFAULT '',
   PRIMARY KEY (`IdCatalog`),
   UNIQUE KEY `Identifier` (`Identifier`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Catalog - XLyre Module';
@@ -131,7 +131,7 @@ CREATE TABLE `XlyreDataset` (
   `Periodicity` int(11) unsigned NOT NULL COMMENT 'Units in Month',
   `License` int(11) unsigned NOT NULL,
   `Spatial` int(11) unsigned NOT NULL,
-  `Reference` varchar(255) NOT NULL DEFAULT '' COMMENT 'Reference webpage for more information about the dataset',
+  `Reference` varchar(255) DEFAULT '' COMMENT 'Reference webpage for more information about the dataset',
   PRIMARY KEY (`IdDataset`),
   UNIQUE KEY `Identifier` (`Identifier`),
   KEY `IdCatalog` (`IdCatalog`)
