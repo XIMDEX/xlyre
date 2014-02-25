@@ -14,8 +14,8 @@
         
     </div>
     
-    <div class="distribution_actions">
-        <span class="file"> 
+    <div class="file"  ng-class="{empty: !queue.length && !(queue.legth || distribution.file)}">
+        <span class="file-upload"> 
             <span class="file_name">[[queue[queue.length-1].name || distribution.file]]</span>
             <span class="upload-button icon" ng-show="editing">
               <span class="tooltip"> [['xlyre.actions.managedataset.distribution.upload' | xI18n ]]</span>
@@ -28,15 +28,15 @@
         <span class="size_file" ng-show="queue.length || distribution.id">
             [[queue[queue.length-1].size || distribution.size | xBytes ]]
         </span>
-        <span class="creation_date" ng-show="distribution.id">
+        <span class="creation_date" ng-show="distribution.id && !queue.length">
             [['xlyre.actions.managedataset.distribution.created' | xI18n ]]
-            <span ng-hide="editing && queue.length">
+            <span>
                 [[distribution.issued*1000 | date:'dd/MM/yyyy']]
             </span>
         </span>
-        <span class="modified_date" ng-show="distribution.id">
+        <span class="modified_date" ng-show="distribution.id && !queue.length">
             [['xlyre.actions.managedataset.distribution.modified' | xI18n ]] 
-            <span ng-hide="editing && queue.length">
+            <span>
                 [[distribution.modified*1000 | date:'dd/MM/yyyy']]
             </span>
         </span>
@@ -46,7 +46,7 @@
         	ng-click="cancelAction()">
         	<span>[['xlyre.actions.managedataset.distribution.cancel' | xI18n ]]</span>
         </button>
-        <button class="save-button" ng-class="{hidded: (!distribution.id && !queue.length) || (distribution.id && (dist_form.$pristine && !queue.length))}"
+        <button class="save-button" ng-class="{hidden: (!distribution.id && !queue.length) || (distribution.id && (dist_form.$pristine && !queue.length))}"
             ng-click="saveDistribution(distribution, queue[queue.length-1])"
             xim-button
             xim-label="uploadButtonLabel"
