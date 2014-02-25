@@ -227,7 +227,7 @@ class Action_managedataset extends ActionAbstract {
             $mt = explode('.', $values['distribution']['file']);
             $values['distribution']['format'] = $mt[1];
             $values['distribution']['size'] = $_FILES['file']['size'];
-            $format_min = _('m-d-Y');
+            $format_min = str_replace("'", "", _("'m-d-Y'"));
             $values['distribution']['issued'] = date($format_min, time());
             $values['distribution']['modified'] = date($format_min, time());
 
@@ -282,7 +282,7 @@ class Action_managedataset extends ActionAbstract {
 
     function updateDistribution() {
         $values = array();
-        $format_min = _('m-d-Y');
+        $format_min = str_replace("'", "", _("'m-d-Y'"));
         // $dist_id = $this->request->getParam('nodeid');
         $dist_id = trim($_POST['id'], '\"');
 
@@ -418,7 +418,7 @@ class Action_managedataset extends ActionAbstract {
             $values['license'] = $dsmeta->get("License");
             $values['spatial'] = $dsmeta->get("Spatial");
             $values['reference'] = $dsmeta->get("Reference");
-            $format = _('m-d-Y H:i:s');
+            $format = str_replace("'", "", _("'m-d-Y H:i:s'"));
             $values['issued'] = date($format, $dsmeta->get("Issued"));
             $values['modified'] = date($format, $dsmeta->get("Modified"));
             $user = new User($dsmeta->get('Publisher'));
@@ -437,7 +437,7 @@ class Action_managedataset extends ActionAbstract {
             $node = new Node($idNode);
             $distributions = $node->GetChildren(XlyreOpenDistribution::IDNODETYPE);
             $dstList = array();
-            $format_min = _('m-d-Y');
+            $format_min = str_replace("'", "", _("'m-d-Y'"));
             if ($distributions) {
                 foreach ($distributions as $distribution) {
                     $languages_distribution = $xlrml->find('Title, IdLanguage', "IdNode = %s", array($distribution), MULTI);
