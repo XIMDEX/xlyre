@@ -227,8 +227,9 @@ class Action_managedataset extends ActionAbstract {
             $mt = explode('.', $values['distribution']['file']);
             $values['distribution']['format'] = $mt[1];
             $values['distribution']['size'] = $_FILES['file']['size'];
-            $values['distribution']['issued'] = time();
-            $values['distribution']['modified'] = time();
+            $format_min = _('m-d-Y');
+            $values['distribution']['issued'] = date($format_min, time());
+            $values['distribution']['modified'] = date($format_min, time());
 
             $nt = new NodeType(XlyreOpenDistribution::IDNODETYPE);
             $data_dist = array(
@@ -281,12 +282,14 @@ class Action_managedataset extends ActionAbstract {
 
     function updateDistribution() {
         $values = array();
+        $format_min = _('m-d-Y');
         // $dist_id = $this->request->getParam('nodeid');
         $dist_id = trim($_POST['id'], '\"');
 
         $distribution = new XlyreDistribution($dist_id);
         $values['distribution']['id'] = $dist_id;
-        $values['distribution']['issued'] = $distribution->get('Issued');
+        $values['distribution']['issued'] = date($format_min, $distribution->get('Issued'));
+        $values['distribution']['modified'] = date($format_min, time());
 
         if (isset($_FILES['file'])) {
             $values['distribution']['file'] = $_FILES['file']['name'];
@@ -294,7 +297,6 @@ class Action_managedataset extends ActionAbstract {
             $mt = explode('.', $values['distribution']['file']);
             $values['distribution']['format'] = $mt[1];
             $values['distribution']['size'] = $_FILES['file']['size'];
-            $values['distribution']['modified'] = time();
             $name = $_FILES['file']['name'];
             $filename = $_FILES['file']['name'];
             $filesize = $_FILES['file']['size'];
@@ -304,7 +306,6 @@ class Action_managedataset extends ActionAbstract {
             $values['distribution']['file'] = $distribution->get('Filename');
             $values['distribution']['format'] = $distribution->get('MediaType');;
             $values['distribution']['size'] = $distribution->get('ByteSize');
-            $values['distribution']['modified'] = $distribution->get('Modified');
             $name = $distribution->get('Identifier');
             $filename = NULL;
             $filesize = NULL;
@@ -436,6 +437,7 @@ class Action_managedataset extends ActionAbstract {
             $node = new Node($idNode);
             $distributions = $node->GetChildren(XlyreOpenDistribution::IDNODETYPE);
             $dstList = array();
+            $format_min = _('m-d-Y');
             if ($distributions) {
                 foreach ($distributions as $distribution) {
                     $languages_distribution = $xlrml->find('Title, IdLanguage', "IdNode = %s", array($distribution), MULTI);
@@ -449,8 +451,8 @@ class Action_managedataset extends ActionAbstract {
                         "file" => $distro->get("Filename"),
                         "format" => $distro->get("MediaType"),
                         "size" => $distro->get("ByteSize"),
-                        "issued" => $distro->get("Issued"),
-                        "modified" => $distro->get("Modified"),
+                        "issued" => date($format_min, $distro->get("Issued")),
+                        "modified" => date($format_min, $distro->get("Modified")),
                         "languages" => $languages_dist_array,
                     );
                 }
