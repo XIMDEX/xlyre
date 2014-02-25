@@ -70,9 +70,7 @@
                             formData.languages.push(language);
                         }
                     }
-                    console.log("Sending datasert", dataset);
                     xBackend.sendFormData(formData, {action: $attrs.ximAction, method: $scope.method, id: dataset.id, IDParent: dataset.IDParent}, function(data){ 
-                        console.log("DATASEEEEEEE", data);
                         if (!dataset.id && data && data.dataset && data.dataset.id) {   
                             $scope.method = 'updatedataset';
                             dataset.id = data.dataset.id;
@@ -247,6 +245,7 @@
                                 $scope.distribution = $scope.backupDistribution;
                             $scope.editing = false;
                             $scope.dist_form.$setPristine();
+                            $scope.queue = [];
                         } else {
                             $scope.deleted = true;    
                         }
