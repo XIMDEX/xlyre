@@ -33,6 +33,21 @@ Xlyre has two main sections for configuring it.
 * **Control Center / Xlyre Manager**: In this section you can add, delete or modify all content related with themes, periodicities and spatials.
 * **License links folder**: This folder will be added to the project once you interact with Xlyre (creating your first catalog section for instace). This folder contains all licenses that the system will support to be added to the datasets.
 
+##Publication
+
+We are going to define a base case to show us publication urls. Imagine we have a catalog called *ODCatalog* which has one dataset called *Budget* in english and spanish languages. When you publish this catalog, Xlyre generates those urls:
+
+* *http://yourdomain.com/en/ODCatalog/*
+* *http://yourdomain.com/es/ODCatalog/*
+* *http://yourdomain.com/en/ODCatalog/Budget*
+* *http://yourdomain.com/es/ODCatalog/Budget*
+
+If the dataset has some distributions, when the catalog is published Xlyre also generates:
+
+* *http://yourdomain.com/ODCatalog/Budget/DistributionName*
+
+which will be the unique url to access to that distribution.
+
 ##Screenshots
 
 * **Create a catalog with one dataset**:
