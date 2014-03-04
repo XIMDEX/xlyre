@@ -15,6 +15,7 @@
       <ref name="publisher.class"/>
       <ref name="issued.class"/>
       <ref name="modified.class"/>
+      <ref name="license.class"/>
       <ref name="reference.class"/>
       <ref name="language_title_description.class"/>
       <ref name="distributions.class"/>
@@ -70,6 +71,28 @@
       <data type="date"/>
       <text/>
       <xim:description>Modified</xim:description>
+    </element>
+  </define>
+
+  <define name="license.class">
+    <element name="license">
+      <ref name="licensename.class"/>
+      <ref name="licenseurl.class"/>
+      <xim:description>License</xim:description>
+    </element>
+  </define>
+
+  <define name="licensename.class">
+    <element name="name">
+      <text/>
+      <xim:description>License name</xim:description>
+    </element>
+  </define>
+
+  <define name="licenseurl.class">
+    <element name="url">
+      <text/>
+      <xim:description>License url</xim:description>
     </element>
   </define>
 
