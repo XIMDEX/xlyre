@@ -1,10 +1,5 @@
 -- xlyre module SQL constructor
 
--- New Channel
-LOCK TABLES `Channels` WRITE;
-INSERT INTO `Channels` VALUES (NULL, 'dcat', 'DCAT Channel', 'rdf', NULL, NULL, 'ximdex');
-UNLOCK TABLES;
-
 -- New Nodetypes
 LOCK TABLES `NodeTypes` WRITE;
 INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4000, 'OpenDataSection', 'xlyreopendatasection', 'catalog_xlyre.png', 'Open Data Section', 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, "xlyre");
