@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-   <xsl:output method="html" encoding="utf-8"/>
-    <xsl:include href="http://lab12.ximdex.net/ximdexxlyre/data/nodes/Picasso/templates/templates_include.xsl"/>
+   <xsl:output encoding="utf-8"/>
        <xsl:template name="docxap" match="docxap">
-         <html xmlns="http://www.w3.org/1999/xhtml">
-
-<!-- Note: Move this file into TEMPLATES folder [Ximdex Project] -->
-
-         <head>
-          <meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8"/>
-                <title>Xlyre</title>
-         </head>
-         <body uid="{@uid}">
-          <div id="container">
-            <xsl:apply-templates/>
-                </div>
-         </body>
-       </html>
+         <xsl:choose>
+          <xsl:when test="@tipo_documento='rng-dcat.xml'">
+              <xsl:copy-of select="*"/>
+          </xsl:when>
+          <xsl:otherwise>
+              <html xmlns="http://www.w3.org/1999/xhtml">
+                <!-- Note: Move this file into TEMPLATES folder [Ximdex Project] -->
+             <head>
+              <meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8"/>
+                    <title>Xlyre</title>
+             </head>
+             <body uid="{@uid}">
+              <div id="container">
+                <xsl:apply-templates/>
+                    </div>
+             </body>
+           </html>
+          </xsl:otherwise>
+          </xsl:choose>
    </xsl:template>
 
   <xsl:template name="catalog" match="catalog">
@@ -90,6 +94,9 @@
       <b>Modified: </b>
       <xsl:value-of select="modified"/>
     </div>
+    <div class="license">
+      <b>License: </b> <xsl:value-of select="license/name"/> - <xsl:value-of select="license/url"/>
+      </div>
     <div class="reference">
       <b>Reference: </b> <xsl:value-of select="reference"/>
       </div>
@@ -128,7 +135,7 @@
                       <xsl:value-of select="mediatype"/>
                     </td>
                     <td>
-                      <xsl:value-of select="bYtesize"/>
+                      <xsl:value-of select="bytesize"/>
                     </td>
                 </tr>
             </xsl:for-each>

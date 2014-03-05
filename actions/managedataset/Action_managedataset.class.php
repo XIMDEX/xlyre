@@ -223,9 +223,8 @@ class Action_managedataset extends ActionAbstract {
         if (isset($_FILES)) {
             $values['distribution']['file'] = $_FILES['file']['name'];
 
-            #TODO: Change this method because the filename can contains more than one '.'
-            $mt = explode('.', $values['distribution']['file']);
-            $values['distribution']['format'] = $mt[1];
+            $extension = strtolower(end(explode('.',$values['distribution']['file'])));
+            $values['distribution']['format'] = $extension;
             $values['distribution']['size'] = $_FILES['file']['size'];
             $format_min = str_replace("'", "", _("'m-d-Y'"));
             $values['distribution']['issued'] = date($format_min, time());
@@ -293,9 +292,8 @@ class Action_managedataset extends ActionAbstract {
 
         if (isset($_FILES['file'])) {
             $values['distribution']['file'] = $_FILES['file']['name'];
-            #TODO: Change this method because the filename can contains more than one '.'
-            $mt = explode('.', $values['distribution']['file']);
-            $values['distribution']['format'] = $mt[1];
+            $extension = strtolower(end(explode('.',$values['distribution']['file'])));
+            $values['distribution']['format'] = $extension;
             $values['distribution']['size'] = $_FILES['file']['size'];
             $name = $_FILES['file']['name'];
             $filename = $_FILES['file']['name'];
