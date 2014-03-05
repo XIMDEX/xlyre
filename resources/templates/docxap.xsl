@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
    <xsl:output encoding="utf-8"/>
-    <xsl:include href="http://lab12.ximdex.net/ximdexxlyre/data/nodes/Picasso/templates/templates_include.xsl"/>
        <xsl:template name="docxap" match="docxap">
          <xsl:choose>
           <xsl:when test="@tipo_documento='rng-dcat.xml'">
