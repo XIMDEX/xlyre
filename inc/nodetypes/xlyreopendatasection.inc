@@ -80,12 +80,20 @@ class XlyreOpenDataSection extends SectionNode{
      * Check if Xlyre RNGs already exist
      */
     private function _existRNGs() {
-        // Check if RNGs do not exist yet
-        $node_search = new Node();
-        $template_dcat = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s", array("rng-dcat.xml", NodetypeService::RNG_VISUAL_TEMPLATE), MONO);
-        $template_catalog = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s", array("rng-catalog.xml", NodetypeService::RNG_VISUAL_TEMPLATE), MONO);
-        $template_dataset = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s", array("rng-dataset.xml", NodetypeService::RNG_VISUAL_TEMPLATE), MONO);
-        return (($template_dcat && $template_catalog) && $template_dataset) ? true : false;
+        $node = new Node($this->nodeID);
+        $projectNode = new Node($node->getProject());
+        $schemasFolder = $projectNode->getChildren(NodetypeService::TEMPLATE_VIEW_FOLDER);
+        if ($schemasFolder) {
+            // Check if RNGs do not exist yet
+            $node_search = new Node();
+            $template_dcat = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s AND IdParent = %s", array("rng-dcat.xml", NodetypeService::RNG_VISUAL_TEMPLATE, $schemasFolder[0]), MONO);
+            $template_catalog = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s AND IdParent=%s", array("rng-catalog.xml", NodetypeService::RNG_VISUAL_TEMPLATE, $schemasFolder[0]), MONO);
+            $template_dataset = $node_search->find('IdNode', "Name = %s AND IdNodeType = %sAND IdParent=%s", array("rng-dataset.xml", NodetypeService::RNG_VISUAL_TEMPLATE, $schemasFolder[0]), MONO);
+            return (($template_dcat && $template_catalog) && $template_dataset) ? true : false;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
