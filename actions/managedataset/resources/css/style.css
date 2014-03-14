@@ -71,13 +71,14 @@
 
 .distributions .save-button, .file.empty .upload-button {
   color: white !important;
-  background-image: linear-gradient(#72c4b9, #7ccac0); }
+  background-image: linear-gradient(#72c4b9, #7ccac0);
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15), 0 1px 0 rgba(255, 255, 255, 0.2); }
   .distributions .save-button:focus, .file.empty .upload-button:focus, .distributions .save-button:hover, .file.empty .upload-button:hover {
     background-image: linear-gradient(#4eb5a7, #58bbaf); }
   .distributions .save-button:active, .file.empty .upload-button:active {
     background-image: linear-gradient(#7ccac0, #72c4b9); }
   .distributions .save-button:disabled, .file.empty .upload-button:disabled, .distributions .disabled.save-button, .file.empty .disabled.upload-button {
-    background: #96d3cb !important;
+    background: #acafbb !important;
     cursor: default !important; }
 
 .file:not(.empty) button, .file:not(.empty) a {

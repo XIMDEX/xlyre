@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<grammar xmlns='http://relaxng.org/ns/structure/1.0' xmlns:xim='http://ximdex.com/schema/1.0'>
+  <start>
+    <element name ="docxap">
+      <ref name="rdf.class"/>
+    </element>
+  </start>
+
+  <define name="rdf.class">
+    <element name="rdf">
+        <text/>
+        <xim:description>RDF</xim:description>
+    </element>
+  </define>
+
+</grammar>

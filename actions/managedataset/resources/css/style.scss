@@ -387,7 +387,7 @@
 	.upload-button {
 		position: relative;
 		text-align: center;	
-		@extend %reload;
+		
 
 		
 	
@@ -465,18 +465,11 @@
 			font-weight: bold;
 			vertical-align: middle;
 		}
-		// .upload-button{
-		// 	@extend %button-main-action;
-		// 	@extend %upload;
-		// 	position: absolute;
-		// 	left: 0;
-		// 	width: 100%;
-		// 	margin-top: -1em;
-
-		// }
+		.upload-button{
+			@extend %reload;
+		}
 
 	}
-
 	.format_file{
 		&::before{
 			content: ".";
