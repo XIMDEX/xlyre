@@ -387,10 +387,6 @@
 	.upload-button {
 		position: relative;
 		text-align: center;	
-		
-
-		
-	
 		input {
 			opacity: 0;
 			position: absolute;
@@ -413,6 +409,7 @@
 
 .file:not(.empty) .upload-button{
 	@extend %hide-text;
+	@extend %reload;
 	width: 1.4em;
 	height: 1.4em;
 	background:$c_bluelight;
@@ -421,7 +418,6 @@
 	border-radius: 50%;
 	margin-left: .5em;
 	cursor: pointer;
-
 	&:hover{
 		background:lighten($c_bluelight, 10%);
 	}
@@ -465,10 +461,6 @@
 			font-weight: bold;
 			vertical-align: middle;
 		}
-		.upload-button{
-			@extend %reload;
-		}
-
 	}
 	.format_file{
 		&::before{

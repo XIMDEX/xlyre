@@ -116,6 +116,9 @@
 .hidden-focus:checked + .reduced_label::before {
   content: "\79"; }
 
+.file:not(.empty) .upload-button::before {
+  content: "\e016"; }
+
 .add_element {
   background: #c4e7e2;
   border: 1px dashed #cccccc;
