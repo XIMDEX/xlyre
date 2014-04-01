@@ -33,10 +33,10 @@
     xim-method="{$go_method}"
     xim-action="{$action}"
     novalidate>
-    <div class="action_header" ng-hide="submitMessages.length">
+    <div class="action_header">
             <h2>#/submitLabel/#</h2>  
     </div>
-    <div class="message" ng-show="submitMessages.length">
+    <div class="message slide-item" ng-show="submitMessages.length">
         <p class="ui-state-primary ui-corner-all msg-info">
             #/submitMessages/#
         </p>

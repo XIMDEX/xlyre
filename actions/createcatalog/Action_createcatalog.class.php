@@ -98,7 +98,7 @@ class Action_createcatalog extends Action_addsectionnode {
                         $this->_createLicenseLinksFolder($folder[0]);
 
 
-                        $this->reloadNode($nodeID);
+                        //$this->reloadNode($nodeID);
                 }
 
 		      if (!($id > 0)) {
@@ -110,10 +110,11 @@ class Action_createcatalog extends Action_addsectionnode {
 
                 $values = array(
                         'action_with_no_return' => $id > 0,
-                        'messages' => $this->messages->messages
+                        'messages' => $this->messages->messages,
+                        'nodeID' => $nodeID
                 );
 
-                $this->render($values, NULL, 'messages.tpl');
+                $this->sendJSON($values);
 	}
 
 	function loadResources(){
