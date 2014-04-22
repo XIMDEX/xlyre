@@ -112,12 +112,10 @@ class Action_deletecatalog extends ActionAbstract {
 			$this->messages->add(_("The catalog were successfully deleted"), MSG_TYPE_NOTICE);
 		}
 			
-		$this->reloadNode($parentID);
-
 		$values = array(
 			'messages' => $this->messages->messages,
 			'action_with_no_return' => true,
-            'parentID' => $idNode 
+            'parentID' => $parentID
 		);
 
 		$this->sendJSON($values);

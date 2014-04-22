@@ -30,7 +30,6 @@ LOCK TABLES `SectionTypes` WRITE;
 INSERT INTO `SectionTypes` ( `idSectionType` , `sectionType` , `idNodeType`  , `module` ) VALUES (3, 'OpenData Section', 4000, 'xlyre');
 UNLOCK TABLES;
 
-
 -- Allowed Contents
 LOCK TABLES `NodeAllowedContents` WRITE;
 INSERT INTO `NodeAllowedContents` VALUES (NULL,5014,4000,0);
@@ -41,23 +40,13 @@ INSERT INTO `NodeAllowedContents` VALUES (NULL,4000,4006,1);
 INSERT INTO `NodeAllowedContents` VALUES (NULL,4001,4002,0);
 INSERT INTO `NodeAllowedContents` VALUES (NULL,4001,4005,0);
 INSERT INTO `NodeAllowedContents` VALUES (NULL,5002,4003,1);
-
-
-
--- INSERT INTO `NodeAllowedContents` VALUES (NULL,4001,4002,0);
--- INSERT INTO `NodeAllowedContents` VALUES (NULL,4000,4003,0);
--- INSERT INTO `NodeAllowedContents` VALUES (NULL,4003,4004,0);
 UNLOCK TABLES;
-
 
 -- Default Contents
 LOCK TABLES `NodeDefaultContents` WRITE;
 INSERT INTO `NodeDefaultContents` VALUES (NULL,4000,4001,'Dataset',NULL,NULL);
 INSERT INTO `NodeDefaultContents` VALUES (NULL,5002,4003,'Xlyre config',NULL,NULL);
--- INSERT INTO `NodeDefaultContents` VALUES (NULL,4000,4001,'RawData',NULL,NULL);
--- INSERT INTO `NodeDefaultContents` VALUES (NULL,4000,4003,'catalogs',NULL,NULL);
 UNLOCK TABLES;
-
 
 -- Actions
 LOCK TABLES `Actions` WRITE;
@@ -68,7 +57,8 @@ INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Desc
 INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7505,  4003,"Configure Xlyre", "configure", "modulesconfig.png","It configures Xlyre module", 99, 'xlyre', 0, NULL);
 INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7506,  4000,"Publish Catalog", "publish", "change_next_state.png","It publishes the current Catalog", 99, 'xlyre', 0, NULL);
 INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7507,  4001,"Publish Dataset", "publish", "change_next_state.png","It publishes the current Dataset", 99, 'xlyre', 0, NULL);
-INSERT INTO `Actions` (`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`) VALUES (7508, 4000, "Modify properties", "manageproperties", "xix.png", "Modify properties", 80);
+INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7508, 4000, "Modify properties", "manageproperties", "xix.png", "Modify properties", 80,'',0,NULL);
+INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7509, 4001, 'Semantic Tags', 'setmetadata', 'change_next_state.png', 'Managing semantic tags related to the current node.',95,'ximTAGS',0,NULL);
 
 UNLOCK TABLES;
 
@@ -82,6 +72,7 @@ INSERT INTO RelRolesActions VALUES (NULL,201,7505,0,1,3);
 INSERT INTO RelRolesActions VALUES (NULL,201,7506,0,1,3);
 INSERT INTO RelRolesActions VALUES (NULL,201,7507,0,1,3);
 INSERT INTO RelRolesActions VALUES (NULL,201,7508,0,1,3);
+INSERT INTO RelRolesActions VALUES (NULL,201,7509,0,1,3);
 UNLOCK TABLES;
 
 -- XlyreCatalog Table
