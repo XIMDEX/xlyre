@@ -44,7 +44,7 @@ class XlyreDataset_ORM extends GenericData   {
                 'Periodicity' => array('type' => 'int(11)', 'not_null' => 'true'),
                 'License' => array('type' => 'int(11)', 'not_null' => 'true'),
                 'Spatial' => array('type' => 'int(11)', 'not_null' => 'true'),
-                'Reference' => array('type' => 'varchar(255)', 'not_null' => 'true')
+                'Reference' => array('type' => 'varchar(255)')
                 );
     var $_uniqueConstraints = array('Identifier');
     var $_indexes = array('IdDataset', 'IdCatalog');

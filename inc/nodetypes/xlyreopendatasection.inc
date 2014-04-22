@@ -28,74 +28,122 @@ ModulesManager::file('/inc/model/XlyreCatalog.php', 'xlyre');
 
 class XlyreOpenDataSection extends SectionNode{
 
-	const IDNODETYPE = 4000;
+    const IDNODETYPE = 4000;
 
 
-	/**
-	 * Specific delete for the current nodetype.
-	 * It must delete Catalog.	 
-	 * @return  boolean True if delete something.
-	 */
-	public function deleteNode(){
-		parent::deleteNode();
-		$catalog = new XlyreCatalog($this->nodeID);
-		return $catalog->delete();
-	}
+    /**
+     * Specific delete for the current nodetype.
+     * It must delete Catalog.   
+     * @return  boolean True if delete something.
+     */
+    public function deleteNode(){
+        parent::deleteNode();
+        $catalog = new XlyreCatalog($this->nodeID);
+        return $catalog->delete();
+    }
 
-	/**
-	 * Create node for the current nodetype
-	 * It must create the catalog
-	 */		
-	public function createNode($name = NULL, $parentID = NULL, $nodeTypeID = NULL){
+    /**
+     * Create node for the current nodetype
+     * It must create the catalog
+     */     
+    public function createNode($name = NULL, $parentID = NULL, $nodeTypeID = NULL){
 
-		//Adding a new Catalog
-		$catalog = new XlyreCatalog();
-		
+        //Adding a new Catalog
+        $catalog = new XlyreCatalog();
+        
 
-		//Settings properties for the catalog.
-		$catalog->set("IdCatalog", $this->nodeID);
-		$catalog->set("Identifier", $name);
-		$catalog->set("Theme", "NULL");
-		$catalog->set("License", "NULL");
-		$catalog->set("Spatial", "NULL");
-		$catalog->set("Homepage", "NULL");
-		$time = time();
-		$catalog->set("Modified",$time);
-		$catalog->set("Issued",$time);
+        //Settings properties for the catalog.
+        $catalog->set("IdCatalog", $this->nodeID);
+        $catalog->set("Identifier", $name);
+        $catalog->set("Theme", "NULL");
+        $catalog->set("License", "NULL");
+        $catalog->set("Spatial", "NULL");
+        $catalog->set("Homepage", "NULL");
+        $time = time();
+        $catalog->set("Modified",$time);
+        $catalog->set("Issued",$time);
 
-		if (!$this->_existRNGs()) {
-			$this->_loadRngs($parentID);
-		}
-		
-		return $catalog->add();
-	}
+        if (!$this->_existRNGs()) {
+            $this->_loadRngs($parentID);
+        }
+
+        if (!$this->_existDcatChannel()) {
+            error_log("No existe");
+            $this->_createDcatChannel();
+        }
+        
+        return $catalog->add();
+    }
 
 
-	/**
-	 * Check if Xlyre RNGs already exist
-	 */
-	private function _existRNGs() {
-		// Check if RNGs do not exist yet
-		$node_search = new Node();
-		$template_catalog = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s", array("rng-catalog.xml", NodetypeService::RNG_VISUAL_TEMPLATE), MONO);
-        $template_dataset = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s", array("rng-dataset.xml", NodetypeService::RNG_VISUAL_TEMPLATE), MONO);
-        return ($template_catalog && $template_dataset) ? true : false;
-	}
+    /**
+     * Check if Xlyre RNGs already exist
+     */
+    private function _existRNGs() {
+        $node = new Node($this->nodeID);
+        $projectNode = new Node($node->getProject());
+        $schemasFolder = $projectNode->getChildren(NodetypeService::TEMPLATE_VIEW_FOLDER);
+        if ($schemasFolder) {
+            // Check if RNGs do not exist yet
+            $node_search = new Node();
+            $template_dcat = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s AND IdParent = %s", array("rng-dcat.xml", NodetypeService::RNG_VISUAL_TEMPLATE, $schemasFolder[0]), MONO);
+            $template_catalog = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s AND IdParent=%s", array("rng-catalog.xml", NodetypeService::RNG_VISUAL_TEMPLATE, $schemasFolder[0]), MONO);
+            $template_dataset = $node_search->find('IdNode', "Name = %s AND IdNodeType = %sAND IdParent=%s", array("rng-dataset.xml", NodetypeService::RNG_VISUAL_TEMPLATE, $schemasFolder[0]), MONO);
+            return (($template_dcat && $template_catalog) && $template_dataset) ? true : false;
+        }
+        else {
+            return false;
+        }
+    }
 
-	/**
-	 * Load RNGs for Xlyre (catalog and dataset) when the user has the 1st interaction with the module
-	 */
-	private function _loadRngs($parentID){
+    /**
+     * Load RNGs for Xlyre (catalog and dataset) when the user has the 1st interaction with the module
+     */
+    private function _loadRngs($parentID){
+        $nodeParent = new Node($parentID);
+        $idProject = $nodeParent->getProject();
+        $nodeProject = new Node($idProject);
+        $idSchemesFolder = $nodeProject->getChildren(NodetypeService::TEMPLATE_VIEW_FOLDER);
+        $path = "/modules/xlyre/resources/schemas/";
+        $this->buildDefaultRngFromPath($idSchemesFolder[0], $path);
+    }
 
-		error_log(print_r($parentID, true));
 
-    	$nodeParent = new Node($parentID);
-		$idProject = $nodeParent->getProject();
-		$nodeProject = new Node($idProject);
-		$idSchemesFolder = $nodeProject->getChildren(NodetypeService::TEMPLATE_VIEW_FOLDER);
-		$path = "/modules/xlyre/resources/schemas/";
-		$this->buildDefaultRngFromPath($idSchemesFolder[0], $path);
-	}
+
+    /**
+     * Check if RDF channel already exists
+    */
+    private function _existDcatChannel() {
+        $node_search = new Node();
+        $rdf_channel = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s", array("dcat", NodetypeService::CHANNEL), MONO);
+        return ($rdf_channel) ? true : false;
+    }
+
+
+    /**
+     * Create RDF Channel for DCAT
+     */
+    private function _createDcatChannel() {
+        $node_parent = new Node();
+        $result = $node_parent->find("IdNode", "Name = %s", array('Channel manager'), MONO);
+
+        $idNode = $result[0];
+        $name = "dcat";
+        $extension = "rdf";
+        $description = "DCAT Channel";
+        $renderMode = "ximdex";
+
+        $nodeType = new NodeType();
+        $nodeType->SetByName('Channel');
+
+        $node = new Node();
+        // $complexName = sprintf("%s.%s", $name, $extension);
+        // Control uniqueness of tupla, channel, format.
+        $result = $node->CreateNode($name, $idNode, $nodeType->get('IdNodeType'), NULL, $name, $extension, NULL, $description, '', $renderMode);
+
+        if ($result > 0) return true;
+        else return false;
+    }
 
 }
 

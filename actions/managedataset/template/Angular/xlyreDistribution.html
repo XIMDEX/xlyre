@@ -1,58 +1,58 @@
-<form class="row-item distribution_item" ng-hide="deleted" file-upload="fileUploaderOptions" name="dist_form" xim-text="[[errorMsg]]" ng-class="{error: errorMsg}">
+<form class="row-item distribution_item" ng-hide="deleted" file-upload="fileUploaderOptions" name="dist_form" xim-text="#/errorMsg/#" ng-class="{error: errorMsg}">
     <div class="translated_items">
         <div class="default_title"
             ng-hide="editing">
-			[[defaultTitle]]
+			#/defaultTitle/#
         </div>
         <ul ng-show="editing">
             <li class="translate_item" ng-repeat="(key, value) in activeLanguages" ng-show="value">
                 <input type="text" placeholder="Distribution title"  value=""
                     ng-model="distribution.languages[key]">
-                <span class="language-label">[[value]]</span>
+                <span class="language-label">#/value/#</span>
             </li>
         </ul>
         
     </div>
     
-    <div class="distribution_actions">
-        <span class="file">
-            
-            <span class="file_name">[[queue[queue.length-1].name || distribution.file]]</span>
+    <div class="file"  ng-class="{empty: !queue.length && !(queue.legth || distribution.file)}">
+        <span class="file-upload"> 
+            <span class="file_name">#/queue[queue.length-1].name || distribution.file/#</span>
             <span class="upload-button icon" ng-show="editing">
-              <span class="tooltip"> Upload file</span>                <input name="file" type="file" multi="false" class="xim-uploader"/>
+              <span class="tooltip"> #/'xlyre.actions.managedataset.distribution.upload' | xI18n /#</span>
+              <input name="file" type="file" multi="false" class="xim-uploader"/>
             </span>
         </span>
-        <span class="format_file">
-            [[queue[queue.length-1].type || distribution.format]]
+        <span class="format_file" ng-show="queue.length || distribution.id">
+            #/queue[queue.length-1].type || distribution.format/#
         </span>
-        <span class="size_file">
-            [[queue[queue.length-1].size || distribution.size | xBytes ]]
+        <span class="size_file" ng-show="queue.length || distribution.id">
+            #/queue[queue.length-1].size || distribution.size | xBytes /#
         </span>
-        <span class="creation_date">
-            Created at
-            <span ng-hide="editing && queue.length">
-                [[distribution.issued | date:'dd/MM/yyyy']]
+        <span class="creation_date" ng-show="distribution.id && !queue.length">
+            #/'xlyre.actions.managedataset.distribution.created' | xI18n /#
+            <span>
+                #/distribution.issued/#
             </span>
         </span>
-        <span class="modified_date">
-            Modified at 
-            <span ng-hide="editing && queue.length">
-                [[distribution.modified | date:'dd/MM/yyyy']]
+        <span class="modified_date" ng-show="distribution.id && !queue.length">
+            #/'xlyre.actions.managedataset.distribution.modified' | xI18n /# 
+            <span>
+                #/distribution.modified/#
             </span>
         </span>
     </div>
     <div ng-show="editing" class="save-cancel-buttonset">
         <button type="button" class="cancel-button"
         	ng-click="cancelAction()">
-        	<span>Cancel</span>
+        	<span>#/'xlyre.actions.managedataset.distribution.cancel' | xI18n /#</span>
         </button>
-        <button class="save-button" ng-class="{hidded: (!distribution.id && !queue.length) || (distribution.id && (dist_form.$pristine && !queue.length))}"
+        <button class="save-button" ng-class="{hidden: (!distribution.id && !queue.length) || (distribution.id && (dist_form.$pristine && !queue.length))}"
             ng-click="saveDistribution(distribution, queue[queue.length-1])"
             xim-button
             xim-label="uploadButtonLabel"
             xim-progress = "uploadProgress"
             xim-state = "queue[queue.length-1].$state()">
-            Save Distribution
+            #/'xlyre.actions.managedataset.distribution.save' | xI18n /#
         </button>
     </div>
     <div class="crud-actions">

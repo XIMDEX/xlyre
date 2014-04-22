@@ -26,6 +26,7 @@
 
 ModulesManager::file('/inc/model/orm/XlyreDistribution_ORM.class.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyreRelMetaLangs.php', 'xlyre');
+ModulesManager::file('/inc/io/XlyreBaseIO.class.php', "xlyre");
 
 class XlyreDistribution extends XlyreDistribution_ORM {
 
@@ -66,6 +67,40 @@ class XlyreDistribution extends XlyreDistribution_ORM {
         else {
             return $stringxml;
         }
+    }
+
+
+    /**
+     * Export distribution info to its RDF format
+     * @return string A string that contains RDF/XML file
+     */
+    public function ToRdf() {
+        
+        $node = new Node($this->IdDataset);
+
+        $stringrdf = "<dcat:distribution>";
+        $stringrdf .= "<dcat:Distribution>";
+        $stringrdf .= "<dct:identifier>@@@RMximdex.pathtoabs(".$this->IdDistribution.")@@@</dct:identifier>";
+        
+        $xlrml = new XlyreRelMetaLangs();
+        $language_distribution = $xlrml->find('IdLanguage, Title', "IdNode = %s", array($this->IdDistribution), MULTI);
+        foreach ($language_distribution as $ld) {
+            $lang = new Language($ld['IdLanguage']);
+            $stringrdf .= "<dct:title xml:lang='".$lang->Get('IsoName')."'>".$ld['Title']."</dct:title>";
+        }    
+        
+        $stringrdf .= "<dcat:accessURL rdf:datatype='http://www.w3.org/2001/XMLSchema#anyURI'>@@@RMximdex.pathtoabs(".$this->IdDistribution.")@@@</dcat:accessURL>";
+        $stringrdf .= "<dct:format>";
+        $stringrdf .= "<dct:IMT>";
+        $stringrdf .= "<rdf:value>".XlyreBaseIO::get_mime_type($this->Filename)."</rdf:value>";
+        $stringrdf .= "<rdfs:label>".$this->MediaType."</rdfs:label>";
+        $stringrdf .= "</dct:IMT>";
+        $stringrdf .= "</dct:format>";
+            
+        $stringrdf .= "</dcat:Distribution>";
+        $stringrdf .= "</dcat:distribution>";
+
+        return $stringrdf;
     }
     
 }

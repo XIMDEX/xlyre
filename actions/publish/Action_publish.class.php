@@ -27,6 +27,7 @@
 
 ModulesManager::file('/inc/nodetypes/xlyreopendataset.inc', 'xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendatasection.inc', 'xlyre');
+ModulesManager::file('/inc/nodetypes/xlyreopendatadcat.inc', 'xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendatasectionmetadata.inc', 'xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendatasetmetadata.inc', 'xlyre');
 ModulesManager::file('/inc/io/XlyreBaseIOConstants.class.php', "xlyre");
@@ -59,9 +60,9 @@ class Action_publish extends Action_workflow_forward {
             $this->messages->add(_('There was an error while publishing nodes'), MSG_TYPE_ERROR);
             $values = array(
                 'action_with_no_return' => 1,
-                'messages' => $this->messages->messages
+                'messages' => $this->messages->messages,
             );
-            $this->render($values, NULL, 'messages.tpl');
+            $this->sendJSON($values);
         }
     }
 
@@ -75,7 +76,7 @@ class Action_publish extends Action_workflow_forward {
         foreach ($nodeLanguages as $idlang) {
             $language = new Language($idlang);
             $nodename = $catalog->get('Identifier');
-            $nodename_search = $catalog->get('Identifier')."-id".$language->get("IsoName");
+            $nodename_search = $nodename."-id".$language->get("IsoName");
             unset($language);
             $node = new Node();
             $result = $node->find('IdNode', "IdParent = %s && IdNodeType = %s && Name = %s", array($idcatalog, XlyreOpenDataSectionMetadata::IDNODETYPE, $nodename_search), MONO);
@@ -97,7 +98,7 @@ class Action_publish extends Action_workflow_forward {
                 if ($template_val) {
                     $data = array(
                         'NODETYPENAME' => $nt->get('Name'),
-                        'NAME' => $nodename,
+                        'NAME' => $nodename_search,
                         'PARENTID' => $idcatalog,
                         'FORCENEW' => true,
                         "CHILDRENS" => array (
@@ -131,6 +132,9 @@ class Action_publish extends Action_workflow_forward {
                 $ok = $this->publish_dataset($dataset);
             }
         }
+
+        $ok = $this->publish_dcat($idcatalog);
+
         return $ok;    
 	}
 
@@ -143,7 +147,7 @@ class Action_publish extends Action_workflow_forward {
         foreach ($i18n_dataset_values as $i18n_value) {
             $language = new Language($i18n_value);
             $nodename = $dataset->get('Identifier');
-            $nodename_search = $dataset->get('Identifier')."-id".$language->get("IsoName");
+            $nodename_search = $nodename."-id".$language->get("IsoName");
             unset($language);
             $node = new Node();
             $result = $node->find('IdNode', "IdParent = %s && IdNodeType = %s && Name = %s", array($iddataset, XlyreOpenDataSetMetadata::IDNODETYPE, $nodename_search), MONO);
@@ -165,7 +169,7 @@ class Action_publish extends Action_workflow_forward {
                 if ($template_val) {
                     $data = array(
                         'NODETYPENAME' => $nt->get('Name'),
-                        'NAME' => $nodename,
+                        'NAME' => $nodename_search,
                         'PARENTID' => $iddataset,
                         'FORCENEW' => true,
                         "CHILDRENS" => array (
@@ -194,6 +198,70 @@ class Action_publish extends Action_workflow_forward {
         return $ok;
 	}
 
+
+    function publish_dcat($idcatalog = 0) {
+        $catalog = new XlyreCatalog($idcatalog);
+        $catalog_node = new Node($idcatalog);
+
+        $nodeLanguages = $catalog_node->getProperty('language', true);
+
+        // Get first language as default language (DCAT does not need any language)
+        // but Ximdex publication proccess needs one
+        if ($nodeLanguages) {
+            $idlang = $nodeLanguages[0];
+            $language = new Language($idlang);
+            $nodename = $catalog->get('Identifier');
+            $nodename_search = $nodename."-dcat";
+            unset($language);
+            $node = new Node();
+            $result = $node->find('IdNode', "IdParent = %s && IdNodeType = %s", array($idcatalog, XlyreOpenDataDCAT::IDNODETYPE), MONO);
+            unset($node);
+            if ($result) {
+                #Update
+                $node = new Node($result[0]);
+                $node->update();
+                $node->setContent($catalog->ToRdf());
+                $ok = true;
+            }
+            else {
+                #Create
+                $ch = new Channel();
+                $dcat_ch = $ch->find('IdChannel', "name = %s", array('dcat'), MONO);
+                $nt = new NodeType(XlyreOpenDataDCAT::IDNODETYPE);
+                $node_search = new Node();
+                $template_val = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s", array("rng-dcat.xml", NodetypeService::RNG_VISUAL_TEMPLATE), MONO);
+                if ($template_val) {
+                    $data = array(
+                        'NODETYPENAME' => $nt->get('Name'),
+                        'NAME' => $nodename_search,
+                        'PARENTID' => $idcatalog,
+                        'FORCENEW' => true,
+                        "CHILDRENS" => array (
+                            array ("NODETYPENAME" => "VISUALTEMPLATE", "ID" => $template_val[0]),
+                            array ("NODETYPENAME" => "CHANNEL", "ID" => $dcat_ch[0]),
+                            array ("NODETYPENAME" => "LANGUAGE", "ID" => $idlang),
+                        )
+                    );
+                    $nodetopublish = new XlyreBaseIO();
+                    $nodeid = $nodetopublish->build($data);
+                    if ($nodeid) {
+                        $node = new Node($nodeid);
+                        $node->setContent($catalog->ToRdf());
+                        $ok = true;
+                    }
+                    else {
+                        #do something when it fails
+                        $ok = false;
+                    }
+                }
+                else {
+                    $ok = false;
+                }
+            }
+        }
+
+        return $ok;
+    }
 
 }
 ?>

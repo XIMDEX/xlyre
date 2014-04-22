@@ -24,7 +24,8 @@
  */
  if (angular.module('ximdex').notRegistred('XLyreDatasetCtrl')){
     angular.module('ximdex')
-        .controllerProvider.register('XLyreDatasetCtrl', ['$scope', '$attrs', 'xBackend', '$timeout', function($scope, $attrs, xBackend, $timeout){
+        .controllerProvider.register('XLyreDatasetCtrl', ['$scope', '$attrs', 'xBackend', 'xTranslate', '$timeout', function($scope, $attrs, xBackend, xTranslate, $timeout){
+            $scope.t = xTranslate;
             $scope.selectedLanguages = {};
             $scope.languages = angular.fromJson($attrs.ximLanguages);
             if ($attrs.ximDistributions)
@@ -41,9 +42,9 @@
 
             $scope.$watch('method', function(newValue){
                 if (newValue == 'createdataset') {
-                    $scope.submitLabel = "Create Dataset";
+                    $scope.submitLabel = xTranslate('xlyre.actions.managedataset.dataset.create');
                 } else if (newValue == 'updatedataset') {
-                    $scope.submitLabel = "Update Dataset";
+                    $scope.submitLabel = xTranslate('xlyre.actions.managedataset.dataset.update');
                 }
             });
 
@@ -70,11 +71,12 @@
                         }
                     }
                     xBackend.sendFormData(formData, {action: $attrs.ximAction, method: $scope.method, id: dataset.id, IDParent: dataset.IDParent}, function(data){ 
-                        if (!dataset.id && data && data.dataset && data.dataset.id) {
+                        if (!dataset.id && data && data.dataset && data.dataset.id) {   
                             $scope.method = 'updatedataset';
                             dataset.id = data.dataset.id;
                             dataset.issued = data.dataset.issued;
                             dataset.modified = data.dataset.modified;
+                            form.$setPristine();
                         }
                         if (data && data.messages) {
                             $scope.submitStatus = 'success';
@@ -90,7 +92,7 @@
     angular.module('ximdex').registerItem('XLyreDatasetCtrl');
     
     angular.module('ximdex')
-        .compileProvider.directive('xlyreDistribution', ['$window', function ($window) {
+        .compileProvider.directive('xlyreDistribution', ['$window', 'xTranslate', function ($window, xTranslate) {
             return {
                 replace: true,
                 scope: {
@@ -104,8 +106,8 @@
                 templateUrl : 'modules/xlyre/actions/managedataset/template/Angular/xlyreDistribution.html',
                 controller: ['$scope', '$element', '$attrs', '$transclude', '$http', '$timeout', 'xUrlHelper', 'xDialog', 'xBackend', function($scope, $element, $attrs, $transclude, $http, $timeout, xUrlHelper, xDialog, xBackend){
 
-                    $scope.uploadButtonLabel = _('Save Distribution');
-                    $scope.addFileLabel = _('Atach File');
+                    $scope.uploadButtonLabel = xTranslate('xlyre.actions.managedataset.distribution.upload');
+                    $scope.addFileLabel = xTranslate('xlyre.actions.managedataset.distribution.attach');
                     $scope.uploadState = 'pending';
                     $scope.distribution.languages = $scope.distribution.languages || []
                     if (!$scope.distribution.id) 
@@ -144,7 +146,7 @@
                     }
 
                     var uploadDistribution = function(distribution, file){
-                        $scope.uploadButtonLabel = _("Uploading");
+                        $scope.uploadButtonLabel = xTranslate('xlyre.actions.managedataset.distribution.uploading');
                         $scope.uploadProgress = 0;
                         var formData = []
                         if (distribution){
@@ -183,7 +185,7 @@
                                     } else if (data.distribution) {
                                         angular.extend($scope.distribution, data.distribution);
                                         $scope.editing = false;
-                                        $scope.uploadButtonLabel = _('Save Distribution');
+                                        $scope.uploadButtonLabel = xTranslate('xlyre.actions.managedataset.distribution.save');
                                     }
                                     $scope.queue = [];
                             });
@@ -222,7 +224,7 @@
                                         }
                                     });    
                                 }
-                            }, _('The distribution and the attached file will be destroyed. Do you want to continue?'));//TODO: Write a translation service and filter
+                            }, xTranslate('xlyre.actions.managedataset.distribution.delete_warn'));//TODO: Write a translation service and filter
                         }
                     }
                     
@@ -237,12 +239,13 @@
                         var file = $scope.queue[$scope.queue.length-1];
                         if (file && (file.$status == 'pending')) {
                             file.$cancel();
-                            $scope.uploadButtonLabel = _('Save Distribution');
+                            $scope.uploadButtonLabel = xTranslate('xlyre.actions.managedataset.distribution.save');
                         } else if ($scope.distribution.id) {;
                             if ($scope.backupDistribution)    
                                 $scope.distribution = $scope.backupDistribution;
                             $scope.editing = false;
                             $scope.dist_form.$setPristine();
+                            $scope.queue = [];
                         } else {
                             $scope.deleted = true;    
                         }

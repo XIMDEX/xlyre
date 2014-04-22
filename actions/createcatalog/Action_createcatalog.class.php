@@ -56,13 +56,18 @@ class Action_createcatalog extends Action_addsectionnode {
         $baseio = new XlyreBaseIO();
         $id = $baseio->build($data);
         
-        if ($id > 0) {
-            foreach ($datasets as $datasetName) {
-                $datasetData = array(
-                            'NODETYPENAME' => 'OpenDataDataset',
+                if ($id > 0) {
+                    $nt = new NodeType(XlyreOpenDataSet::IDNODETYPE);
+                    foreach ($datasets as $datasetName) {
+                        $datasetData = array(
+                            'NODETYPENAME' => $nt->get('Name'),
                             'NAME' => $datasetName,
                             'PARENTID' => $id,
-                            'FORCENEW' => true
+                            'THEME' => 0,
+                            'PERIODICITY' => 0,
+                            'LICENSE' => 0,
+                            'SPATIAL' => 0,
+                            'REFERENCE' => '',
                         ); 
                 $baseio->build($datasetData); 
             }
@@ -107,7 +112,7 @@ class Action_createcatalog extends Action_addsectionnode {
 
     private function _createLicenseLinksFolder($links_id) {
         $nodeaux = new Node();
-        $linkfolder = $nodeaux->find('IdNode', "idnodetype = %s AND Name = 'Licenses'", array(NodetypeService::LINK_FOLDER), MONO);
+        $linkfolder = $nodeaux->find('IdNode', "idnodetype = %s AND Name = 'Licenses' AND ParentId = %s", array(NodetypeService::LINK_FOLDER, $links_id), MONO);
         if (!$linkfolder) {
             $nodeType = new NodeType();
             $nodeType->SetByName('LinkFolder');

@@ -377,19 +377,16 @@
 	.cancel-button, .save-button {
 		height: 36px;
 		width: 100%;
-		&.hidded {
+		&.hidden {
 			width:0;
 			padding: 0;
+			margin: -2px;
 		}
 	}
 
 	.upload-button {
 		position: relative;
 		text-align: center;	
-		@extend %reload;
-
-		
-	
 		input {
 			opacity: 0;
 			position: absolute;
@@ -401,37 +398,45 @@
 	}
 	.save-cancel-buttonset {
 		margin-top: 1em;
+		display: -webkit-box;           /* OLD - iOS 6-, Safari 3.1-6 */
+		display: -moz-box;              /* OLD - Firefox 19- (doesn't work very well) */
+		display: -ms-flexbox;           /* TWEENER - IE 10 */
+		display: -webkit-flex;          /* NEW - Chrome */ 
 		display: flex;
 		justify-content: space-between;
 	}
 }
 
-.file_name:not(:empty) + .upload-button{
-			@extend %hide-text;
-			width: 1.4em;
-			height: 1.4em;
-			background:$c_bluelight;
-			-webkit-border-radius: 50%;
-			-moz-border-radius: 50%;
-			border-radius: 50%;
-			margin-left: .5em;
-			cursor: pointer;
+.file:not(.empty) .upload-button{
+	@extend %hide-text;
+	@extend %reload;
+	width: 1.4em;
+	height: 1.4em;
+	background:$c_bluelight;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+	margin-left: .5em;
+	cursor: pointer;
+	&:hover{
+		background:lighten($c_bluelight, 10%);
+	}
 
-			&:hover{
-				background:lighten($c_bluelight, 10%);
-			}
-
-			&::before{
-				text-indent: 0;
-				display: block;
-				width: 100%;
-				text-align: center;
-				color: #fff;
-				font-size: 1.1em;
-				padding-top: .1em;
-			}
-		}
-.distribution_actions {
+	&::before{
+		text-indent: 0;
+		display: block;
+		width: 100%;
+		text-align: center;
+		color: #fff;
+		font-size: 1.1em;
+		padding-top: .1em;
+	}
+}
+.file:not(.empty) {
+	display: -webkit-box;           /* OLD - iOS 6-, Safari 3.1-6 */
+	display: -moz-box;              /* OLD - Firefox 19- (doesn't work very well) */
+	display: -ms-flexbox;           /* TWEENER - IE 10 */
+	display: -webkit-flex;          /* NEW - Chrome */ 
 	display: flex;
 	justify-content: space-between;
 	position: relative;
@@ -443,7 +448,7 @@
 		-ms-flex:  1.0;
 		flex:  1.0;				
 	}
-	.file {
+	.file-upload {
 		width: 32%;
 		 -webkit-box-flex: 2.0;
 		-moz-box-flex:  2.0;
@@ -456,22 +461,7 @@
 			font-weight: bold;
 			vertical-align: middle;
 		}
-		.file_name {
-
-			&:empty{
-				& + .upload-button{
-					@extend %button-main-action;
-					@extend %upload;
-					position: absolute;
-					left: 0;
-					width: 100%;
-					margin-top: -1em;
-
-				}
-			}
-		}
 	}
-
 	.format_file{
 		&::before{
 			content: ".";
@@ -500,6 +490,17 @@
 		@extend %upload;
 	}*/
 
+}
+.file.empty {
+	.upload-button{
+		@extend %button-main-action;
+		@extend %upload;
+		width: 100%;
+		margin-top: -1em;
+	}
+	& + .save-cancel-buttonset {
+		margin-top: 0.1em;
+	}
 }
 .crud-actions {
 	position: absolute;
