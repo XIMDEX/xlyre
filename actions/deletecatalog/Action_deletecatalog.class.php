@@ -117,9 +117,10 @@ class Action_deletecatalog extends ActionAbstract {
 		$values = array(
 			'messages' => $this->messages->messages,
 			'action_with_no_return' => true,
+            'parentID' => $idNode 
 		);
 
-		$this->render($values, NULL, 'messages.tpl');
+		$this->sendJSON($values);
 	}
 
 }

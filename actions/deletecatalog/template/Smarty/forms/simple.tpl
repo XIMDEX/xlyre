@@ -32,8 +32,8 @@
 			{button label="Delete" class="validate focus  btn main_action" message="You are going to delete this datasets and its distributions. Would you like to continue?"}
 		</fieldset>
 	</div>
-	<div class="message delete-message icon">
-		<p>{t}This action cannot be undone{/t}.</p>
+	<div class="message message-warning">
+		<p class="icon">{t}This action cannot be undone{/t}.</p>
 	</div>
 	<div class="action_content">
 		<fieldset>
@@ -52,7 +52,7 @@
             </div>
         {else}
             <div class="deletenodes">
-                <p>{t}This catalog has not any datasets{/t}.</p>
+                <p>{t}This catalog has no datasets to delete{/t}.</p>
             </div>
         {/if}
 	</div>

@@ -35,8 +35,8 @@ class Action_createcatalog extends Action_addsectionnode {
 	function index(){
 		$this->loadResources();
 		$values=$this->loadValues();
-                $values['go_method']='addcatalog';
-                $this->render($values, null, 'default-3.0.tpl');
+        $values['go_method']='addcatalog';
+        $this->render($values, null, 'default-3.0.tpl');
 	}
 
 	function addcatalog(){
@@ -44,13 +44,11 @@ class Action_createcatalog extends Action_addsectionnode {
 		$datasets = $this->request->getParam('datasets');        
 		$name = $this->request->getParam('catalogName');
 		$langidlst = $this->request->getParam('langidlst');
-
 		$catalog = new Node();
 
 		$data = array(
                     'NODETYPENAME' => 'OpenDataSection',
                     'NAME' => $name,
-//                    'SUBFOLDERS' => $lst,
                     'PARENTID' => $nodeID,
                     'FORCENEW' => true
                     );  
@@ -58,57 +56,40 @@ class Action_createcatalog extends Action_addsectionnode {
         $baseio = new XlyreBaseIO();
         $id = $baseio->build($data);
         
-                if ($id > 0) {
-                    foreach ($datasets as $datasetName) {
-                        $datasetData = array(
+        if ($id > 0) {
+            foreach ($datasets as $datasetName) {
+                $datasetData = array(
                             'NODETYPENAME' => 'OpenDataDataset',
                             'NAME' => $datasetName,
                             'PARENTID' => $id,
                             'FORCENEW' => true
                         ); 
-                        $baseio->build($datasetData); 
-                    }
+                $baseio->build($datasetData); 
+            }
 
-                    /*
-			         $aliasLangArray = array();
-        	           if($langidlst) {
-                	        foreach ($langidlst as $key) {
-                        	        $aliasLangArray[$key] = $namelst[$key];
-                        	}
-                	       }
-			
+            // Creating Licenses subfolder in links folder
+            $catalognode = new Node($id);
+            $projectnode = new Node($catalognode->getProject());
+            $folder = $projectnode->getChildren(NodetypeService::LINK_MANAGER);
+            $this->_createLicenseLinksFolder($folder[0]);
 
-                        $section = new Node($id);
-                        if($aliasLangArray) {
-                                foreach ($aliasLangArray as $langID => $longName) {
-                                $section->SetAliasForLang($langID, $longName);
-                                }   
-                        }   */
+            $this->reloadNode($nodeID);
+        }
 
+		if (!($id > 0)) {
+            $this->messages->mergeMessages($baseio->messages);
+            $this->messages->add(_('Operation could not be successfully completed'), MSG_TYPE_ERROR);
+        }else{
+            $this->messages->add(sprintf(_('%s has been successfully created'), $name), MSG_TYPE_NOTICE);
+        }
 
-                        // Creating Licenses subfolder in links folder
-                        $catalognode = new Node($id);
-                        $projectnode = new Node($catalognode->getProject());
-                        $folder = $projectnode->getChildren(NodetypeService::LINK_MANAGER);
-                        $this->_createLicenseLinksFolder($folder[0]);
+        $values = array(
+            'action_with_no_return' => $id > 0,
+            'parentID' => $nodeID,
+            'messages' => $this->messages->messages
+        );
 
-
-                        $this->reloadNode($nodeID);
-                }
-
-		      if (!($id > 0)) {
-                        $this->messages->mergeMessages($baseio->messages);
-                        $this->messages->add(_('Operation could not be successfully completed'), MSG_TYPE_ERROR);
-                }else{
-                        $this->messages->add(sprintf(_('%s has been successfully created'), $name), MSG_TYPE_NOTICE);
-                }
-
-                $values = array(
-                        'action_with_no_return' => $id > 0,
-                        'messages' => $this->messages->messages
-                );
-
-                $this->render($values, NULL, 'messages.tpl');
+        $this->sendJSON($values);
 	}
 
 	function loadResources(){

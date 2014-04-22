@@ -53,14 +53,13 @@ class Action_configure extends ActionAbstract {
 		$this->_processField($old_options['themes'], explode(',', $this->request->getParam('themes')), 'theme');
 		$this->_processField($old_options['periodicities'], explode(',', $this->request->getParam('periodicities')), 'periodicity');
 		$this->_processField($old_options['spatials'], explode(',', $this->request->getParam('spatials')), 'spatial');
-        $this->messages->add(_("All the fields have been successfully saved."), MSG_TYPE_ERROR);
-
+        $this->messages->add(_("All the fields have been successfully saved."), MSG_TYPE_NOTICE);
 		$values = array(
 			'messages' => $this->messages->messages,
 			'action_with_no_return' => true,
 		);
 
-		$this->render($values, NULL, 'messages.tpl');
+		$this->sendJSON($values);
 
 	}
 

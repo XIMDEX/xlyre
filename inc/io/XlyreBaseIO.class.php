@@ -42,14 +42,11 @@ class XlyreBaseIO extends BaseIO{
 	 * @return identifier of the inserted node or a state specifying why it was not inserted
 	 */
 	protected function createNode($data, $metaType, $nodeTypeClass, $nodeTypeName){
-		error_log("En CREATE NODE!!");
 		if (array_key_exists($nodeTypeClass, XlyreBaseIOConstants::$metaTypesArray)) {
 			$metaTypesArray = XlyreBaseIOConstants::$metaTypesArray;
 			$metaType = $metaTypesArray[$nodeTypeClass];
 		}
 		$instance = new Node();
-		error_log("metatype: $metaType");
-		error_log("nodeTypeName: $nodeTypeClass");
 		switch ($metaType) {
 			case 'OPENDATASECTION':
 				$idNode = $instance->CreateNode($data['NAME'], $data['PARENTID'], XlyreOpenDataSection::IDNODETYPE, NULL, array(false));
@@ -149,3 +146,4 @@ class XlyreBaseIO extends BaseIO{
 }
 
 ?>
+
