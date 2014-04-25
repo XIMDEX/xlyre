@@ -180,9 +180,12 @@
                 <h3>
                     <label for="reference">{t}More Info Url{/t}</label>
                 </h3>
-            <input type="url" name="reference" id="reference" maxlength="50" class="full_size validable" placeholder="{t}Reference{/t}"
+                <span class="reference_tooltip" data-tooltip="{$reference}">
+                     <input type="url" name="reference" id="reference" maxlength="50" class="full_size validable" placeholder="{t}Reference{/t}"
                 ng-model="dataset.reference"
                 ng-init="dataset.reference='{$reference}'">
+                </span>
+           
             </div>
 
             <div class="creation_date"
