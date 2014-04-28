@@ -230,6 +230,13 @@
             </xlyre-distribution>
                 
     </div> 
+    <div class="distributions">
+            <h3 class="headline"><span>{t}Tags{/t}</span></h3>     
+            <button type="button" class="add-button" id="manage-tags" ng-click="$emit('openAction',{literal}{name:'Manage Tags',nodeid:dataset.id,command:'setmetadata',module:'ximTAGS'}{/literal})" >
+                            {t}Add more tags{/t}
+            </button>
+
+    </div>
 
     </div>            
 </form>
