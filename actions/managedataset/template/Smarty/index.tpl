@@ -139,12 +139,12 @@
 
         <div class="col1-3 right dataset_info">
             <h4>{t}Dataset info{/t}</h4>
-               <div class="channel_selection">
+               <!-- <div class="channel_selection">
                 <h3>{t}Channels{/t}</h3>
                 {if count($channels) > 0}
                     {foreach from=$channels item=channel}
                         <div class="channel-section">
-                            <input name='channels[]' type='checkbox' value='{$channel.IdChannel}' class="hidden-focus" id="{$channel.IdChannel}"/>
+                            <input name='channels[]' type='checkbox' value='{$channel.IdChannel}' class="hidden-focus" id="{$channel.IdChannel}"/ ng-init="dataset.channel={$channel.IdChannel}">
                             <label  class="icon checkbox-label reduced_label"  for="{$channel.IdChannel}">{$channel.Description|gettext}</label>
                         </div>
                     {/foreach}
@@ -152,7 +152,7 @@
                 {else}
                     <p>{t}There are no channels associated to this catalog{/t}.</p>
                 {/if}
-            </div>
+            </div> -->
             <div class="languages-available"><h3>{t}Languages{/t}</h3>
                 {if count($languages) > 0}
                     {foreach from=$languages item=language}
