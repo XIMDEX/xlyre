@@ -33,7 +33,7 @@ ModulesManager::file('/inc/io/XlyreBaseIO.class.php','xlyre');
 class Action_createcatalog extends Action_addsectionnode {
 
 	function index(){
-		$this->loadResources();
+        $this->loadResources();
 		$values=$this->loadValues();
         $values['go_method']='addcatalog';
         $this->render($values, null, 'default-3.0.tpl');
@@ -78,7 +78,6 @@ class Action_createcatalog extends Action_addsectionnode {
             $folder = $projectnode->getChildren(NodetypeService::LINK_MANAGER);
             $this->_createLicenseLinksFolder($folder[0]);
 
-            $this->reloadNode($nodeID);
         }
 
 		if (!($id > 0)) {
