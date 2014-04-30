@@ -30,6 +30,7 @@
     ng-cloak
     xim-languages='{$json_languages}'
     xim-distributions='{$json_distributions}'
+    xim-tags='{$tags}'
     xim-method="{$go_method}"
     xim-action="{$action}"
     novalidate>
@@ -231,12 +232,21 @@
                 
     </div> 
     <div class="distributions">
-            <h3 class="headline"><span>{t}Tags{/t}</span></h3>     
-            <button type="button" class="add-button" id="manage-tags" ng-click="$emit('openAction',{literal}{name:'Manage Tags',nodeid:dataset.id,command:'setmetadata',module:'ximTAGS'}{/literal})" >
-                            {t}Add more tags{/t}
-            </button>
+        <h3 class="headline"><span>{t}Tags{/t}</span></h3>     
+        <ul class="xim-tagsinput-list">
+            <li class="xim-tagsinput-tag icon xim-tagsinput-type-#/tag.namespace.nemo/#" ng-repeat="tag in tags">
+                <span class="xim-tagsinput-text" data-tooltip="#/tag.namespace.uri/#">
+                #/tag.Name/#
+                </span>
+                <a ng-href="#/tag.namespace.uri/#" class="ontology_link" target="_blank">#/tag.namespace.type/#</a>
+            </li>
+        </ul>
+        <button type="button" class="add-button" id="manage-tags" ng-click="$emit('openAction',{literal}{name:'Manage Tags',nodeid:dataset.id,command:'setmetadata',module:'ximTAGS'}{/literal})" >
+                        {t}Add more tags{/t}
+        </button>
 
     </div>
 
-    </div>            
+    </div>
+
 </form>

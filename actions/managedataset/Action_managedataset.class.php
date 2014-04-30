@@ -388,6 +388,7 @@ class Action_managedataset extends ActionAbstract {
 	function loadResources() {
         $this->addJs('/modules/xlyre/actions/managedataset/resources/js/index.js');
         $this->addCss('/modules/xlyre/actions/managedataset/resources/css/style.css');
+        $this->addCss('/xmd/style/jquery/ximdex_theme/widgets/tagsinput/tagsinput.css');
     }
 
 
@@ -455,6 +456,15 @@ class Action_managedataset extends ActionAbstract {
                     );
                 }
             }
+            $relTags = new RelTagsNodes();
+            $tags = $relTags->getTags($idNode);
+            
+            foreach ($tags as $key => $tag) {
+                $namespace = new Namespaces($tag['IdNamespace']);
+                $tags[$key]['namespace'] = $namespace;
+            }
+
+            $values["tags"] = json_encode($tags);
             $values['distributions'] = $dstList;
             $values['json_distributions'] = json_encode($dstList);
         }
