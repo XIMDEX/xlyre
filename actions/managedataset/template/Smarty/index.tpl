@@ -57,14 +57,15 @@
             <div class="editable_data col1_2">
                 <select name="" id="" class="language_selector js_language_selector" 
                         ng-model="selectedLanguage"
+                        ng-init="selectedLanguage = {$default_language}"
                         ng-show="activeLanguages">
                     <option value="" 
-                        ng-selected="!dataset.languages[selectedLanguage]">
+                        ng-selected="!dataset.languages[selectedLanguage]" ng-disabled="!!selectedLanguage">
                         {t}Select a language{/t}
                     </option>
                     <option 
                         ng-repeat="(id, label) in dataset.languages" 
-                        ng-disabled="!label" 
+                        ng-disabled="!label" ng-if="!!label"
                         value="#/id/#">
                         #/label/#
                     </option>

@@ -446,7 +446,7 @@
 	}
 	// .title_language span {display: none;}
 }
-.distributions {
+.distributions, .tags {
 	.add-button, .cancel-button {
 		@extend %button-default;
 	}

@@ -41,7 +41,7 @@
   border-color: #fff;
   background: #d6d8dd; }
 
-.distributions .save-button, .file.empty .upload-button, .distributions .add-button, .distributions .cancel-button {
+.distributions .save-button, .tags .save-button, .file.empty .upload-button, .distributions .add-button, .distributions .cancel-button, .tags .add-button, .tags .cancel-button {
   background: #fff;
   border: 1px solid #dedede;
   display: inline-block;
@@ -57,27 +57,27 @@
   cursor: pointer !important;
   border-color: #fff;
   background: #d6d8dd; }
-  .distributions .save-button input, .file.empty .upload-button input, .distributions .add-button input, .distributions .cancel-button input {
+  .distributions .save-button input, .tags .save-button input, .file.empty .upload-button input, .distributions .add-button input, .distributions .cancel-button input, .tags .add-button input, .tags .cancel-button input {
     cursor: pointer; }
-  .distributions .save-button:focus, .file.empty .upload-button:focus, .distributions .add-button:focus, .distributions .cancel-button:focus, .distributions .save-button:active, .file.empty .upload-button:active, .distributions .add-button:active, .distributions .cancel-button:active, .distributions .active.save-button, .file.empty .active.upload-button, .distributions .active.add-button, .distributions .active.cancel-button, .distributions .save-button:hover, .file.empty .upload-button:hover, .distributions .add-button:hover, .distributions .cancel-button:hover {
+  .distributions .save-button:focus, .tags .save-button:focus, .file.empty .upload-button:focus, .distributions .add-button:focus, .distributions .cancel-button:focus, .tags .add-button:focus, .tags .cancel-button:focus, .distributions .save-button:active, .tags .save-button:active, .file.empty .upload-button:active, .distributions .add-button:active, .distributions .cancel-button:active, .tags .add-button:active, .tags .cancel-button:active, .distributions .active.save-button, .tags .active.save-button, .file.empty .active.upload-button, .distributions .active.add-button, .distributions .active.cancel-button, .tags .active.add-button, .tags .active.cancel-button, .distributions .save-button:hover, .tags .save-button:hover, .file.empty .upload-button:hover, .distributions .add-button:hover, .distributions .cancel-button:hover, .tags .add-button:hover, .tags .cancel-button:hover {
     outline: none; }
-  .distributions .save-button:focus, .file.empty .upload-button:focus, .distributions .add-button:focus, .distributions .cancel-button:focus, .distributions .save-button:hover, .file.empty .upload-button:hover, .distributions .add-button:hover, .distributions .cancel-button:hover {
+  .distributions .save-button:focus, .tags .save-button:focus, .file.empty .upload-button:focus, .distributions .add-button:focus, .distributions .cancel-button:focus, .tags .add-button:focus, .tags .cancel-button:focus, .distributions .save-button:hover, .tags .save-button:hover, .file.empty .upload-button:hover, .distributions .add-button:hover, .distributions .cancel-button:hover, .tags .add-button:hover, .tags .cancel-button:hover {
     background: #babdc6; }
-  .distributions .save-button:active, .file.empty .upload-button:active, .distributions .add-button:active, .distributions .cancel-button:active, .distributions .active.save-button, .file.empty .active.upload-button, .distributions .active.add-button, .distributions .active.cancel-button {
+  .distributions .save-button:active, .tags .save-button:active, .file.empty .upload-button:active, .distributions .add-button:active, .distributions .cancel-button:active, .tags .add-button:active, .tags .cancel-button:active, .distributions .active.save-button, .tags .active.save-button, .file.empty .active.upload-button, .distributions .active.add-button, .distributions .active.cancel-button, .tags .active.add-button, .tags .active.cancel-button {
     box-shadow: inset 0 0 1px #464955; }
-  .distributions .save-button:disabled, .file.empty .upload-button:disabled, .distributions .add-button:disabled, .distributions .cancel-button:disabled, .distributions .disabled.save-button, .file.empty .disabled.upload-button, .distributions .disabled.add-button, .distributions .disabled.cancel-button {
+  .distributions .save-button:disabled, .tags .save-button:disabled, .file.empty .upload-button:disabled, .distributions .add-button:disabled, .distributions .cancel-button:disabled, .tags .add-button:disabled, .tags .cancel-button:disabled, .distributions .disabled.save-button, .tags .disabled.save-button, .file.empty .disabled.upload-button, .distributions .disabled.add-button, .distributions .disabled.cancel-button, .tags .disabled.add-button, .tags .disabled.cancel-button {
     background: #babdc6 !important;
     cursor: default !important; }
 
-.distributions .save-button, .file.empty .upload-button {
+.distributions .save-button, .tags .save-button, .file.empty .upload-button {
   color: white !important;
   background-image: linear-gradient(#72c4b9, #7ccac0);
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15), 0 1px 0 rgba(255, 255, 255, 0.2); }
-  .distributions .save-button:focus, .file.empty .upload-button:focus, .distributions .save-button:hover, .file.empty .upload-button:hover {
+  .distributions .save-button:focus, .tags .save-button:focus, .file.empty .upload-button:focus, .distributions .save-button:hover, .tags .save-button:hover, .file.empty .upload-button:hover {
     background-image: linear-gradient(#4eb5a7, #58bbaf); }
-  .distributions .save-button:active, .file.empty .upload-button:active {
+  .distributions .save-button:active, .tags .save-button:active, .file.empty .upload-button:active {
     background-image: linear-gradient(#7ccac0, #72c4b9); }
-  .distributions .save-button:disabled, .file.empty .upload-button:disabled, .distributions .disabled.save-button, .file.empty .disabled.upload-button {
+  .distributions .save-button:disabled, .tags .save-button:disabled, .file.empty .upload-button:disabled, .distributions .disabled.save-button, .tags .disabled.save-button, .file.empty .disabled.upload-button {
     background: #acafbb !important;
     cursor: default !important; }
 
@@ -115,7 +115,7 @@
   transition: all .5s .3s;
   z-index: 5; }
 
-.distributions .save-button, .file.empty .upload-button, .distributions .add-button, .distributions .cancel-button {
+.distributions .save-button, .tags .save-button, .file.empty .upload-button, .distributions .add-button, .distributions .cancel-button, .tags .add-button, .tags .cancel-button {
   -webkit-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all;
   -moz-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all;
   -ms-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) all;
@@ -451,24 +451,24 @@
     right: 16px;
     top: 3px; }
 
-.distributions .cancel-button, .distributions .save-button {
+.distributions .cancel-button, .distributions .save-button, .tags .cancel-button, .tags .save-button {
   height: 36px;
   width: 100%; }
-  .distributions .cancel-button.hidden, .distributions .save-button.hidden {
+  .distributions .cancel-button.hidden, .distributions .save-button.hidden, .tags .cancel-button.hidden, .tags .save-button.hidden {
     width: 0;
     padding: 0;
     margin: -2px; }
-.distributions .upload-button {
+.distributions .upload-button, .tags .upload-button {
   position: relative;
   text-align: center; }
-  .distributions .upload-button input {
+  .distributions .upload-button input, .tags .upload-button input {
     opacity: 0;
     position: absolute;
     top: 0;
     right: 0;
     width: 100%;
     height: 100%; }
-.distributions .save-cancel-buttonset {
+.distributions .save-cancel-buttonset, .tags .save-cancel-buttonset {
   margin-top: 1em;
   display: -webkit-box;
   /* OLD - iOS 6-, Safari 3.1-6 */

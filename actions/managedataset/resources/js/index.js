@@ -137,7 +137,7 @@
                     var updateDistributionMetadata = function (distribution) {
                         var formData = {
                             languages: angular.toJson(distribution.languages),
-                            id: angular.toJson(distribution.id)
+                            id: distribution.id
 
                         };
                         // Note: Adding distribution.id in formData because it is not being sent over action url
@@ -278,7 +278,13 @@
                         } else {
                             $scope.deleted = true;    
                         }
-                    }    
+                    }
+
+                    $scope.$watch('queue.length', function(newVal, oldVal){
+                        if (newVal){
+                            $scope.uploadButtonLabel = xTranslate('xlyre.actions.managedataset.distribution.upload');
+                        }
+                    });    
                 }]
             }
         }]);
