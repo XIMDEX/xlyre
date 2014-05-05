@@ -201,8 +201,22 @@
 
                     $scope.$watch('distribution.languages',function(languages){
                         if (languages)
-                            $scope.defaultTitle = languages[$scope.defaultLanguage];
+                            $scope.defaultTitle = $scope.getDefaultTitle(languages);
                     }, true);
+
+                    $scope.getDefaultTitle = function(languages){
+                        var title;
+                        if (languages[$scope.defaultLanguage]){
+                            title = languages[$scope.defaultLanguage];
+                        } else {
+                            for (langTitle in languages){
+                                if (languages[langTitle]) {
+                                    title = languages[langTitle];
+                                }
+                            }
+                        }
+                        return title;
+                    }
 
                     $scope.saveDistribution = function (distribution, file) {
                         if (file) { 
