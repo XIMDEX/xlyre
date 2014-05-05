@@ -34,6 +34,8 @@ ModulesManager::file('/inc/model/XlyreRelMetaLangs.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyreThemes.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyrePeriodicities.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyreSpatials.php', 'xlyre');
+ModulesManager::file('/inc/model/Namespaces.class.php');
+ModulesManager::file('/inc/helper/String.class.php');
 
 
 class Action_managedataset extends ActionAbstract {
@@ -219,8 +221,9 @@ class Action_managedataset extends ActionAbstract {
     //Note: This method only works for browsers supporting sendAsBinary()
     function addDistribution() {
         $values = array();
+        $filename = $_FILES['file']['name'];
         if (isset($_FILES)) {
-            $values['distribution']['file'] = $_FILES['file']['name'];
+            $values['distribution']['file'] = String::normalize($filename);
 
             $extension = strtolower(end(explode('.',$values['distribution']['file'])));
             $values['distribution']['format'] = $extension;
@@ -290,7 +293,8 @@ class Action_managedataset extends ActionAbstract {
         $values['distribution']['modified'] = date($format_min, time());
 
         if (isset($_FILES['file'])) {
-            $values['distribution']['file'] = $_FILES['file']['name'];
+            $filename = $_FILES['file']['name'];
+            $values['distribution']['file'] = String::normalize($filename);
             $extension = strtolower(end(explode('.',$values['distribution']['file'])));
             $values['distribution']['format'] = $extension;
             $values['distribution']['size'] = $_FILES['file']['size'];
