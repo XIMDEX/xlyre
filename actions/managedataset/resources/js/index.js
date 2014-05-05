@@ -83,12 +83,19 @@
                             dataset.modified = data.dataset.modified;
                             form.$setPristine();
                         }
-                        if (data && data.messages) {
+                        if (data && data.messages && data.messages.length > 0) {
                             $scope.submitStatus = 'success';
                             $scope.submitMessages = data.messages;
                             $timeout(function(){
                                 $scope.submitMessages = null;
                             }, 4000);
+                        }
+                        if (data && data.errors && data.errors.length > 0) {
+                            $scope.submitStatus = 'error';
+                            $scope.submitMessages = data.errors;
+                            $timeout(function(){
+                                $scope.submitMessages = null;
+                            }, 4000);    
                         }
                     });
                 }  
