@@ -102,9 +102,9 @@ class Action_managedataset extends ActionAbstract {
         $errors = array();
 
 		if (!($iddataset > 0)) {
-            // $this->messages->mergeMessages($baseio->messages);
+            $this->messages->mergeMessages($baseio->messages);
             // $this->messages->add(_('Operation could not be successfully completed'), MSG_TYPE_ERROR);
-            $errors[] = _('Operation could not be successfully completed');
+            $errors[] = array('message' => _('Operation could not be successfully completed'), 'type' => MSG_TYPE_ERROR);
         }
         else {
             //Adding title and description based on languages
@@ -121,8 +121,8 @@ class Action_managedataset extends ActionAbstract {
                 }
             }
 
-            // $this->messages->add(sprintf(_('%s has been successfully created'), $name), MSG_TYPE_NOTICE);
-            $messages = sprintf(_('%s has been successfully created'), $name);
+
+            $messages[] = array('message' => sprintf(_('%s has been successfully created'), $name), 'type' => MSG_TYPE_NOTICE);
             $this->reloadNode($parentID);
         }
 
@@ -145,7 +145,7 @@ class Action_managedataset extends ActionAbstract {
 
     function updatedataset() {
         $errors = array();
-
+        $messages = array();
         $nodeID =$this->request->getParam('id');
         $name = $this->request->getParam('name');
 
@@ -166,8 +166,7 @@ class Action_managedataset extends ActionAbstract {
         $result = $baseio->updateNode($data, "XLYREOPENDATASET");
 
         if (!($result > 0)) {
-            //$this->messages->mergeMessages($baseio->messages);
-            $errors[] = _('Operation could not be successfully completed');
+            $errors[] = array('message' => _('Operation could not be successfully completed'), 'type' => MSG_TYPE_ERROR);
         }
         else {
             $xlrml = new XlyreRelMetaLangs();
@@ -204,7 +203,7 @@ class Action_managedataset extends ActionAbstract {
 
             $node = new Node($nodeID);
             $this->reloadNode($node->get("IdParent"));
-            $messages = sprintf(_('%s has been successfully updated'), $name);
+            $messages[] = array('message' => sprintf(_('%s has been successfully updated'), $name), 'type' => MSG_TYPE_NOTICE);
         }
 
         $values = array(

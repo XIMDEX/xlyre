@@ -37,11 +37,12 @@
     <div class="action_header">
             <h2>#/submitLabel/#</h2>  
     </div>
-    <div class="message slide-item" ng-show="submitMessages.length">
-        <p class="ui-state-primary ui-corner-all msg-info">
-            #/submitMessages/#
+    <div class="message slide-item" ng-show="submitMessages.length" ng-class="{literal}{'message-success': submitStatus == 'success', 'message-error': submitStatus == 'error'}{/literal}">
+        <p class="icon" ng-repeat="message in submitMessages">
+            #/message.message/#
         </p>
     </div>
+
     <div class="action_content dataset_action">
         <div class="col2-3 left dataset_data">
             <div class="dataset icon input">
