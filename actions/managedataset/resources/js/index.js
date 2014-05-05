@@ -30,6 +30,8 @@
             $scope.languages = angular.fromJson($attrs.ximLanguages);
             if ($attrs.ximDistributions)
                     $scope.distributions = angular.fromJson($attrs.ximDistributions);
+            if ($attrs.ximTags)
+                    $scope.tags = angular.fromJson($attrs.ximTags);
             
             $scope.$watch('dataset.languages', function(languages, oldLanguages){
                 $scope.activeLanguages = 0;
@@ -271,5 +273,13 @@
 }
 //Start angular compile and binding
 X.actionLoaded(function(event, fn, params) {
-    X.angularTools.initView(params.context, params.tabId);    
+    var scope = X.angularTools.initView(params.context, params.tabId);
+    scope.actionParams = params
+    $(document).on('nodemodified', function(e, nodeId){
+        if (params.actionView.nodes.length == 1 && params.actionView.nodes[0] === nodeId) {   
+            scope.$destroy();
+            scope = null;
+            params.actionView.reloadAction();
+        }
+    });    
 });

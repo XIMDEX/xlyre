@@ -231,7 +231,8 @@
             </xlyre-distribution>
                 
     </div> 
-    <div class="distributions">
+    <div class="tags" 
+        ng-show="dataset.id">
         <h3 class="headline"><span>{t}Tags{/t}</span></h3>     
         <ul class="xim-tagsinput-list">
             <li class="xim-tagsinput-tag icon xim-tagsinput-type-#/tag.namespace.nemo/#" ng-repeat="tag in tags">
