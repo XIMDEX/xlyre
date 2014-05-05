@@ -25,9 +25,9 @@
  if (angular.module('ximdex').notRegistred('XLyreDatasetCtrl')){
     angular.module('ximdex')
         .controllerProvider.register('XLyreDatasetCtrl', ['$scope', '$attrs', 'xBackend', 'xTranslate', '$timeout', function($scope, $attrs, xBackend, xTranslate, $timeout){
-            $scope.t = xTranslate;
             $scope.selectedLanguages = {};
             $scope.languages = angular.fromJson($attrs.ximLanguages);
+
             if ($attrs.ximDistributions)
                     $scope.distributions = angular.fromJson($attrs.ximDistributions);
             if ($attrs.ximTags)
@@ -36,9 +36,12 @@
             $scope.$watch('dataset.languages', function(languages, oldLanguages){
                 $scope.activeLanguages = 0;
                 for (key in languages) {
-                    if (languages[key] != '')
+                    if (languages[key] != '') {
                         $scope.activeLanguages++;
                         $scope.defaultLanguage = $scope.defaultLanguage || key;
+                    } else {
+                        if ($scope.selectedLanguage === key) $scope.selectedLanguage = "";
+                    }
                 }
             }, true);
 
@@ -68,7 +71,7 @@
                     $scope.submitStatus = 'submitting';
                     formData.languages = [];
                     for (var language in dataset.languages) {
-                        if (language) {
+                        if (!!dataset.languages[language]) {
                             formData.languages.push(language);
                         }
                     }

@@ -94,14 +94,14 @@ class Action_managedataset extends ActionAbstract {
             'PERIODICITY' => $this->request->getParam('periodicity'),
             'LICENSE' => $this->request->getParam('license'),
             'SPATIAL' => $this->request->getParam('spatial'),
-            'REFERENCE' => $this->request->getParam('reference'),
-            'LANGUAGES' => $this->request->getParam('languages_dataset')
+            'REFERENCE' => $this->request->getParam('reference')
         );
 
         $baseio = new XlyreBaseIO();
         $iddataset = $baseio->build($data);
 
         $errors = array();
+        $messages = array();
 
 		if (!($iddataset > 0)) {
             $this->messages->mergeMessages($baseio->messages);
@@ -160,8 +160,7 @@ class Action_managedataset extends ActionAbstract {
             'PERIODICITY' => $this->request->getParam('periodicity'),
             'LICENSE' => $this->request->getParam('license'),
             'SPATIAL' => $this->request->getParam('spatial'),
-            'REFERENCE' => $this->request->getParam('reference'),
-            'LANGUAGES' => $this->request->getParam('languages')
+            'REFERENCE' => $this->request->getParam('reference')
             );
 
         $baseio = new XlyreBaseIO();
@@ -396,12 +395,11 @@ class Action_managedataset extends ActionAbstract {
 
 
     function loadValues(&$values, $idNode = 0) {
-        
         #Default values for selectors
         $this->_getValues(new XlyreThemes(), $values['themes']);
         $this->_getValues(new XlyrePeriodicities(), $values['periodicities']);
         $this->_getValues(new XlyreSpatials(), $values['spatials']);
-        $values['default_language'] = 10002;
+        $values['default_language'] = $values['languages'][0]['IdLanguage'];
         $node = new Node();
         $linkfolder = $node->find('IdNode', "idnodetype = 5048 AND Name = 'Licenses'", array(), MONO);
         if ($linkfolder) {
@@ -436,6 +434,7 @@ class Action_managedataset extends ActionAbstract {
             }
             $values['id_catalog'] = $dsmeta->getParent();
             // Get Distributions
+
             $node = new Node($idNode);
             $distributions = $node->GetChildren(XlyreOpenDistribution::IDNODETYPE);
             $dstList = array();
