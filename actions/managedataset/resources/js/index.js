@@ -79,6 +79,9 @@
                         if (!dataset.id && data && data.dataset && data.dataset.id) {   
                             $scope.method = 'updatedataset';
                             dataset.id = data.dataset.id;
+                            
+                            $scope.actionParams.actionView.setNode(dataset.id);//Bad practice but needed at the moment to update browser window action
+                            
                             dataset.issued = data.dataset.issued;
                             dataset.modified = data.dataset.modified;
                             form.$setPristine();
