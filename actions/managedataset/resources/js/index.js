@@ -80,7 +80,7 @@
                             $scope.method = 'updatedataset';
                             dataset.id = data.dataset.id;
                             
-                            $scope.actionParams.actionView.setNode(dataset.id);//Bad practice but needed at the moment to update browser window action
+                            $scope.setActionNode(dataset.id);//Bad practice but needed at the moment to update browser window action
                             
                             dataset.issued = data.dataset.issued;
                             dataset.modified = data.dataset.modified;
@@ -293,7 +293,9 @@
 //Start angular compile and binding
 X.actionLoaded(function(event, fn, params) {
     var scope = X.angularTools.initView(params.context, params.tabId);
-    scope.actionParams = params
+    scope.setActionNode = function(nodeId){
+        params.actionView.setNode(nodeId);
+    };
     $(document).on('nodemodified', function(e, nodeId){
         if (params.actionView.nodes.length == 1 && params.actionView.nodes[0] === nodeId) {   
             scope.$destroy();
