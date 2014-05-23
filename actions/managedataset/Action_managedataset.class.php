@@ -122,26 +122,22 @@ class Action_managedataset extends ActionAbstract {
                     }
                 }
             }
-
-
             $messages[] = array('message' => sprintf(_('%s has been successfully created'), $name), 'type' => MSG_TYPE_NOTICE);
             $this->reloadNode($parentID);
         }
 
         $dataset = new XlyreDataset($iddataset);
-        $format = _('m-d-Y H:i:s');
         $values = array(
                 'dataset' => array(
                     'id' => $iddataset,
-                    'issued' => date($format, $dataset->Get('Issued')),
-                    'modified' => date($format, $dataset->Get('Modified')),
+                    'issued' => $dataset->Get('Issued'),
+                    'modified' => $dataset->Get('Modified'),
                 ),
                 'messages' => $messages,
                 'errors' => $errors
         );
 
         $this->sendJSON($values);
-
     }
 
 
@@ -227,9 +223,8 @@ class Action_managedataset extends ActionAbstract {
             $extension = strtolower(end(explode('.',$values['distribution']['file'])));
             $values['distribution']['format'] = $extension;
             $values['distribution']['size'] = $_FILES['file']['size'];
-            $format_min = str_replace("'", "", _("'m-d-Y'"));
-            $values['distribution']['issued'] = date($format_min, time());
-            $values['distribution']['modified'] = date($format_min, time());
+            $values['distribution']['issued'] = time();
+            $values['distribution']['modified'] = time();
 
             $nt = new NodeType(XlyreOpenDistribution::IDNODETYPE);
             $data_dist = array(
@@ -282,14 +277,13 @@ class Action_managedataset extends ActionAbstract {
 
     function updateDistribution() {
         $values = array();
-        $format_min = str_replace("'", "", _("'m-d-Y'"));
         // $dist_id = $this->request->getParam('nodeid');
         $dist_id = trim($_POST['id'], '\"');
 
         $distribution = new XlyreDistribution($dist_id);
         $values['distribution']['id'] = $dist_id;
-        $values['distribution']['issued'] = date($format_min, $distribution->get('Issued'));
-        $values['distribution']['modified'] = date($format_min, time());
+        $values['distribution']['issued'] = $distribution->get('Issued');
+        $values['distribution']['modified'] = time();
 
         if (isset($_FILES['file'])) {
             $filename = $_FILES['file']['name'];
@@ -420,7 +414,6 @@ class Action_managedataset extends ActionAbstract {
             $dataset['license'] = $dsmeta->get("License");
             $dataset['spatial'] = $dsmeta->get("Spatial");
             $dataset['reference'] = $dsmeta->get("Reference");
-            $format = str_replace("'", "", _("'m-d-Y H:i:s'"));
             $dataset['issued'] = $dsmeta->get("Issued");
             $dataset['modified'] = $dsmeta->get("Modified");
             $user = new User($dsmeta->get('Publisher'));
@@ -441,7 +434,6 @@ class Action_managedataset extends ActionAbstract {
             $node = new Node($idNode);
             $distributions = $node->GetChildren(XlyreOpenDistribution::IDNODETYPE);
             $dstList = array();
-            $format_min = str_replace("'", "", _("'m-d-Y'"));
             if ($distributions) {
                 foreach ($distributions as $distribution) {
                     $languages_distribution = $xlrml->find('Title, IdLanguage', "IdNode = %s", array($distribution), MULTI);
@@ -473,8 +465,6 @@ class Action_managedataset extends ActionAbstract {
             $values['distributions'] = $dstList;
         }
         else {
-            $dataset['issued'] = "--/--/--";
-            $dataset['modified'] = "--/--/--";
             $user = new User(XSession::get('userID'));
             $dataset['publisher'] = $user->Get('Name');
             $dataset['languages_dataset'] = array();
@@ -487,7 +477,6 @@ class Action_managedataset extends ActionAbstract {
         }
         $values['dataset'] = $dataset;
     }
-
 
     private function _getValues($object, &$partial_options) {
         $values = $object->find('Id, Name', "1 ORDER BY Id", array(), MULTI);
