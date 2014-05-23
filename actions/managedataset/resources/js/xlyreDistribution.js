@@ -22,91 +22,8 @@
  *  @author Ximdex DevTeam <dev@ximdex.com>
  *  @version $Revision$
  */
- if (angular.module('ximdex').notRegistred('XLyreDatasetCtrl')){
-    angular.module('ximdex')
-        .controllerProvider.register('XLyreDatasetCtrl', ['$scope', '$attrs', 'xBackend', 'xTranslate', '$timeout', function($scope, $attrs, xBackend, xTranslate, $timeout){
-            $scope.selectedLanguages = {};
-            $scope.languages = angular.fromJson($attrs.ximLanguages);
-
-            if ($attrs.ximDistributions)
-                    $scope.distributions = angular.fromJson($attrs.ximDistributions);
-            if ($attrs.ximTags)
-                    $scope.tags = angular.fromJson($attrs.ximTags);
-            
-            $scope.$watch('dataset.languages', function(languages, oldLanguages){
-                $scope.activeLanguages = 0;
-                for (key in languages) {
-                    if (languages[key] != '') {
-                        $scope.activeLanguages++;
-                        $scope.defaultLanguage = $scope.defaultLanguage || key;
-                    } else {
-                        if ($scope.selectedLanguage === key) $scope.selectedLanguage = "";
-                    }
-                }
-            }, true);
-
-            $scope.$watch('method', function(newValue){
-                if (newValue == 'createdataset') {
-                    $scope.submitLabel = xTranslate('xlyre.actions.managedataset.dataset.create');
-                } else if (newValue == 'updatedataset') {
-                    $scope.submitLabel = xTranslate('xlyre.actions.managedataset.dataset.update');
-                }
-            });
-
-            $scope.method = $attrs.ximMethod;
-
-            $scope.newDistribution = function(){
-                $scope.distributions = $scope.distributions || [];
-                var newDistribution = {}
-                newDistribution.languages = {}
-                for (var i = 0; i < $scope.languages.length; i++)  {
-                    newDistribution.languages[$scope.languages[i].IdLanguage] = '';
-               }
-               $scope.distributions.unshift(newDistribution); 
-            }
-            
-            $scope.submitForm = function(form, dataset){
-                if (form.$valid) {    
-                    var formData = angular.copy(dataset);
-                    $scope.submitStatus = 'submitting';
-                    formData.languages = [];
-                    for (var language in dataset.languages) {
-                        if (!!dataset.languages[language]) {
-                            formData.languages.push(language);
-                        }
-                    }
-                    xBackend.sendFormData(formData, {action: $attrs.ximAction, method: $scope.method, id: dataset.id, IDParent: dataset.IDParent}, function(data){ 
-                        if (!dataset.id && data && data.dataset && data.dataset.id) {   
-                            $scope.method = 'updatedataset';
-                            dataset.id = data.dataset.id;
-                            
-                            $scope.setActionNode(dataset.id);//Bad practice but needed at the moment to update browser window action
-                            
-                            dataset.issued = data.dataset.issued;
-                            dataset.modified = data.dataset.modified;
-                            form.$setPristine();
-                        }
-                        if (data && data.messages && data.messages.length > 0) {
-                            $scope.submitStatus = 'success';
-                            $scope.submitMessages = data.messages;
-                            $timeout(function(){
-                                $scope.submitMessages = null;
-                            }, 4000);
-                        }
-                        if (data && data.errors && data.errors.length > 0) {
-                            $scope.submitStatus = 'error';
-                            $scope.submitMessages = data.errors;
-                            $timeout(function(){
-                                $scope.submitMessages = null;
-                            }, 4000);    
-                        }
-                    });
-                }  
-            }
-        }]);
-    angular.module('ximdex').registerItem('XLyreDatasetCtrl');
-    
-    angular.module('ximdex')
+if (angular.module('ximdex').notRegistred('xlyreDistribution')){
+	angular.module('ximdex')
         .compileProvider.directive('xlyreDistribution', ['$window', 'xTranslate', function ($window, xTranslate) {
             return {
                 replace: true,
@@ -290,17 +207,3 @@
         }]);
     angular.module('ximdex').registerItem('xlyreDistribution');
 }
-//Start angular compile and binding
-X.actionLoaded(function(event, fn, params) {
-    var scope = X.angularTools.initView(params.context, params.tabId);
-    scope.setActionNode = function(nodeId){
-        params.actionView.setNode(nodeId);
-    };
-    $(document).on('nodemodified', function(e, nodeId){
-        if (params.actionView.nodes.length == 1 && params.actionView.nodes[0] === nodeId) {   
-            scope.$destroy();
-            scope = null;
-            params.actionView.reloadAction();
-        }
-    });    
-});

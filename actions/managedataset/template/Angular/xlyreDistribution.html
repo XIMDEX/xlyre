@@ -31,13 +31,13 @@
         <span class="creation_date" ng-show="distribution.id && !queue.length">
             #/'xlyre.actions.managedataset.distribution.created' | xI18n /#
             <span>
-                #/distribution.issued/#
+                #/distribution.issued*1000 | date:'dd-MM-yyyy'/#
             </span>
         </span>
         <span class="modified_date" ng-show="distribution.id && !queue.length">
             #/'xlyre.actions.managedataset.distribution.modified' | xI18n /# 
             <span>
-                #/distribution.modified/#
+                #/distribution.modified*1000 | date:'dd-MM-yyyy'/#
             </span>
         </span>
     </div>
