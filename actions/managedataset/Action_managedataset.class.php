@@ -44,38 +44,38 @@ class Action_managedataset extends ActionAbstract {
 		$this->loadResources();
 
         $idNode = $this->request->getParam("nodeid");
-
+        $options = array();
         // Getting channels
         $channel = new Channel();
         $channels = $channel->getChannelsForNode($idNode);
-        $values['channels'] = $channels;
+        $options['channels'] = $channels;
 
         // Getting languages
         $language = new Language();
         $languages = $language->getLanguagesForNode($idNode);
-        $values['languages'] = $languages;
-        $values['json_languages'] = json_encode($languages);
+        $options['languages'] = $languages;
 
         $node = new Node($idNode);
         $nt = $node->GetNodeType();
         if ($nt == XlyreOpenDataSection::IDNODETYPE) {
-            $this->loadValues($values);
-            $values['base_url'] = Config::getValue('UrlRoot');
-            $values['go_method'] = 'createdataset';
-            $values['action'] = 'managedataset';
+            $this->loadValues($options);
+            $options['base_url'] = Config::getValue('UrlRoot');
+            $options['go_method'] = 'createdataset';
+            $options['action'] = 'managedataset';
             $values['title'] = 'Create Dataset';
             $values['button'] = 'Create';
-            $values['id_catalog'] = $idNode;
+            $options['dataset']['IDParent'] = $idNode;
         }
         elseif ($nt == XlyreOpenDataset::IDNODETYPE) {
-            $this->loadValues($values, $idNode);
-            $values['base_url'] = Config::getValue('UrlRoot');
-            $values['go_method'] = 'updatedataset';
-            $values['action'] = 'managedataset';
+            $this->loadValues($options, $idNode);
+            $options['base_url'] = Config::getValue('UrlRoot');
+            $options['go_method'] = 'updatedataset';
+            $options['action'] = 'managedataset';
             $values['title'] = 'Edit Dataset';
             $values['button'] = 'Update';
-            $values['id_dataset'] = $idNode;
-        }        
+            $options['dataset']['id'] = $idNode;
+        }
+        $values['options'] = json_encode($options);
         $this->render($values, null, 'default-3.0.tpl');
 	}
 
@@ -399,7 +399,7 @@ class Action_managedataset extends ActionAbstract {
         $this->_getValues(new XlyreThemes(), $values['themes']);
         $this->_getValues(new XlyrePeriodicities(), $values['periodicities']);
         $this->_getValues(new XlyreSpatials(), $values['spatials']);
-        $values['default_language'] = $values['languages'][0]['IdLanguage'];
+        $values['defaultLanguage'] = $values['languages'][0]['IdLanguage'];
         $node = new Node();
         $linkfolder = $node->find('IdNode', "idnodetype = 5048 AND Name = 'Licenses'", array(), MONO);
         if ($linkfolder) {
@@ -409,30 +409,31 @@ class Action_managedataset extends ActionAbstract {
                 $values['licenses'][$key]['name'] = $link['Name'];
             }
         }
-
+        $dataset = array();
         if ($idNode > 0) {
             $dsmeta = new XlyreDataset($idNode);
-            $values['name'] = $dsmeta->get("Identifier");
-            $values['theme'] = $dsmeta->get("Theme");
-            $values['periodicity'] = $dsmeta->get("Periodicity");
-            $values['license'] = $dsmeta->get("License");
-            $values['spatial'] = $dsmeta->get("Spatial");
-            $values['reference'] = $dsmeta->get("Reference");
+            $dataset['name'] = $dsmeta->get("Identifier");
+            $dataset['theme'] = $dsmeta->get("Theme");
+            $dataset['periodicity'] = $dsmeta->get("Periodicity");
+            $dataset['license'] = $dsmeta->get("License");
+            $dataset['spatial'] = $dsmeta->get("Spatial");
+            $dataset['reference'] = $dsmeta->get("Reference");
             $format = str_replace("'", "", _("'m-d-Y H:i:s'"));
-            $values['issued'] = date($format, $dsmeta->get("Issued"));
-            $values['modified'] = date($format, $dsmeta->get("Modified"));
+            $dataset['issued'] = date($format, $dsmeta->get("Issued"));
+            $dataset['modified'] = date($format, $dsmeta->get("Modified"));
             $user = new User($dsmeta->get('Publisher'));
-            $values['publisher'] = $user->Get('Name');
+            $dataset['publisher'] = $user->Get('Name');
             $xlrml = new XlyreRelMetaLangs();
             $languages_dataset = $xlrml->find('Title, Description, IdLanguage', "IdNode = %s", array($idNode), MULTI);
             foreach ($languages_dataset as $ld) {
-                $values['languages_dataset'][$ld['IdLanguage']]['title'] = $ld['Title'];
-                $values['languages_dataset'][$ld['IdLanguage']]['description'] = $ld['Description'];
+                $dataset['languages_dataset'][$ld['IdLanguage']]['title'] = $ld['Title'];
+                $dataset['languages_dataset'][$ld['IdLanguage']]['description'] = $ld['Description'];
             }
+            $dataset['languages'] = array();
             for($i=0; $i<sizeof($values['languages']); $i++) {
-                $values['languages'][$i]['Checked'] = in_array($values['languages'][$i]['IdLanguage'], array_keys($values['languages_dataset'])) ? TRUE : FALSE;
+                $dataset['languages'][$values['languages'][$i]['IdLanguage']] = in_array($values['languages'][$i]['IdLanguage'], array_keys($dataset['languages_dataset'])) ? $values['languages'][$i]['Name'] : '';
             }
-            $values['id_catalog'] = $dsmeta->getParent();
+            $dataset['IDParent'] = $dsmeta->getParent();
             // Get Distributions
 
             $node = new Node($idNode);
@@ -466,27 +467,23 @@ class Action_managedataset extends ActionAbstract {
                 $tags[$key]['namespace'] = $namespace;
             }
 
-            $values["tags"] = json_encode($tags);
+            $values["tags"] = $tags;
             $values['distributions'] = $dstList;
-            $values['json_distributions'] = json_encode($dstList);
         }
         else {
-            $values['name'] = "";
-            $values['theme'] = "";
-            $values['periodicity'] = "";
-            $values['license'] = "";
-            $values['spatial'] = "";
-            $values['reference'] = "";
-            $values['issued'] = "--/--/--";
-            $values['modified'] = "--/--/--";
+            $dataset['issued'] = "--/--/--";
+            $dataset['modified'] = "--/--/--";
             $user = new User(XSession::get('userID'));
-            $values['publisher'] = $user->Get('Name');
-            $values['languages_dataset'] = array();
+            $dataset['publisher'] = $user->Get('Name');
+            $dataset['languages_dataset'] = array();
+            $dataset['languages'] = array();
             for($i=0; $i<sizeof($values['languages']); $i++) {
-                $values['languages'][$i]['Checked'] = FALSE;
+                $dataset['languages'][$values['languages'][$i]['IdLanguage']] = '';
+                $dataset['languages_dataset'][$values['languages'][$i]['IdLanguage']] = array('title' => '', 'description' => '');
             }
-            $values['distributions'] = array();
+            $dataset['distributions'] = array();
         }
+        $values['dataset'] = $dataset;
     }
 
 

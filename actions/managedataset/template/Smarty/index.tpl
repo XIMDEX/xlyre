@@ -24,16 +24,9 @@
 *}
 
 
-<form method="post" id='mdfdts_form' name="mdfdts" action="{$base_url}"
-    ng-controller="XLyreDatasetCtrl" 
-    ng-init="dataset.IDParent = '{$id_catalog}'; dataset.id = '{$id_dataset}'; defaultLanguage = '{$default_language}'"
-    ng-cloak
-    xim-languages='{$json_languages}'
-    xim-distributions='{$json_distributions}'
-    xim-tags='{$tags}'
-    xim-method="{$go_method}"
-    xim-action="{$action}"
-    novalidate>
+<form id='mdfdts_form' name="mdfdts" novalidate ng-cloak
+    ng-controller="XLyreManagedatasetCtrl" 
+    xim-init-options='{$options}'>
     <div class="action_header">
             <h2>#/submitLabel/#</h2>  
     </div>
@@ -49,7 +42,6 @@
         
                 <input type="text" name="name" id="name" maxlength="100" class="validable not_empty full-size" placeholder="{t}Name of your dataset{/t}"
                     ng-model="dataset.name"
-                    ng-init="dataset.name = '{$name}'"
                     required xim-alphanumeric>
             </div>
 
@@ -57,7 +49,7 @@
             <div class="editable_data col1_2">
                 <select name="" id="" class="language_selector js_language_selector" 
                         ng-model="selectedLanguage"
-                        ng-init="selectedLanguage = {$default_language}"
+                        ng-init="selectedLanguage = defaultLanguage"
                         ng-show="activeLanguages">
                     <option value="" 
                         ng-selected="!dataset.languages[selectedLanguage]" ng-disabled="!!selectedLanguage">
@@ -77,133 +69,92 @@
                 </div>
                
                 <div class="js_form_sections">
-                    {foreach from=$languages item=l}
-                        <div class="js_form_section" id="language_selector_{$l.IdLanguage}" 
-                            ng-show="selectedLanguage == {$l.IdLanguage} && dataset.languages.{$l.IdLanguage}">
-                            <p>
-                                <label for="languages_dataset[{$l.IdLanguage}][title]" class="label_title">{t}Dataset title{/t}</label>
-                                <input name="languages_dataset[{$l.IdLanguage}][title]" type="text" class="full_size"
-                                    ng-model="dataset.languages_dataset.{$l.IdLanguage}.title"
-                                    ng-init="dataset.languages_dataset.{$l.IdLanguage}.title = '{$languages_dataset[$l.IdLanguage].title}'">
-                            </p>
-                            <p>
-                                <label for="languages_dataset[{$l.IdLanguage}][description]"  class="label_title">{t}Dataset description{/t}</label>
-                                <textarea name="languages_dataset[{$l.IdLanguage}][description]" id="" cols="30" rows="9" class="full_size"
-                                    ng-model="dataset.languages_dataset.{$l.IdLanguage}.description"
-                                    ng-init="dataset.languages_dataset.{$l.IdLanguage}.description = '{$languages_dataset[$l.IdLanguage].description}'">
-                            </p>
-                                
+                    <div class="js_form_section" id="language_selector_#/l.IdLanguage/#"
+                        ng-repeat="l in languages"
+                        ng-init="dataset.languages_dataset[l.IdLanguage] = dataset.languages_dataset[l.IdLanguage] || {}"
+                        ng-show="selectedLanguage == l.IdLanguage && dataset.languages[l.IdLanguage]">
+                        <p>
+                            <label for="languages_dataset[#/l.IdLanguage/#][title]" class="label_title">{t}Dataset title{/t}</label>
+                            <input name="languages_dataset[#/l.IdLanguage/#][title]" id="languages_dataset[#/l.IdLanguage/#][description]" type="text" class="full_size"
+                                ng-model="dataset.languages_dataset[l.IdLanguage].title">
+                        </p>
+                        <p>
+                            <label for="languages_dataset[#/l.IdLanguage/#][description]"  class="label_title">{t}Dataset description{/t}</label>
+                            <textarea name="languages_dataset[#/l.IdLanguage/#][description]" id="languages_dataset[#/l.IdLanguage/#][description]" cols="30" rows="9" class="full_size"
+                                ng-model="dataset.languages_dataset[l.IdLanguage].description">
                             </textarea>
-                        </div>
-                    {/foreach}
+                        </p> 
+                    </div>
                 </div>
             </div>
             <div class="non_editable_data col1_2">
-                <p>
-                    <label for="theme_label"  class="label_title">{t}Theme{/t}</label>
-                    <select class="not_empty full_size" name="theme" id="theme" 
-                        ng-model="dataset.theme"
-                        ng-init="dataset.theme = '{$theme}' || '{$themes[0].id|gettext}'">
-                        {foreach from=$themes item=t}
-                            <option value='{$t.id|gettext}'>{$t.name|gettext}</option>
-                        {/foreach}
-                    </select>
-                </p>
-                <p>
-                    <label for="periodicity_label"  class="label_title">{t}Periodicity (in months){/t}</label>
-                    <select class="not_empty full_size" name="periodicity" id="periodicity"
-                        ng-model="dataset.periodicity"
-                        ng-init="dataset.periodicity = '{$periodicity}' || '{$periodicities[0].id|gettext}'">
-                        {foreach from=$periodicities item=p}
-                            <option value='{$p.id|gettext}'>{$p.name|gettext}</option>
-                        {/foreach}
-                    </select>
-                </p>
-                <p>
-                    <label for="license_label"  class="label_title">{t}License{/t}</label>
-                    <select class="not_empty full_size" name="license" id="license"
-                        ng-model="dataset.license"
-                        ng-init="dataset.license = '{$license}' || '{$licenses[0].id|gettext}'">
-                        {foreach from=$licenses item=l}
-                            <option value='{$l.id|gettext}'>{$l.name|gettext}</option>
-                        {/foreach}
-                    </select>
-                </p>
+                
+                <label for="theme_label"  class="label_title">{t}Theme{/t}</label>
+                <select class="not_empty full_size" name="theme" id="theme" 
+                    ng-model="dataset.theme"
+                    ng-init="dataset.theme = dataset.theme || options.themes[0].id"
+                    ng-options="theme.id as theme.name for theme in options.themes">
+                </select>
+            
+                <label for="periodicity_label"  class="label_title">{t}Periodicity (in months){/t}</label>
+                <select class="not_empty full_size" name="periodicity" id="periodicity" 
+                    ng-model="dataset.periodicity"
+                    ng-init="dataset.periodicity = dataset.periodicity || options.periodicities[0].id"
+                    ng-options="periodicity.id as periodicity.name for periodicity in options.periodicities">
+                </select>
+            
+                <label for="license_label"  class="label_title">{t}License{/t}</label>
+                <select class="not_empty full_size" name="license" id="license" 
+                    ng-model="dataset.license"
+                    ng-init="dataset.license = dataset.license || options.licenses[0].id"
+                    ng-options="license.id as license.name for license in options.licenses">
+                </select>
+                
                 <label for="spatial_label"  class="label_title">{t}Spatial{/t}</label>
-                <select class="not_empty full_size" name="spatial" id="spatial"
+                <select class="not_empty full_size" name="spatial" id="spatial" 
                     ng-model="dataset.spatial"
-                    ng-init="dataset.spatial = '{$spatial}' || '{$spatials[0].id|gettext}'">
-                    {foreach from=$spatials item=s}
-                        <option value='{$s.id|gettext}'>{$s.name|gettext}</option>
-                    {/foreach}
+                    ng-init="dataset.spatial = dataset.spatial || options.spatials[0].id"
+                    ng-options="spatial.id as spatial.name for spatial in options.spatials">
                 </select>
             </div>
         </div>
 
         <div class="col1-3 right dataset_info">
             <h4>{t}Dataset info{/t}</h4>
-               <!-- <div class="channel_selection">
-                <h3>{t}Channels{/t}</h3>
-                {if count($channels) > 0}
-                    {foreach from=$channels item=channel}
-                        <div class="channel-section">
-                            <input name='channels[]' type='checkbox' value='{$channel.IdChannel}' class="hidden-focus" id="{$channel.IdChannel}"/ ng-init="dataset.channel={$channel.IdChannel}">
-                            <label  class="icon checkbox-label reduced_label"  for="{$channel.IdChannel}">{$channel.Description|gettext}</label>
-                        </div>
-                    {/foreach}
-                    
-                {else}
-                    <p>{t}There are no channels associated to this catalog{/t}.</p>
-                {/if}
-            </div> -->
             <div class="languages-available"><h3>{t}Languages{/t}</h3>
-                {if count($languages) > 0}
-                    {foreach from=$languages item=language}
-                        <div class="languages-section">
-                            {if $language.Checked == true}
-                                <input name='languages[]' type='checkbox' value='{$language.IdLanguage}'  id='{$language.IdLanguage}' class="hidden-focus" 
-                                    ng-init="dataset.languages.{$language.IdLanguage} = '{$language.Name|gettext}'" ng-model="dataset.languages.{$language.IdLanguage}" 
-                                    ng-true-value="{$language.Name|gettext}" 
-                                    ng-false-value=""/>
-                            {else}
-                                <input name='languages[]' type='checkbox' value='{$language.IdLanguage}'  id='{$language.IdLanguage}' class="hidden-focus" 
-                                    ng-model="dataset.languages.{$language.IdLanguage}" 
-                                    ng-true-value="{$language.Name|gettext}" 
-                                    ng-false-value=""/>
-                            {/if}
-                            <label  for="{$language.IdLanguage}" class="icon checkbox-label reduced_label">{$language.Name|gettext}</label>
-                        </div>
-                    {/foreach}
-                {else}
-                    <p>{t}There are no languages associated to this catalog{/t}.</p>
-                {/if}
+                <div class="languages-section"
+                    ng-repeat="language in languages">
+                    <input name='languages[]' type='checkbox' id='#/language.IdLanguage/#' class="hidden-focus" 
+                        ng-model="dataset.languages[language.IdLanguage]" 
+                        ng-true-value="#/language.Name/#" 
+                        ng-false-value=""/>
+                    <label  for="#/language.IdLanguage/#" class="icon checkbox-label reduced_label">#/language.Name/#</label>
+                </div>
+                <p ng-if="!languages.length">{t}There are no languages associated to this catalog{/t}.</p>
             </div>
 
             <div class="reference_url">
                 <h3>
                     <label for="reference">{t}More Info Url{/t}</label>
                 </h3>
-                <span class="reference_tooltip" data-tooltip="{$reference}">
-                     <input type="url" name="reference" id="reference" maxlength="50" class="full_size validable" placeholder="{t}Reference{/t}"
-                ng-model="dataset.reference"
-                ng-init="dataset.reference='{$reference}'">
+                <span class="reference_tooltip" data-tooltip="#/reference/#">
+                    <input type="url" name="reference" id="reference" maxlength="50" class="full_size validable" placeholder="{t}Reference{/t}"
+                        ng-model="dataset.reference">
                 </span>
            
             </div>
 
-            <div class="creation_date"
-                ng-init="dataset.issued = '{$issued}'">
+            <div class="creation_date">
                 <h3>{t}Creation date{/t}</h3>
                 <p>#/dataset.issued/#</p>
             </div>
-            <div class="modification_date"
-                ng-init="dataset.modified = '{$modified}'">
+            <div class="modification_date">
                 <h3>{t}Modification date{/t}</h3>
                 <p>#/dataset.modified/#</p>
             </div>
             <div class="publicator">
                 <h3>{t}Publicated by{/t}</h3>
-                <p>{$publisher}</p>
+                <p>#/dataset.publisher/#</p>
             </div>
             
          
@@ -227,29 +178,27 @@
             </button>
             <xlyre-distribution ng-repeat="distribution in distributions"
                     xim-distribution="distribution"
-                    xim-default-language="{$default_language}"
+                    xim-default-language="defaultLanguage"
                     xim-active-languages="dataset.languages"
                     xim-nodeid="dataset.id"> 
             </xlyre-distribution>
                 
-    </div> 
-    <div class="tags" 
-        ng-show="dataset.id">
-        <h3 class="headline"><span>{t}Tags{/t}</span></h3>     
-        <ul class="xim-tagsinput-list">
-            <li class="xim-tagsinput-tag icon xim-tagsinput-type-#/tag.namespace.nemo/#" ng-repeat="tag in tags">
-                <span class="xim-tagsinput-text" data-tooltip="#/tag.namespace.uri/#">
-                #/tag.Name/#
-                </span>
-                <a ng-href="#/tag.namespace.uri/#" class="ontology_link" target="_blank">#/tag.namespace.type/#</a>
-            </li>
-        </ul>
-        <button type="button" class="add-button" id="manage-tags" ng-click="$emit('openAction',{literal}{name:'Manage Tags',nodeid:dataset.id,command:'setmetadata',module:'ximTAGS'}{/literal})" >
-                        {t}Add more tags{/t}
-        </button>
-
+        </div> 
+        <div class="tags" 
+            ng-show="dataset.id">
+            <h3 class="headline"><span>{t}Tags{/t}</span></h3>     
+            <ul class="xim-tagsinput-list">
+                <li class="xim-tagsinput-tag icon xim-tagsinput-type-#/tag.namespace.nemo/#" ng-repeat="tag in tags">
+                    <span class="xim-tagsinput-text" data-tooltip="#/tag.namespace.uri/#">
+                    #/tag.Name/#
+                    </span>
+                    <a ng-href="#/tag.namespace.uri/#" class="ontology_link" target="_blank">#/tag.namespace.type/#</a>
+                </li>
+            </ul>
+            <button type="button" class="add-button" id="manage-tags" 
+                ng-click="$emit('openAction',{literal}{name:'Manage Tags',nodeid:dataset.id,command:'setmetadata',module:'ximTAGS'}{/literal})" >
+                {t}Add more tags{/t}
+            </button>
+        </div>
     </div>
-
-    </div>
-
 </form>

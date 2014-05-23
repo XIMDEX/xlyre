@@ -22,16 +22,21 @@
  *  @author Ximdex DevTeam <dev@ximdex.com>
  *  @version $Revision$
  */
- if (angular.module('ximdex').notRegistred('XLyreDatasetCtrl')){
+if (angular.module('ximdex').notRegistred('XLyreManagedatasetCtrl')){
     angular.module('ximdex')
-        .controllerProvider.register('XLyreDatasetCtrl', ['$scope', '$attrs', 'xBackend', 'xTranslate', '$timeout', function($scope, $attrs, xBackend, xTranslate, $timeout){
+        .controllerProvider.register('XLyreManagedatasetCtrl', ['$scope', '$attrs', 'xBackend', 'xTranslate', '$timeout', function($scope, $attrs, xBackend, xTranslate, $timeout){
+            
             $scope.selectedLanguages = {};
-            $scope.languages = angular.fromJson($attrs.ximLanguages);
+            
+            if ($attrs.ximInitOptions) {
+                $scope.options = angular.fromJson($attrs.ximInitOptions);
 
-            if ($attrs.ximDistributions)
-                    $scope.distributions = angular.fromJson($attrs.ximDistributions);
-            if ($attrs.ximTags)
-                    $scope.tags = angular.fromJson($attrs.ximTags);
+                $scope.dataset = $scope.options.dataset;
+                $scope.languages = $scope.options.languages;
+                $scope.distributions = $scope.options.distributions;
+                $scope.tags = $scope.options.tags;
+                $scope.defaultLanguage = $scope.options.defaultLanguage;   
+            }
             
             $scope.$watch('dataset.languages', function(languages, oldLanguages){
                 $scope.activeLanguages = 0;
@@ -53,7 +58,7 @@
                 }
             });
 
-            $scope.method = $attrs.ximMethod;
+            $scope.method = $scope.options.go_method;
 
             $scope.newDistribution = function(){
                 $scope.distributions = $scope.distributions || [];
@@ -75,7 +80,7 @@
                             formData.languages.push(language);
                         }
                     }
-                    xBackend.sendFormData(formData, {action: $attrs.ximAction, method: $scope.method, id: dataset.id, IDParent: dataset.IDParent}, function(data){ 
+                    xBackend.sendFormData(formData, {action: $scope.options.action, method: $scope.method, id: dataset.id, IDParent: dataset.IDParent}, function(data){
                         if (!dataset.id && data && data.dataset && data.dataset.id) {   
                             $scope.method = 'updatedataset';
                             dataset.id = data.dataset.id;
@@ -104,7 +109,7 @@
                 }  
             }
         }]);
-    angular.module('ximdex').registerItem('XLyreDatasetCtrl');
+    angular.module('ximdex').registerItem('XLyreManagedatasetCtrl');
     
     angular.module('ximdex')
         .compileProvider.directive('xlyreDistribution', ['$window', 'xTranslate', function ($window, xTranslate) {
