@@ -388,7 +388,9 @@ class Action_managedataset extends ActionAbstract {
 
 
 	function loadResources() {
-        $this->addJs('/modules/xlyre/actions/managedataset/resources/js/index.js');
+        $this->addJs('/modules/xlyre/actions/managedataset/resources/js/xlyreDistribution.js');
+        $this->addJs('/modules/xlyre/actions/managedataset/resources/js/XManagedatasetCtrl.js');
+        $this->addJs('/modules/xlyre/actions/managedataset/resources/js/init.js');
         $this->addCss('/modules/xlyre/actions/managedataset/resources/css/style.css');
         $this->addCss('/xmd/style/jquery/ximdex_theme/widgets/tagsinput/tagsinput.css');
     }
