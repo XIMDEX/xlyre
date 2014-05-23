@@ -421,8 +421,8 @@ class Action_managedataset extends ActionAbstract {
             $dataset['spatial'] = $dsmeta->get("Spatial");
             $dataset['reference'] = $dsmeta->get("Reference");
             $format = str_replace("'", "", _("'m-d-Y H:i:s'"));
-            $dataset['issued'] = date($format, $dsmeta->get("Issued"));
-            $dataset['modified'] = date($format, $dsmeta->get("Modified"));
+            $dataset['issued'] = $dsmeta->get("Issued");
+            $dataset['modified'] = $dsmeta->get("Modified");
             $user = new User($dsmeta->get('Publisher'));
             $dataset['publisher'] = $user->Get('Name');
             $xlrml = new XlyreRelMetaLangs();
@@ -455,8 +455,8 @@ class Action_managedataset extends ActionAbstract {
                         "file" => $distro->get("Filename"),
                         "format" => $distro->get("MediaType"),
                         "size" => $distro->get("ByteSize"),
-                        "issued" => date($format_min, $distro->get("Issued")),
-                        "modified" => date($format_min, $distro->get("Modified")),
+                        "issued" => $distro->get("Issued"),
+                        "modified" => $distro->get("Modified"),
                         "languages" => $languages_dist_array,
                     );
                 }

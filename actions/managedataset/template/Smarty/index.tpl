@@ -144,15 +144,15 @@
            
             </div>
 
-            <div class="creation_date">
+            <div class="creation_date" ng-if="dataset.id">
                 <h3>{t}Creation date{/t}</h3>
-                <p>#/dataset.issued/#</p>
+                <p>#/dataset.issued*1000 | date:'dd-MM-yyyy hh:mm:ss'/#</p>
             </div>
-            <div class="modification_date">
+            <div class="modification_date" ng-if="dataset.id">
                 <h3>{t}Modification date{/t}</h3>
-                <p>#/dataset.modified/#</p>
+                <p>#/dataset.modified*1000 | date:'dd-MM-yyyy hh:mm:ss'/#</p>
             </div>
-            <div class="publicator">
+            <div class="publicator" ng-if="dataset.id">
                 <h3>{t}Publicated by{/t}</h3>
                 <p>#/dataset.publisher/#</p>
             </div>
