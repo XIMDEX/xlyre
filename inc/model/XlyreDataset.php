@@ -33,6 +33,7 @@ ModulesManager::file('/inc/model/XlyreSpatials.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyreRelMetaLangs.php', 'xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendistribution.inc', 'xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendatasetmetadata.inc', 'xlyre');
+ModulesManager::file('/inc/RelTagsNodes.inc', 'ximTAGS');
 
 class XlyreDataset extends XlyreDataset_ORM {
     
@@ -131,8 +132,15 @@ class XlyreDataset extends XlyreDataset_ORM {
         $stringxml = "<dataset>";
         $stringxml .= "<id>$this->IdDataset</id>";
         $stringxml .= "<identifier>$this->Identifier</identifier>";
-
+        $stringxml .= "<reference>$this->Reference</reference>";
+        
+        $theme = new XlyreThemes($this->Theme);
+        $theme_name = $theme->Get('Name');
+        $stringxml .= "<theme>$theme_name</theme>";
+        $stringxml .= $this->getTags();
+        
         $stringxml .= "<language>";
+        
         $xlrml = new XlyreRelMetaLangs();
         $language_dataset = $xlrml->find('Title, Description', "IdNode = %s AND IdLanguage = %s", array($this->IdDataset, $language), MULTI);
         foreach ($language_dataset as $ld) {
@@ -162,6 +170,7 @@ class XlyreDataset extends XlyreDataset_ORM {
             return $doc->saveXML();
         }
         else {
+            error_log($stringxml);
             return $stringxml;
         }
     }
@@ -263,6 +272,23 @@ class XlyreDataset extends XlyreDataset_ORM {
         
         return 10001;
 
+    }
+
+    private function getTags() {
+        $result = "";
+        if(ModulesManager::isEnabled('ximTAGS')){
+            $rtn= new RelTagsNodes();
+            $nodeTags=$rtn->getTags($this->IdDataset);
+            if(!empty($nodeTags)){
+                foreach($nodeTags as $tag){
+                    $xtags.=$tag['Name'].",";
+                }
+            }
+            $xtags=substr_replace($xtags,"",-1);
+            
+        }
+        $result = "<tags>".utf8_decode($xtags)."</tags>";
+        return $result;
     }
 
 }

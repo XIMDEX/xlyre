@@ -149,6 +149,64 @@ class XlyreOpenDataSet extends FolderNode{
 
 	 	return $out;
 	}
+        
+        public static function buildDatasetXml($idDataset){
+            $dataset = new XlyreDataset($idDataset);
+            $xlrml = new XlyreRelMetaLangs();
+            $i18n_dataset_values = $xlrml->find('IdLanguage', "IdNode = %s", array($idDataset), MONO);
+            foreach ($i18n_dataset_values as $i18n_value) {
+                $language = new Language($i18n_value);
+                $nodename = $dataset->get('Identifier');
+                $nodename_search = $nodename."-id".$language->get("IsoName");
+                unset($language);
+                $node = new Node();
+                $result = $node->find('IdNode', "IdParent = %s && IdNodeType = %s && Name = %s", array($idDataset, XlyreOpenDataSetMetadata::IDNODETYPE, $nodename_search), MONO);
+                unset($node);
+                if ($result) {
+                    #Update
+                    $node = new Node($result[0]);
+                    $node->update();
+                    $node->setContent($dataset->ToXml($i18n_value));
+                    $ok = true;
+                }
+                else {
+                    #Create
+                    $ch = new Channel();
+                    $html_ch = $ch->find('IdChannel', "name = %s", array('html'), MONO);
+                    $nt = new NodeType(XlyreOpenDataSetMetadata::IDNODETYPE);
+                    $node_search = new Node();
+                    $template_val = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s", array("rng-dataset.xml", NodetypeService::RNG_VISUAL_TEMPLATE), MONO);
+                    if ($template_val) {
+                        $data = array(
+                            'NODETYPENAME' => $nt->get('Name'),
+                            'NAME' => $nodename_search,
+                            'PARENTID' => $idDataset,
+                            'FORCENEW' => true,
+                            "CHILDRENS" => array (
+                                array ("NODETYPENAME" => "VISUALTEMPLATE", "ID" => $template_val[0]),
+                                array ("NODETYPENAME" => "CHANNEL", "ID" => $html_ch[0]),
+                                array ("NODETYPENAME" => "LANGUAGE", "ID" => $i18n_value),
+                            )
+                        );
+                        $nodetopublish = new XlyreBaseIO();
+                        $nodeid = $nodetopublish->build($data);
+                        if ($nodeid) {
+                            $node = new Node($nodeid);
+                            $node->setContent($dataset->ToXml($i18n_value));
+                            $ok = true;
+                        }
+                        else {
+                            #do something when it fails
+                            $ok = false;
+                        }
+                    }
+                    else {
+                        $ok = false;
+                    }
+                }
+            }
+            return $ok;
+        }
 
 
 }

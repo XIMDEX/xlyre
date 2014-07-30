@@ -75,6 +75,7 @@ class XlyreOpenDataSection extends SectionNode{
         return $catalog->add();
     }
 
+    
 
     /**
      * Check if Xlyre RNGs already exist
@@ -144,7 +145,146 @@ class XlyreOpenDataSection extends SectionNode{
         if ($result > 0) return true;
         else return false;
     }
+    
+    /**
+     * Create a Catalog metadata node for the current Catalog.
+     */
+    public static function buildCatalogXml($idCatalog) {
+        $ok = true;
+        $catalog = new XlyreCatalog($idCatalog);
+        $catalog_node = new Node($idCatalog);
 
+        $nodeLanguages = $catalog_node->getProperty('language', true);
+
+        foreach ($nodeLanguages as $idlang) {
+            $language = new Language($idlang);
+            $nodename = $catalog->get('Identifier');
+            $nodename_search = $nodename."-id".$language->get("IsoName");
+            unset($language);
+            $node = new Node();
+            $result = $node->find('IdNode', "IdParent = %s && IdNodeType = %s && Name = %s", array($idCatalog, XlyreOpenDataSectionMetadata::IDNODETYPE, $nodename_search), MONO);
+            unset($node);
+            if ($result) {
+                #Update
+                $node = new Node($result[0]);
+                $node->update();
+                $node->setContent($catalog->ToXml($idlang));
+            }
+            else {
+                #Create
+                $ch = new Channel();
+                $html_ch = $ch->find('IdChannel', "name = %s", array('html'), MONO);
+                $csv_ch = $ch->find('IdChannel', "name = %s", array('csv'), MONO);
+                $nt = new NodeType(XlyreOpenDataSectionMetadata::IDNODETYPE);
+                $node_search = new Node();
+                $template_val = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s", array("rng-catalog.xml", NodetypeService::RNG_VISUAL_TEMPLATE), MONO);
+                if ($template_val) {
+                    $data = array(
+                        'NODETYPENAME' => $nt->get('Name'),
+                        'NAME' => $nodename_search,
+                        'PARENTID' => $idCatalog,
+                        'FORCENEW' => true,
+                        "CHILDRENS" => array (
+                            array ("NODETYPENAME" => "VISUALTEMPLATE", "ID" => $template_val[0]),
+                            array ("NODETYPENAME" => "CHANNEL", "ID" => $html_ch[0]),
+                            array ("NODETYPENAME" => "CHANNEL", "ID" => $csv_ch[0]),
+                            array ("NODETYPENAME" => "LANGUAGE", "ID" => $idlang),
+                        )
+                    );
+                    $nodetopublish = new XlyreBaseIO();
+                    $nodeid = $nodetopublish->build($data);
+                    if ($nodeid) {
+                        $node = new Node($nodeid);
+                        $node->setContent($catalog->ToXml($idlang));
+                    }
+                    else {
+                        #do something when it fails
+                        $ok = false;
+                    }
+                }
+                else {
+                    $ok = false;
+                }
+            }
+        }
+
+        # Publish all datasets
+        $datasets = $catalog_node->GetChildren(XlyreOpenDataset::IDNODETYPE);
+        if ($datasets) {
+            foreach ($datasets as $dataset) {
+                $ok = $ok && XlyreOpenDataSet::buildDatasetXml($dataset);
+                
+            }
+        }
+
+        $ok = self::buildCatalogDcatXml($idCatalog) && $ok;
+
+        return $ok;    
+    }
+    
+    private static function buildCatalogDcatXml($idcatalog) {
+        $catalog = new XlyreCatalog($idcatalog);
+        $catalog_node = new Node($idcatalog);
+
+        $nodeLanguages = $catalog_node->getProperty('language', true);
+
+        // Get first language as default language (DCAT does not need any language)
+        // but Ximdex publication proccess needs one
+        if ($nodeLanguages) {
+            $idlang = $nodeLanguages[0];
+            $language = new Language($idlang);
+            $nodename = $catalog->get('Identifier');
+            $nodename_search = $nodename."-dcat";
+            unset($language);
+            $node = new Node();
+            $result = $node->find('IdNode', "IdParent = %s && IdNodeType = %s", array($idcatalog, XlyreOpenDataDCAT::IDNODETYPE), MONO);
+            unset($node);
+            if ($result) {
+                #Update
+                $node = new Node($result[0]);
+                $node->update();
+                $node->setContent($catalog->ToRdf());
+                $ok = true;
+            }
+            else {
+                #Create
+                $ch = new Channel();
+                $dcat_ch = $ch->find('IdChannel', "name = %s", array('dcat'), MONO);
+                $nt = new NodeType(XlyreOpenDataDCAT::IDNODETYPE);
+                $node_search = new Node();
+                $template_val = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s", array("rng-dcat.xml", NodetypeService::RNG_VISUAL_TEMPLATE), MONO);
+                if ($template_val) {
+                    $data = array(
+                        'NODETYPENAME' => $nt->get('Name'),
+                        'NAME' => $nodename_search,
+                        'PARENTID' => $idcatalog,
+                        'FORCENEW' => true,
+                        "CHILDRENS" => array (
+                            array ("NODETYPENAME" => "VISUALTEMPLATE", "ID" => $template_val[0]),
+                            array ("NODETYPENAME" => "CHANNEL", "ID" => $dcat_ch[0]),
+                            array ("NODETYPENAME" => "LANGUAGE", "ID" => $idlang),
+                        )
+                    );
+                    $nodetopublish = new XlyreBaseIO();
+                    $nodeid = $nodetopublish->build($data);
+                    if ($nodeid) {
+                        $node = new Node($nodeid);
+                        $node->setContent($catalog->ToRdf());
+                        $ok = true;
+                    }
+                    else {
+                        #do something when it fails
+                        $ok = false;
+                    }
+                }
+                else {
+                    $ok = false;
+                }
+            }
+        }
+
+        return $ok;
+    }
 }
 
 ?>
