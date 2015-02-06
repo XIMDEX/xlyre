@@ -23,6 +23,7 @@
  *  @author Ximdex DevTeam <dev@ximdex.com>
  *  @version $Revision$
  */
+use Ximdex\Services\NodeType as NodetypeService;
 
 ModulesManager::file('/inc/model/XlyreCatalog.php', 'xlyre');
 
@@ -150,6 +151,7 @@ class XlyreOpenDataSection extends SectionNode{
      * Create a Catalog metadata node for the current Catalog.
      */
     public static function buildCatalogXml($idCatalog) {
+        XMD_Log::info("buildCatalogXml - idCatalog:$idCatalog");
         $ok = true;
         $catalog = new XlyreCatalog($idCatalog);
         $catalog_node = new Node($idCatalog);
@@ -157,6 +159,7 @@ class XlyreOpenDataSection extends SectionNode{
         $nodeLanguages = $catalog_node->getProperty('language', true);
 
         foreach ($nodeLanguages as $idlang) {
+        XMD_Log::info("buildCatalogXml - idlang:$idlang");
             $language = new Language($idlang);
             $nodename = $catalog->get('Identifier');
             $nodename_search = $nodename."-id".$language->get("IsoName");
@@ -210,8 +213,10 @@ class XlyreOpenDataSection extends SectionNode{
 
         # Publish all datasets
         $datasets = $catalog_node->GetChildren(XlyreOpenDataset::IDNODETYPE);
+        XMD_Log::info("buildCatalogXml - datasets: " . print_r($datasets,true));
         if ($datasets) {
             foreach ($datasets as $dataset) {
+                XMD_Log::info("buildCatalogXml - this dataset: $dataset");
                 $ok = $ok && XlyreOpenDataSet::buildDatasetXml($dataset);
                 
             }

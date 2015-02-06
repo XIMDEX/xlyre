@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  \details &copy; 2011  Open Ximdex Evolution SL [http://www.ximdex.org]
  *
@@ -23,53 +24,48 @@
  *  @author Ximdex DevTeam <dev@ximdex.com>
  *  @version $Revision$
  */
-
 ModulesManager::file('/actions/addsectionnode/Action_addsectionnode.class.php');
-ModulesManager::file('/services/NodetypeService.class.php');
-ModulesManager::file('/inc/nodetypes/xlyreopendatasection.inc','xlyre');
-ModulesManager::file('/inc/nodetypes/xlyreopendataset.inc','xlyre');
-ModulesManager::file('/inc/io/XlyreBaseIO.class.php','xlyre');
 
 class Action_createcatalog extends Action_addsectionnode {
 
-	function index(){
+    function index() {
         $this->loadResources();
-		$values=$this->loadValues();
-        $values['go_method']='addcatalog';
+        $values = $this->loadValues();
+        $values['go_method'] = 'addcatalog';
         $this->render($values, null, 'default-3.0.tpl');
-	}
+    }
 
-	function addcatalog(){
-		$nodeID = $this->request->getParam('nodeid');
-		$datasets = $this->request->getParam('datasets');        
-		$name = $this->request->getParam('catalogName');
-		$langidlst = $this->request->getParam('langidlst');
-		$catalog = new Node();
+    function addcatalog() {
+        $nodeID = $this->request->getParam('nodeid');
+        $datasets = $this->request->getParam('datasets');
+        $name = $this->request->getParam('catalogName');
+        $langidlst = $this->request->getParam('langidlst');
+        $catalog = new Node();
 
-		$data = array(
-                    'NODETYPENAME' => 'OpenDataSection',
-                    'NAME' => $name,
-                    'PARENTID' => $nodeID,
-                    'FORCENEW' => true
-                    );  
+        $data = array(
+            'NODETYPENAME' => 'OpenDataSection',
+            'NAME' => $name,
+            'PARENTID' => $nodeID,
+            'FORCENEW' => true
+        );
 
         $baseio = new XlyreBaseIO();
         $id = $baseio->build($data);
-        
-                if ($id > 0) {
-                    $nt = new NodeType(XlyreOpenDataSet::IDNODETYPE);
-                    foreach ($datasets as $datasetName) {
-                        $datasetData = array(
-                            'NODETYPENAME' => $nt->get('Name'),
-                            'NAME' => $datasetName,
-                            'PARENTID' => $id,
-                            'THEME' => 0,
-                            'PERIODICITY' => 0,
-                            'LICENSE' => 0,
-                            'SPATIAL' => 0,
-                            'REFERENCE' => '',
-                        ); 
-                $baseio->build($datasetData); 
+
+        if ($id > 0) {
+            $nt = new NodeType(XlyreOpenDataSet::IDNODETYPE);
+            foreach ($datasets as $datasetName) {
+                $datasetData = array(
+                    'NODETYPENAME' => $nt->get('Name'),
+                    'NAME' => $datasetName,
+                    'PARENTID' => $id,
+                    'THEME' => 0,
+                    'PERIODICITY' => 0,
+                    'LICENSE' => 0,
+                    'SPATIAL' => 0,
+                    'REFERENCE' => '',
+                );
+                $baseio->build($datasetData);
             }
 
             // Creating Licenses subfolder in links folder
@@ -77,13 +73,12 @@ class Action_createcatalog extends Action_addsectionnode {
             $projectnode = new Node($catalognode->getProject());
             $folder = $projectnode->getChildren(NodetypeService::LINK_MANAGER);
             $this->_createLicenseLinksFolder($folder[0]);
-
         }
 
-		if (!($id > 0)) {
+        if (!($id > 0)) {
             $this->messages->mergeMessages($baseio->messages);
             $this->messages->add(_('Operation could not be successfully completed'), MSG_TYPE_ERROR);
-        }else{
+        } else {
             $this->messages->add(sprintf(_('%s has been successfully created'), $name), MSG_TYPE_NOTICE);
         }
 
@@ -94,20 +89,19 @@ class Action_createcatalog extends Action_addsectionnode {
         );
 
         $this->sendJSON($values);
-	}
+    }
 
-	function loadResources(){
-                $this->addJs('/modules/xlyre/actions/createcatalog/resources/js/index.js');
-                $this->addCss('/actions/addsectionnode/resources/css/style.css');
-                $this->addCss('/modules/xlyre/actions/createcatalog/resources/css/style.css');
+    function loadResources() {
+        $this->addJs('/modules/xlyre/actions/createcatalog/resources/js/index.js');
+        $this->addCss('/actions/addsectionnode/resources/css/style.css');
+        $this->addCss('/modules/xlyre/actions/createcatalog/resources/css/style.css');
+    }
+
+    function _getDescription($nodetype) {
+        switch ($nodetype) {
+            case "4001": return "A dataset should be for a single data in several formats.";
         }
-
-	function _getDescription($nodetype){
-                switch($nodetype){
-                        case "4001": return "A dataset should be for a single data in several formats.";
-		}
-	}
-
+    }
 
     private function _createLicenseLinksFolder($links_id) {
         $nodeaux = new Node();
@@ -127,16 +121,13 @@ class Action_createcatalog extends Action_addsectionnode {
             'NAME' => $link_name,
             'PARENTID' => $idFolder,
             'IDSTATE' => 0,
-            'CHILDRENS' => array (
-                array ('URL' => $link_url),
-                array ('DESCRIPTION' => $link_description)
+            'CHILDRENS' => array(
+                array('URL' => $link_url),
+                array('DESCRIPTION' => $link_description)
             )
-        );    
+        );
         $bio = new baseIO();
         $result = $bio->build($data);
     }
-    
 
 }
-
-?>

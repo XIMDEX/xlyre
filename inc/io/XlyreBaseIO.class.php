@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  \details &copy; 2011  Open Ximdex Evolution SL [http://www.ximdex.org]
  *
@@ -23,168 +24,160 @@
  *  @author Ximdex DevTeam <dev@ximdex.com>
  *  @version $Revision: 8703 $
  */
+use Ximdex\Modules\Config;
+
 ModulesManager::file('/inc/io/BaseIOConstants.php');
 ModulesManager::file('/inc/io/BaseIO.class.php');
 ModulesManager::file('/inc/io/XlyreBaseIOConstants.class.php', "xlyre");
-
 
 /**
  * BaseIO for the Xlyre module.
  * All about create new nodes is here.
  */
-class XlyreBaseIO extends BaseIO{
+class XlyreBaseIO extends BaseIO {
 
-	/**
-	 * Creates an object desribed in data array
-	 *
-	 * @param array $data Data of the object to create
-	 * @param int $idUser Optional param, if it is not specified, the identifier is obtained from the session user identifier
-	 * @return identifier of the inserted node or a state specifying why it was not inserted
-	 */
-	protected function createNode($data, $metaType, $nodeTypeClass, $nodeTypeName){
-		if (array_key_exists($nodeTypeClass, XlyreBaseIOConstants::$metaTypesArray)) {
-			$metaTypesArray = XlyreBaseIOConstants::$metaTypesArray;
-			$metaType = $metaTypesArray[$nodeTypeClass];
-		}
-		$instance = new Node();
-		switch ($metaType) {
-			case 'OPENDATASECTION':
-				$idNode = $instance->CreateNode($data['NAME'], $data['PARENTID'], XlyreOpenDataSection::IDNODETYPE, NULL, array(false));
-				break;
-			case 'OPENDATASET':
-				$idNode = $instance->CreateNode($data['NAME'], $data['PARENTID'], XlyreOpenDataSet::IDNODETYPE, NULL, array(false), $data["THEME"], $data["PERIODICITY"], $data["LICENSE"], $data["SPATIAL"], $data["REFERENCE"]);
-				break;
-			case 'OPENDISTRIBUTION':
-				$idNode = $instance->CreateNode($data['NAME'], $data['PARENTID'], XlyreOpenDistribution::IDNODETYPE, NULL,array(false), $data["FILENAME"], $data["FILESIZE"]);
-				if ($idNode) {
-					// Creating the phisical file
-					$node = new Node($idNode);
-					$node->setContent(FsUtils::file_get_contents($data['TMPSRC']));
-				}
-				break;
-			case "XMLDOCUMENTNODE":			
-				$idNode = parent::createNode($data, $metaType, $nodeTypeClass, $nodeTypeName);
-				break;
-			default:
-				break;
-		}
-		if (!($idNode > 0)) {
-			return ERROR_INCORRECT_DATA;
-		}
-		return $idNode;
-	}
+    /**
+     * Creates an object desribed in data array
+     *
+     * @param array $data Data of the object to create
+     * @param int $idUser Optional param, if it is not specified, the identifier is obtained from the session user identifier
+     * @return identifier of the inserted node or a state specifying why it was not inserted
+     */
+    protected function createNode($data, $metaType, $nodeTypeClass, $nodeTypeName) {
+        if (array_key_exists($nodeTypeClass, XlyreBaseIOConstants::$metaTypesArray)) {
+            $metaTypesArray = XlyreBaseIOConstants::$metaTypesArray;
+            $metaType = $metaTypesArray[$nodeTypeClass];
+        }
+        $instance = new Node();
+        switch ($metaType) {
+            case 'OPENDATASECTION':
+                $idNode = $instance->CreateNode($data['NAME'], $data['PARENTID'], XlyreOpenDataSection::IDNODETYPE, NULL, array(false));
+                break;
+            case 'OPENDATASET':
+                $idNode = $instance->CreateNode($data['NAME'], $data['PARENTID'], XlyreOpenDataSet::IDNODETYPE, NULL, array(false), $data["THEME"], $data["PERIODICITY"], $data["LICENSE"], $data["SPATIAL"], $data["REFERENCE"]);
+                break;
+            case 'OPENDISTRIBUTION':
+                $idNode = $instance->CreateNode($data['NAME'], $data['PARENTID'], XlyreOpenDistribution::IDNODETYPE, NULL, array(false), $data["FILENAME"], $data["FILESIZE"]);
+                if ($idNode) {
+                    // Creating the phisical file
+                    $node = new Node($idNode);
+                    $node->setContent(FsUtils::file_get_contents($data['TMPSRC']));
+                }
+                break;
+            case "XMLDOCUMENTNODE":
+                $idNode = parent::createNode($data, $metaType, $nodeTypeClass, $nodeTypeName);
+                break;
+            default:
+                break;
+        }
+        if (!($idNode > 0)) {
+            return ERROR_INCORRECT_DATA;
+        }
+        return $idNode;
+    }
 
+    /**
+     * Updates an object desribed in data array
+     *
+     * @param array $data Data of the object to update
+     * @param int $idUser Optional param, if it is not specified, the identifier is obtained from the session user identifier
+     * @return identifier of the updated node or a state specifying why it was not updated
+     */
+    public function updateNode($data, $nodeTypeClass) {
+        if (array_key_exists($nodeTypeClass, XlyreBaseIOConstants::$metaTypesArray)) {
+            $metaTypesArray = XlyreBaseIOConstants::$metaTypesArray;
+            $metaType = $metaTypesArray[$nodeTypeClass];
+        }
 
-	/**
-	 * Updates an object desribed in data array
-	 *
-	 * @param array $data Data of the object to update
-	 * @param int $idUser Optional param, if it is not specified, the identifier is obtained from the session user identifier
-	 * @return identifier of the updated node or a state specifying why it was not updated
-	 */
-	public function updateNode($data, $nodeTypeClass){
-		if (array_key_exists($nodeTypeClass, XlyreBaseIOConstants::$metaTypesArray)) {
-			$metaTypesArray = XlyreBaseIOConstants::$metaTypesArray;
-			$metaType = $metaTypesArray[$nodeTypeClass];
-		}
+        switch ($metaType) {
+            case 'OPENDATASECTION':
+                # code...
+                break;
+            case 'OPENDATASET':
+                $nodeDataset = new Node($data["IDNODE"]);
+                $nodeDataset->set("Name", $data['NAME']);
+                $ok = $nodeDataset->update();
+                if ($ok) {
+                    $idNode = $nodeDataset->class->updateNode($data["IDNODE"], $data['NAME'], $data["THEME"], $data["PERIODICITY"], $data["LICENSE"], $data["SPATIAL"], $data["REFERENCE"]);
+                    if (!($idNode > 0)) {
+                        return ERROR_INCORRECT_DATA;
+                    }
+                    return $idNode;
+                } else {
+                    return ERROR_INCORRECT_DATA;
+                }
+                break;
+            case 'OPENDISTRIBUTION':
+                $nodeDistribution = new Node($data["IDNODE"]);
 
-		switch ($metaType) {
-			case 'OPENDATASECTION':
-				# code...
-				break;
-			case 'OPENDATASET':
-				$nodeDataset = new Node($data["IDNODE"]);
-				$nodeDataset->set("Name", $data['NAME']);
-				$ok = $nodeDataset->update();
-				if ($ok) {
-					$idNode = $nodeDataset->class->updateNode($data["IDNODE"], $data['NAME'], $data["THEME"], $data["PERIODICITY"], $data["LICENSE"], $data["SPATIAL"], $data["REFERENCE"]);
-					if (!($idNode > 0)) {
-						return ERROR_INCORRECT_DATA;
-					}
-					return $idNode;
-				}
-				else {
-					return ERROR_INCORRECT_DATA;
-				}
-				break;
-			case 'OPENDISTRIBUTION':
-				$nodeDistribution = new Node($data["IDNODE"]);
+                // We delete old file before uploading new one
+                if (!is_null($data['TMPSRC'])) {
+                    $absPath = Config::GetValue("AppRoot") . Config::GetValue("NodeRoot");
+                    $deletablePath = $nodeDistribution->class->GetPathList();
+                    FsUtils::delete($absPath . $deletablePath);
+                }
 
-				// We delete old file before uploading new one
-				if (!is_null($data['TMPSRC'])) {
-					$absPath = Config::GetValue("AppRoot") . Config::GetValue("NodeRoot");
-					$deletablePath = $nodeDistribution->class->GetPathList();
-					FsUtils::delete($absPath . $deletablePath);
-				}
+                $nodeDistribution->set("Name", $data['NAME']);
+                $ok = $nodeDistribution->update();
+                if ($ok) {
+                    $idNode = $nodeDistribution->class->updateNode($data["IDNODE"], $data['NAME'], $data["FILENAME"], $data["FILESIZE"]);
+                    if (!($idNode > 0)) {
+                        return ERROR_INCORRECT_DATA;
+                    } else {
+                        if (!is_null($data['TMPSRC'])) {
+                            // Updating the phisical file
+                            $nodeDistribution->setContent(FsUtils::file_get_contents($data['TMPSRC']));
+                        }
+                    }
+                    return $idNode;
+                } else {
+                    return ERROR_INCORRECT_DATA;
+                }
+                break;
+            default:
+                # code...
+                break;
+        }
+    }
 
-				$nodeDistribution->set("Name", $data['NAME']);
-				$ok = $nodeDistribution->update();
-				if ($ok) {
-					$idNode = $nodeDistribution->class->updateNode($data["IDNODE"], $data['NAME'], $data["FILENAME"], $data["FILESIZE"]);
-					if (!($idNode > 0)) {
-						return ERROR_INCORRECT_DATA;
-					}
-					else {
-						if (!is_null($data['TMPSRC'])) {
-							// Updating the phisical file
-							$nodeDistribution->setContent(FsUtils::file_get_contents($data['TMPSRC']));
-						}
-					}
-					return $idNode;
-				}
-				else {
-					return ERROR_INCORRECT_DATA;
-				}
-				break;
-			default:
-				# code...
-				break;
-		}
-	}
-
-
-	public static function get_mime_type($file) {
+    public static function get_mime_type($file) {
         // our list of mime types
         $mime_types = array(
-                "pdf" => "application/pdf",
-                "exe" => "application/octet-stream",
-                "zip" => "application/zip",
-                "docx" => "application/msword",
-                "doc" => "application/msword",
-                "xls" => "application/vnd.ms-excel",
-                "ppt" => "application/vnd.ms-powerpoint",
-                "gif" => "image/gif",
-                "png" => "image/png",
-                "jpeg" => "image/jpg",
-                "jpg" => "image/jpg",
-                "mp3" => "audio/mpeg",
-                "wav" => "audio/x-wav",
-                "mpeg" => "video/mpeg",
-                "mpg" => "video/mpeg",
-                "mpe" => "video/mpeg",
-                "mov" => "video/quicktime",
-                "avi" => "video/x-msvideo",
-                "3gp" => "video/3gpp",
-                "css" => "text/css",
-                "jsc" => "application/javascript",
-                "js" => "application/javascript",
-                "php" => "text/html",
-                "htm" => "text/html",
-                "html" => "text/html",
-                "json" => "application/json",
-                "geojson" => "application/json",
-                "rdf" => "application/rdf+xml",
-                "csv" => "text/csv",
-                "tsv" => "text/tab-separated-values",
-                "tar" => "application/x-tar",
-                "txt" => "text/plain",
+            "pdf" => "application/pdf",
+            "exe" => "application/octet-stream",
+            "zip" => "application/zip",
+            "docx" => "application/msword",
+            "doc" => "application/msword",
+            "xls" => "application/vnd.ms-excel",
+            "ppt" => "application/vnd.ms-powerpoint",
+            "gif" => "image/gif",
+            "png" => "image/png",
+            "jpeg" => "image/jpg",
+            "jpg" => "image/jpg",
+            "mp3" => "audio/mpeg",
+            "wav" => "audio/x-wav",
+            "mpeg" => "video/mpeg",
+            "mpg" => "video/mpeg",
+            "mpe" => "video/mpeg",
+            "mov" => "video/quicktime",
+            "avi" => "video/x-msvideo",
+            "3gp" => "video/3gpp",
+            "css" => "text/css",
+            "jsc" => "application/javascript",
+            "js" => "application/javascript",
+            "php" => "text/html",
+            "htm" => "text/html",
+            "html" => "text/html",
+            "json" => "application/json",
+            "geojson" => "application/json",
+            "rdf" => "application/rdf+xml",
+            "csv" => "text/csv",
+            "tsv" => "text/tab-separated-values",
+            "tar" => "application/x-tar",
+            "txt" => "text/plain",
         );
-        $extension = strtolower(end(explode('.',$file)));
+        $extension = strtolower(end(explode('.', $file)));
         return $mime_types[$extension];
-	}
-
+    }
 
 }
-
-?>
-

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  \details &copy; 2011  Open Ximdex Evolution SL [http://www.ximdex.org]
  *
@@ -23,26 +24,24 @@
  *  @author Ximdex DevTeam <dev@ximdex.com>
  *  @version $Revision$
  */
-
 ModulesManager::file('/inc/model/orm/XlyreCatalog_ORM.class.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyreDataset.php', 'xlyre');
-ModulesManager::file('/inc/nodetypes/xlyreopendatasectionmetadata.inc', 'xlyre');
+ModulesManager::file('/inc/nodetypes/xlyreopendatasectionmetadata.php', 'xlyre');
 
 class XlyreCatalog extends XlyreCatalog_ORM {
-    
+
     /**
      * Get all datasets for current Catalog
      * @return array Array with dataset object for every dataset in the current Catalog.
      */
-    public function getDatasets(){
-    	$result = array();
-    	if ($this->get("IdCatalog")){
-    		$dataset = new XlyreDataset();
-    		return $dataset->getByCatalog($this->get("IdCatalog"));    		
-    	}
-    	return $result;
+    public function getDatasets() {
+        $result = array();
+        if ($this->get("IdCatalog")) {
+            $dataset = new XlyreDataset();
+            return $dataset->getByCatalog($this->get("IdCatalog"));
+        }
+        return $result;
     }
-
 
     /**
      * Export catalog info to its XML format
@@ -53,7 +52,7 @@ class XlyreCatalog extends XlyreCatalog_ORM {
     public function ToXml($language = 0, $exportdomdoc = false) {
         $format = _('m-d-Y');
         $stringxml = "<catalog>";
-        $stringxml .= "<identifier>".$this->Identifier."</identifier>";
+        $stringxml .= "<identifier>" . $this->Identifier . "</identifier>";
         $issued_date = date($format, $this->Issued);
         $stringxml .= "<issued>$issued_date</issued>";
         $modified_date = date($format, $this->Modified);
@@ -71,19 +70,16 @@ class XlyreCatalog extends XlyreCatalog_ORM {
             $doc = new DOMDocument();
             $doc->loadXML($stringxml);
             return $doc->saveXML();
-        }
-        else {
+        } else {
             return $stringxml;
         }
     }
-
 
     /**
      * Export catalog info to its RDF format
      * @return string A string that contains RDF/XML file
      */
     public function ToRdf() {
-        
         $node = new Node($this->IdCatalog);
 
         $childrens = $node->GetChildren(XlyreOpenDataSectionMetadata::IDNODETYPE);
@@ -99,15 +95,14 @@ class XlyreCatalog extends XlyreCatalog_ORM {
         $stringrdf .= " xmlns:rdfs='http://www.w3.org/2000/01/rdf-schema#'";
         $stringrdf .= " xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'>";
 
-        $stringrdf .= "<dcat:Catalog rdf:about='@@@RMximdex.pathtoabs(".$childrens[0].",".$defaultPublicationChannel.")@@@'>";
+        $stringrdf .= "<dcat:Catalog rdf:about='@@@RMximdex.pathtoabs(" . $childrens[0] . "," . $defaultPublicationChannel . ")@@@'>";
 
-        $stringrdf .= "<dct:identifier>@@@RMximdex.pathtoabs(".$childrens[0].",".$defaultPublicationChannel.")@@@</dct:identifier>";
+        $stringrdf .= "<dct:identifier>@@@RMximdex.pathtoabs(" . $childrens[0] . "," . $defaultPublicationChannel . ")@@@</dct:identifier>";
 
         # Add these lines for each language (not implemented for catalog yet)
         // <dct:title xml:lang='es'>Title</dct:title>
         // <dct:description xml:lang='es'>Decription</dct:description>
         // <dc:language>IsoName</dc:language>
-        
         # Add these props (not implemented for catalog yet)
         // <dct:publisher rdf:resource="http://" />
         // <dct:extent>
@@ -120,11 +115,11 @@ class XlyreCatalog extends XlyreCatalog_ORM {
         // <dct:spatial rdf:resource="http://datos.gob.es/recurso/sector-publico/territorio/pais/Espana" />
         // <dcat:themeTaxonomy rdf:resource="http://datos.gob.es/kos/sector-publico/sector/" />
         // <dct:license rdf:resource="https://sede.minetur.gob.es/es-ES/Paginas/aviso.aspx#uso" />
-        
+
         $format = 'Y-m-d\TH:i:s\Z';
-        $stringrdf .= "<dct:issued rdf:datatype='http://www.w3.org/2001/XMLSchema#dateTime'>".date($format, $this->Issued)."</dct:issued>";
-        $stringrdf .= "<dct:modified rdf:datatype='http://www.w3.org/2001/XMLSchema#dateTime'>".date($format, $this->Modified)."</dct:modified>";
-        $stringrdf .= "<foaf:homepage rdf:resource='@@@RMximdex.sectionpathabs(".$this->IdCatalog.")@@@' />";
+        $stringrdf .= "<dct:issued rdf:datatype='http://www.w3.org/2001/XMLSchema#dateTime'>" . date($format, $this->Issued) . "</dct:issued>";
+        $stringrdf .= "<dct:modified rdf:datatype='http://www.w3.org/2001/XMLSchema#dateTime'>" . date($format, $this->Modified) . "</dct:modified>";
+        $stringrdf .= "<foaf:homepage rdf:resource='@@@RMximdex.sectionpathabs(" . $this->IdCatalog . ")@@@' />";
 
         $node = new Node($this->IdCatalog);
         $datasets = $node->GetChildren(XlyreOpenDataset::IDNODETYPE);
@@ -139,13 +134,8 @@ class XlyreCatalog extends XlyreCatalog_ORM {
         return $stringrdf;
     }
 
-
-    private function getDefaultPublicationChannel(){
-        
+    private function getDefaultPublicationChannel() {
         return 10001;
-
     }
 
-    
 }
-?>

@@ -2,26 +2,26 @@
 
 -- New Nodetypes
 LOCK TABLES `NodeTypes` WRITE;
-INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4000, 'OpenDataSection', 'xlyreopendatasection', 'catalog_xlyre.png', 'Open Data Section', 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, "xlyre");
-INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4001, 'OpenDataDataset', 'xlyreopendataset', 'dataset_xlyre.png', 'Open Data Dataset', 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, "xlyre");
-INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`, `IsHidden`) VALUES (4002, 'OpenDataDistribution', 'xlyreopendistribution', 'binary_file.png', 'Open Data Distribution', 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, "xlyre", 1);
+INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4000, 'OpenDataSection', 'xlyreopendatasection', 'catalog_xlyre.png', 'Open Data Section', 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 'xlyre');
+INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4001, 'OpenDataDataset', 'xlyreopendataset', 'dataset_xlyre.png', 'Open Data Dataset', 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 'xlyre');
+INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`, `IsHidden`) VALUES (4002, 'OpenDataDistribution', 'xlyreopendistribution', 'binary_file.png', 'Open Data Distribution', 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 'xlyre', 1);
 INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`) VALUES (4003, 'OpenDataConfig', 'root', 'modulesconfig.png', 'Xlyre Configuration', 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, NULL);
-INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`, `IsHidden`) VALUES (4004, 'OpenDataSectionMetadata', 'xlyreopendatasectionmetadata', 'catalog_xlyre.png', 'Open Data Section to Publish', 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, "xlyre", 1);
-INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`, `IsHidden`) VALUES (4005, 'OpenDataDatasetMetadata', 'xlyreopendatasetmetadata', 'dataset_xlyre.png', 'Open Data Dataset to Publish', 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, "xlyre", 1);
-INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`, `IsHidden`) VALUES (4006, 'OpenDataDCAT', 'xlyreopendatadcat', 'binary_file.png', 'Open Data DCAT', 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, "xlyre", 1);
+INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`, `IsHidden`) VALUES (4004, 'OpenDataSectionMetadata', 'xlyreopendatasectionmetadata', 'catalog_xlyre.png', 'Open Data Section to Publish', 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 'xlyre', 1);
+INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`, `IsHidden`) VALUES (4005, 'OpenDataDatasetMetadata', 'xlyreopendatasetmetadata', 'dataset_xlyre.png', 'Open Data Dataset to Publish', 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 'xlyre', 1);
+INSERT INTO `NodeTypes` (`IdNodeType`, `Name`, `Class`, `Icon`, `Description`, `IsRenderizable`, `HasFSEntity`, `CanAttachGroups`, `IsSection`, `IsFolder`, `IsVirtualFolder`, `IsPlainFile`, `IsStructuredDocument`, `IsPublicable`, `CanDenyDeletion`, `System`, `Module`, `IsHidden`) VALUES (4006, 'OpenDataDCAT', 'xlyreopendatadcat', 'binary_file.png', 'Open Data DCAT', 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 'xlyre', 1);
 UNLOCK TABLES;
 
 
 -- New Nodes
 LOCK TABLES `Nodes` WRITE;
-INSERT INTO `Nodes` (`IdNode`, `IdParent`, `IdNodeType`, `Name`, `IdState`, `BlockTime`, `BlockUser`, `CreationDate`, `ModificationDate`, `Description`, `SharedWorkflow`, `Path`) VALUES (14, 2, 4003, 'Xlyre manager', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '/Ximdex/Control center');
+INSERT INTO `Nodes` (`IdNode`, `IdParent`, `IdNodeType`, `Name`, `IdState`, `BlockTime`, `BlockUser`, `CreationDate`, `ModificationDate`, `Description`, `SharedWorkflow`, `Path`) VALUES (11000, 2, 4003, 'Xlyre manager', 7, NULL, NULL, NULL, NULL, NULL, NULL, '/Ximdex/Control center');
 UNLOCK TABLES;
 
 -- Ximdex Path for Settings
 LOCK TABLES `FastTraverse` WRITE;
-INSERT INTO FastTraverse VALUES (1,14,2);
-INSERT INTO FastTraverse VALUES (2,14,1);
-INSERT INTO FastTraverse VALUES (14,14,0);
+INSERT INTO FastTraverse VALUES (1, 11000, 2);
+INSERT INTO FastTraverse VALUES (2, 11000, 1);
+INSERT INTO FastTraverse VALUES (11000, 11000, 0);
 UNLOCK TABLES;
 
 
@@ -50,29 +50,30 @@ UNLOCK TABLES;
 
 -- Actions
 LOCK TABLES `Actions` WRITE;
-INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7501, 4000 ,"Delete Catalog", "deletecatalog", "delete_section.png","It deletes the current Open Data Catalog", 97, 'xlyre', 0, NULL);
-INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7502,  4000,"Create New Dataset", "managedataset", "change_next_state.png","It creates a new Dataset", 99, 'xlyre', 0, NULL);
-INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7503,  4001,"Edit Dataset", "managedataset", "change_next_state.png","It edits the current Dataset", 99, 'xlyre', 0, NULL);
-INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7504,  4001,"Delete Dataset", "deletedataset", "delete_section.png","It deletes the current Dataset", 99, 'xlyre', 0, NULL);
-INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7505,  4003,"Configure Xlyre", "configure", "modulesconfig.png","It configures Xlyre module", 99, 'xlyre', 0, NULL);
-INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7506,  4000,"Publish Catalog", "publish", "change_next_state.png","It publishes the current Catalog", 99, 'xlyre', 0, NULL);
-INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7507,  4001,"Publish Dataset", "publish", "change_next_state.png","It publishes the current Dataset", 99, 'xlyre', 0, NULL);
-INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7508, 4000, "Modify properties", "manageproperties", "xix.png", "Modify properties", 80,'',0,NULL);
-INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7509, 4001, 'Semantic Tags', 'setmetadata', 'change_next_state.png', 'Managing semantic tags related to the current node.',95,'ximTAGS',0,NULL);
+INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7701, 4000 ,'Delete Catalog', 'deletecatalog', 'delete_section.png','It deletes the current Open Data Catalog', 97, 'xlyre', 0, NULL);
+INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7702,  4000,'Create New Dataset', 'managedataset', 'change_next_state.png','It creates a new Dataset', 99, 'xlyre', 0, NULL);
+INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7703,  4001,'Edit Dataset', 'managedataset', 'change_next_state.png','It edits the current Dataset', 99, 'xlyre', 0, NULL);
+INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7704,  4001,'Delete Dataset', 'deletedataset', 'delete_section.png','It deletes the current Dataset', 99, 'xlyre', 0, NULL);
+INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7705,  4003,'Configure Xlyre', 'configure', 'modulesconfig.png','It configures Xlyre module', 99, 'xlyre', 0, NULL);
+INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7706,  4000,'Publish Catalog', 'publish', 'change_next_state.png','It publishes the current Catalog', 99, 'xlyre', 0, NULL);
+INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7707,  4001,'Publish Dataset', 'publish', 'change_next_state.png','It publishes the current Dataset', 99, 'xlyre', 0, NULL);
+INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7708, 4000, 'Modify properties', 'manageproperties', 'xix.png', 'Modify properties', 80,'',0,NULL);
+INSERT INTO `Actions`(`IdAction`, `IdNodeType`, `Name`, `Command`, `Icon`, `Description`,`Sort`, `Module`,`Multiple`, `Params`) VALUES ( 7709, 4001, 'Semantic Tags', 'setmetadata', 'change_next_state.png', 'Managing semantic tags related to the current node.',95,'ximTAGS',0,NULL);
 
 UNLOCK TABLES;
 
 -- Roles for these actions
+-- TODO: bug with server state = 7
 LOCK TABLES `RelRolesActions` WRITE;
-INSERT INTO RelRolesActions VALUES (NULL,201,7501,0,1,3);
-INSERT INTO RelRolesActions VALUES (NULL,201,7502,0,1,3);
-INSERT INTO RelRolesActions VALUES (NULL,201,7503,0,1,3);
-INSERT INTO RelRolesActions VALUES (NULL,201,7504,0,1,3);
-INSERT INTO RelRolesActions VALUES (NULL,201,7505,0,1,3);
-INSERT INTO RelRolesActions VALUES (NULL,201,7506,0,1,3);
-INSERT INTO RelRolesActions VALUES (NULL,201,7507,0,1,3);
-INSERT INTO RelRolesActions VALUES (NULL,201,7508,0,1,3);
-INSERT INTO RelRolesActions VALUES (NULL,201,7509,0,1,3);
+INSERT INTO RelRolesActions VALUES (NULL,201,7701,7,1,NULL);
+INSERT INTO RelRolesActions VALUES (NULL,201,7702,7,1,NULL);
+INSERT INTO RelRolesActions VALUES (NULL,201,7703,7,1,NULL);
+INSERT INTO RelRolesActions VALUES (NULL,201,7704,7,1,NULL);
+INSERT INTO RelRolesActions VALUES (NULL,201,7705,7,1,NULL);
+INSERT INTO RelRolesActions VALUES (NULL,201,7706,7,1,NULL);
+INSERT INTO RelRolesActions VALUES (NULL,201,7707,7,1,NULL);
+INSERT INTO RelRolesActions VALUES (NULL,201,7708,7,1,NULL);
+INSERT INTO RelRolesActions VALUES (NULL,201,7709,7,1,NULL);
 UNLOCK TABLES;
 
 -- XlyreCatalog Table

@@ -82,7 +82,7 @@ class XlyreOpenDataSet extends FolderNode{
 		$dataset->set("License", $license);
 		$dataset->set("Issued", time());
 		$dataset->set("Modified", time());
-		$dataset->set("Publisher", XSession::get('userID'));
+		$dataset->set("Publisher",   \Ximdex\Utils\Session::get('userID'));
 		$dataset->set("Periodicity", $periodicity);
 		$dataset->set("Spatial", $spatial);
 		$dataset->set("Reference", $reference);
@@ -102,7 +102,7 @@ class XlyreOpenDataSet extends FolderNode{
 		$dataset->set("Theme", $theme);
 		$dataset->set("License", $license);
 		$dataset->set("Modified", time());
-		$dataset->set("Publisher", XSession::get('userID'));
+		$dataset->set("Publisher", \Ximdex\Utils\Session::get('userID'));
 		$dataset->set("Periodicity", $periodicity);
 		$dataset->set("Spatial", $spatial);
 		$dataset->set("Reference", $reference);
@@ -151,10 +151,14 @@ class XlyreOpenDataSet extends FolderNode{
 	}
         
         public static function buildDatasetXml($idDataset){
+            XMD_Log::info("1 buildDatasetXml ($idDataset)");
+            $ok = false;
             $dataset = new XlyreDataset($idDataset);
             $xlrml = new XlyreRelMetaLangs();
             $i18n_dataset_values = $xlrml->find('IdLanguage', "IdNode = %s", array($idDataset), MONO);
+            XMD_Log::info("buildDatasetXml - " . print_r($i18n_dataset_values,true));
             foreach ($i18n_dataset_values as $i18n_value) {
+                XMD_Log::info("buildDatasetXml i18: $i18n_value");
                 $language = new Language($i18n_value);
                 $nodename = $dataset->get('Identifier');
                 $nodename_search = $nodename."-id".$language->get("IsoName");
@@ -163,6 +167,7 @@ class XlyreOpenDataSet extends FolderNode{
                 $result = $node->find('IdNode', "IdParent = %s && IdNodeType = %s && Name = %s", array($idDataset, XlyreOpenDataSetMetadata::IDNODETYPE, $nodename_search), MONO);
                 unset($node);
                 if ($result) {
+                    XMD_Log::info("buildDatasetXml i18 result");
                     #Update
                     $node = new Node($result[0]);
                     $node->update();
@@ -170,13 +175,19 @@ class XlyreOpenDataSet extends FolderNode{
                     $ok = true;
                 }
                 else {
+                    XMD_Log::info("buildDatasetXml i18 else...");
                     #Create
                     $ch = new Channel();
                     $html_ch = $ch->find('IdChannel', "name = %s", array('html'), MONO);
+        XMD_Log::info("buildDatasetXml else 1...");
                     $nt = new NodeType(XlyreOpenDataSetMetadata::IDNODETYPE);
+        XMD_Log::info("buildDatasetXml else 2...");
                     $node_search = new Node();
-                    $template_val = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s", array("rng-dataset.xml", NodetypeService::RNG_VISUAL_TEMPLATE), MONO);
+        XMD_Log::info("buildDatasetXml else 3...");
+                    $template_val = $node_search->find('IdNode', "Name = %s AND IdNodeType = %s", array("rng-dataset.xml", \Ximdex\Services\NodeType::RNG_VISUAL_TEMPLATE), MONO);
+        XMD_Log::info("buildDatasetXml else 4...");
                     if ($template_val) {
+                        XMD_Log::info("buildDatasetXml template_val OK");
                         $data = array(
                             'NODETYPENAME' => $nt->get('Name'),
                             'NAME' => $nodename_search,
@@ -196,11 +207,13 @@ class XlyreOpenDataSet extends FolderNode{
                             $ok = true;
                         }
                         else {
+                            XMD_Log::error("not valid node id");
                             #do something when it fails
                             $ok = false;
                         }
                     }
                     else {
+                        XMD_Log::error("not valid template");
                         $ok = false;
                     }
                 }

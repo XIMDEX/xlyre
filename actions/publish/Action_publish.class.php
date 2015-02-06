@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  \details &copy; 2011  Open Ximdex Evolution SL [http://www.ximdex.org]
  *
@@ -23,41 +24,35 @@
  *  @author Ximdex DevTeam <dev@ximdex.com>
  *  @version $Revision$
  */
-
-
-ModulesManager::file('/inc/nodetypes/xlyreopendataset.inc', 'xlyre');
-ModulesManager::file('/inc/nodetypes/xlyreopendatasection.inc', 'xlyre');
-ModulesManager::file('/inc/nodetypes/xlyreopendatadcat.inc', 'xlyre');
-ModulesManager::file('/inc/nodetypes/xlyreopendatasectionmetadata.inc', 'xlyre');
-ModulesManager::file('/inc/nodetypes/xlyreopendatasetmetadata.inc', 'xlyre');
-ModulesManager::file('/inc/io/XlyreBaseIOConstants.class.php', "xlyre");
-ModulesManager::file('/inc/io/XlyreBaseIO.class.php', "xlyre");
+ModulesManager::file('/inc/nodetypes/xlyreopendataset.php', 'xlyre');
+ModulesManager::file('/inc/nodetypes/xlyreopendatasection.php', 'xlyre');
+ModulesManager::file('/inc/nodetypes/xlyreopendatadcat.php', 'xlyre');
+ModulesManager::file('/inc/nodetypes/xlyreopendatasectionmetadata.php', 'xlyre');
+ModulesManager::file('/inc/nodetypes/xlyreopendatasetmetadata.php', 'xlyre');
+ModulesManager::file('/inc/io/XlyreBaseIOConstants.php', "xlyre");
+ModulesManager::file('/inc/io/XlyreBaseIO.php', "xlyre");
 ModulesManager::file('/inc/model/XlyreCatalog.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyreDataset.php', 'xlyre');
 ModulesManager::file('/actions/workflow_forward/Action_workflow_forward.class.php');
 
-
 class Action_publish extends Action_workflow_forward {
 
-	 function index () {
+    function index() {
         parent::index();
-	 }
+    }
 
-
-    protected function sendToPublish($idNode, $up, $down, $markEnd, $republish, $structure, $deepLevel, $sendNotifications, $notificableUsers, $idState, $texttosend){
+    protected function sendToPublish($idNode, $up, $down, $markEnd, $republish, $structure, $deepLevel, $sendNotifications, $notificableUsers, $idState, $texttosend) {
         $node = new Node($idNode);
         $nt = $node->GetNodeType();
         if ($nt == XlyreOpenDataSection::IDNODETYPE) {
             $ok = XlyreOpenDataSection::buildCatalogXml($idNode);
-        }
-        elseif ($nt == XlyreOpenDataset::IDNODETYPE) {
+        } elseif ($nt == XlyreOpenDataset::IDNODETYPE) {
             $ok = XlyreOpenDataSet::buildDatasetXml($idNode);
         }
         if ($ok) {
             parent::sendToPublish($idNode, $up, $down, $markEnd, $republish, $structure, $deepLevel, $sendNotifications, $notificableUsers, $idState, $texttosend);
-        }
-        else {
-            $this->messages->add(_('There was an error while publishing nodes'), MSG_TYPE_ERROR);
+        } else {
+            $this->messages->add(_('There was an error while publishing nodes!!!'), MSG_TYPE_ERROR);
             $values = array(
                 'action_with_no_return' => 1,
                 'messages' => $this->messages->messages,
@@ -65,5 +60,5 @@ class Action_publish extends Action_workflow_forward {
             $this->sendJSON($values);
         }
     }
+
 }
-?>

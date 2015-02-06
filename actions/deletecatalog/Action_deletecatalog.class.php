@@ -29,7 +29,7 @@
 ModulesManager::file('/inc/sync/SynchroFacade.class.php');
 ModulesManager::file('/actions/browser3/inc/GenericDatasource.class.php');
 ModulesManager::file('/actions/deletedataset/Action_deletedataset.class.php', "xlyre");
-ModulesManager::file('/inc/nodetypes/xlyreopendataset.inc', 'xlyre');
+ModulesManager::file('/inc/nodetypes/xlyreopendataset.php', 'xlyre');
 
 
 class Action_deletecatalog extends ActionAbstract {

@@ -4,10 +4,10 @@
 DELETE FROM NodeTypes where IdNodeType in (4000,4001,4002,4003,4004,4005,4006);
 
 -- Deleting Xlyre Nodes
-DELETE FROM Nodes where IdNode in (14);
+DELETE FROM Nodes where IdNode in (11000);
 
 -- Deleting Xlyre FastTraverse
-DELETE FROM FastTraverse where IdChild in (14);
+DELETE FROM FastTraverse where IdChild in (11000);
 
 -- Deleting Xlyre SectionType
 DELETE FROM SectionTypes where idSectionType=3;
@@ -24,10 +24,10 @@ DELETE FROM NodeDefaultContents where IdNodeType in (4000);
 DELETE FROM NodeDefaultContents where NodeType in (4003);
 
 -- Deleting all Xlyre Actions
-DELETE FROM Actions where IdAction in (7501,7502,7503,7504,7505,7506,7507,7508,7509);
+DELETE FROM Actions where IdAction in (7701,7702,7703,7704,7705,7706,7707,7708,7709);
 
 -- Deleting all RelRolesActions (Permissions) for Xlyre Actions
-DELETE FROM RelRolesActions where IdAction in (7501,7502,7503,7504,7505,7506,7507,7508,7509);
+DELETE FROM RelRolesActions where IdAction in (7701,7702,7703,7704,7705,7706,7707,7708,7709);
 
 -- Deleting all tables and their content related exclusively with Xlyre
 DROP TABLE IF EXISTS `XlyreCatalog`;

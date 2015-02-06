@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  \details &copy; 2011  Open Ximdex Evolution SL [http://www.ximdex.org]
  *
@@ -23,59 +24,25 @@
  *  @author Ximdex DevTeam <dev@ximdex.com>
  *  @version $Revision$
  */
-
-
-
-ModulesManager::file('/inc/modules/Module.class.php');
-ModulesManager::file('/inc/io/BaseIO.class.php');
-ModulesManager::file('/inc/cli/CliParser.class.php');
-ModulesManager::file('/inc/cli/CliReader.class.php');
-ModulesManager::file('/inc/model/RelRolesActions.class.php');
-ModulesManager::file('/inc/nodetypes/channelnode.inc');
-ModulesManager::file('/inc/model/channel.inc');
-ModulesManager::file('/inc/model/node.inc');
-ModulesManager::file('/inc/utils.inc');
-ModulesManager::file('/inc/model/orm/RelRolesStates_ORM.class.php');
+use Ximdex\Modules\Module;
 
 class Module_xlyre extends Module {
-    
-	function Module_xlyre() {
-		// Call Module constructor.
-            	parent::Module('xlyre', dirname(__FILE__));
-	}
 
-        //Function which installs the module
-	function install() {
-		echo "\nModule xlyre will be installed.\n";
-               	$this->loadConstructorSQL("xlyre.constructor.sql");
-		/*$name = "xlyre";
-                $extension = "xml";
-                $complexName = sprintf("%s.%s", $name, $extension);
-                $description = "OpenData channel";
-                $renderMode = "ximdex";
+    function Module_xlyre() {
+        parent::__construct('xlyre', dirname(__FILE__));
+    }
 
-                $nodeType = new NodeType();
-                $nodeType->SetByName('Channel');
+    //Function which installs the module
+    function install() {
+        echo "\nModule xlyre will be installed.\n";
+        $this->loadConstructorSQL("xlyre.constructor.sql");
+        return parent::install();
+    }
 
-		$node = new Node();
-		$idNode = $node->CreateNode($complexName, 9,$nodeType->GetID(), NULL);
+    function uninstall() {
+        echo "\nModule xlyre will be uninstalled!.\n";
+        $this->loadDestructorSQL("xlyre.destructor.sql");
+        parent::uninstall();
+    }
 
-		$ch=new Channel($idNode);
-		$result=$ch->CreateNewChannel($name, $extension, NULL, $description, $idNode, NULL, $renderMode);
-                if ($result > 0) {
-                        echo "Channel has been succesfully created\n";
-                }
-		else{
-			echo "There was a problem creating the xlyre channel\n";
-		}*/
-
-                parent::install();
-	}
-        
-        function uninstall(){
-		echo "\nModule xlyre will be uninstalled!.\n";
-               	$this->loadDestructorSQL("xlyre.destructor.sql");
-                parent::uninstall();
-        }
 }
-?>

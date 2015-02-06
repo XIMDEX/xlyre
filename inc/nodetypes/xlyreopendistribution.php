@@ -24,7 +24,7 @@
  *  @version $Revision$
  */
 
-ModulesManager::file('/inc/nodetypes/filenode.inc');
+ModulesManager::file('/inc/nodetypes/filenode.php');
 ModulesManager::file('/inc/model/XlyreDistribution.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyreRelMetaLangs.php', 'xlyre');
 

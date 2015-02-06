@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  \details &copy; 2011  Open Ximdex Evolution SL [http://www.ximdex.org]
  *
@@ -23,11 +24,12 @@
  *  @author Ximdex DevTeam <dev@ximdex.com>
  *  @version $Revision$
  */
+use Ximdex\Modules\Config;
 
-ModulesManager::file('/inc/io/XlyreBaseIO.class.php','xlyre');
-ModulesManager::file('/inc/nodetypes/xlyreopendistribution.inc', 'xlyre');
-ModulesManager::file('/inc/nodetypes/xlyreopendataset.inc', 'xlyre');
-ModulesManager::file('/inc/nodetypes/xlyreopendatasection.inc', 'xlyre');
+ModulesManager::file('/inc/io/XlyreBaseIO.class.php', 'xlyre');
+ModulesManager::file('/inc/nodetypes/xlyreopendistribution.php', 'xlyre');
+ModulesManager::file('/inc/nodetypes/xlyreopendataset.php', 'xlyre');
+ModulesManager::file('/inc/nodetypes/xlyreopendatasection.php', 'xlyre');
 ModulesManager::file('/inc/io/XlyreBaseIOConstants.class.php', "xlyre");
 ModulesManager::file('/inc/model/XlyreDistribution.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyreRelMetaLangs.php', 'xlyre');
@@ -37,11 +39,10 @@ ModulesManager::file('/inc/model/XlyreSpatials.php', 'xlyre');
 ModulesManager::file('/inc/model/Namespaces.class.php');
 ModulesManager::file('/inc/helper/String.class.php');
 
-
 class Action_managedataset extends ActionAbstract {
 
-	function index(){
-		$this->loadResources();
+    function index() {
+        $this->loadResources();
 
         $idNode = $this->request->getParam("nodeid");
         $options = array();
@@ -59,16 +60,15 @@ class Action_managedataset extends ActionAbstract {
         $nt = $node->GetNodeType();
         if ($nt == XlyreOpenDataSection::IDNODETYPE) {
             $this->loadValues($options);
-            $options['base_url'] = Config::getValue('UrlRoot');
+            $options['base_url'] = \App::getValue('UrlRoot');
             $options['go_method'] = 'createdataset';
             $options['action'] = 'managedataset';
             $values['title'] = 'Create Dataset';
             $values['button'] = 'Create';
             $options['dataset']['IDParent'] = $idNode;
-        }
-        elseif ($nt == XlyreOpenDataset::IDNODETYPE) {
+        } elseif ($nt == XlyreOpenDataset::IDNODETYPE) {
             $this->loadValues($options, $idNode);
-            $options['base_url'] = Config::getValue('UrlRoot');
+            $options['base_url'] = \App::getValue('UrlRoot');
             $options['go_method'] = 'updatedataset';
             $options['action'] = 'managedataset';
             $values['title'] = 'Edit Dataset';
@@ -77,10 +77,9 @@ class Action_managedataset extends ActionAbstract {
         }
         $values['options'] = json_encode($options);
         $this->render($values, null, 'default-3.0.tpl');
-	}
+    }
 
-
-	function createdataset() {
+    function createdataset() {
 
         $parentID = $this->request->getParam('IDParent');
         $name = $this->request->getParam('name');
@@ -103,12 +102,11 @@ class Action_managedataset extends ActionAbstract {
         $errors = array();
         $messages = array();
 
-		if (!($iddataset > 0)) {
+        if (!($iddataset > 0)) {
             $this->messages->mergeMessages($baseio->messages);
             // $this->messages->add(_('Operation could not be successfully completed'), MSG_TYPE_ERROR);
             $errors[] = array('message' => _('Operation could not be successfully completed'), 'type' => MSG_TYPE_ERROR);
-        }
-        else {
+        } else {
             //Adding title and description based on languages
             foreach ($this->request->getParam('languages_dataset') as $key => $value) {
                 if (!is_null($this->request->getParam('languages'))) {
@@ -128,23 +126,22 @@ class Action_managedataset extends ActionAbstract {
 
         $dataset = new XlyreDataset($iddataset);
         $values = array(
-                'dataset' => array(
-                    'id' => $iddataset,
-                    'issued' => $dataset->Get('Issued'),
-                    'modified' => $dataset->Get('Modified'),
-                ),
-                'messages' => $messages,
-                'errors' => $errors
+            'dataset' => array(
+                'id' => $iddataset,
+                'issued' => $dataset->Get('Issued'),
+                'modified' => $dataset->Get('Modified'),
+            ),
+            'messages' => $messages,
+            'errors' => $errors
         );
 
         $this->sendJSON($values);
     }
 
-
     function updatedataset() {
         $errors = array();
         $messages = array();
-        $nodeID =$this->request->getParam('id');
+        $nodeID = $this->request->getParam('id');
         $name = $this->request->getParam('name');
 
         $nt = new NodeType(XlyreOpenDataSet::IDNODETYPE);
@@ -157,15 +154,14 @@ class Action_managedataset extends ActionAbstract {
             'LICENSE' => $this->request->getParam('license'),
             'SPATIAL' => $this->request->getParam('spatial'),
             'REFERENCE' => $this->request->getParam('reference')
-            );
+        );
 
         $baseio = new XlyreBaseIO();
         $result = $baseio->updateNode($data, "XLYREOPENDATASET");
 
         if (!($result > 0)) {
             $errors[] = array('message' => _('Operation could not be successfully completed'), 'type' => MSG_TYPE_ERROR);
-        }
-        else {
+        } else {
             $xlrml = new XlyreRelMetaLangs();
             $i18n_dataset_values = $xlrml->find('IdLanguage', "IdNode = %s", array($nodeID), MONO);
             //Updating title and description based on languages
@@ -179,8 +175,7 @@ class Action_managedataset extends ActionAbstract {
                         $xlrml_update->set('Description', $value['description']);
                         $xlrml_update->update();
                         unset($i18n_dataset_values[array_search($key, $i18n_dataset_values)]);
-                    }
-                    else {
+                    } else {
                         #Add language
                         $xlrml_add = new XlyreRelMetaLangs();
                         $xlrml_add->set('IdNode', $nodeID);
@@ -204,23 +199,21 @@ class Action_managedataset extends ActionAbstract {
         }
 
         $values = array(
-                'errors' => $errors,
-                'messages' => $messages
+            'errors' => $errors,
+            'messages' => $messages
         );
 
         $this->sendJSON($values);
-
     }
-
 
     //Note: This method only works for browsers supporting sendAsBinary()
     function addDistribution() {
         $values = array();
         $filename = $_FILES['file']['name'];
         if (isset($_FILES)) {
-            $values['distribution']['file'] = String::normalize($filename);
+            $values['distribution']['file'] = \Ximdex\Utils\String::normalize($filename);
 
-            $extension = strtolower(end(explode('.',$values['distribution']['file'])));
+            $extension = strtolower(end(explode('.', $values['distribution']['file'])));
             $values['distribution']['format'] = $extension;
             $values['distribution']['size'] = $_FILES['file']['size'];
             $values['distribution']['issued'] = time();
@@ -261,19 +254,15 @@ class Action_managedataset extends ActionAbstract {
             if (!($iddist > 0)) {
                 $values['errors'][] = _('Operation could not be successfully completed.');
                 // $values['errors'][] = $baseio->messages();
-            }
-            else {
+            } else {
                 $values['messages'] = _('The distribution was uploaded sucesfully.');
                 $values['distribution']['id'] = $iddist;
             }
-        }
-        else {
+        } else {
             $values['errors'][] = _("There is no file to upload. Please try again.");
         }
         $this->sendJSON($values);
     }
-
-
 
     function updateDistribution() {
         $values = array();
@@ -287,18 +276,18 @@ class Action_managedataset extends ActionAbstract {
 
         if (isset($_FILES['file'])) {
             $filename = $_FILES['file']['name'];
-            $values['distribution']['file'] = String::normalize($filename);
-            $extension = strtolower(end(explode('.',$values['distribution']['file'])));
+            $values['distribution']['file'] = \Ximdex\Utils\String::normalize($filename);
+            $extension = strtolower(end(explode('.', $values['distribution']['file'])));
             $values['distribution']['format'] = $extension;
             $values['distribution']['size'] = $_FILES['file']['size'];
             $name = $_FILES['file']['name'];
             $filename = $_FILES['file']['name'];
             $filesize = $_FILES['file']['size'];
             $tmpfile = $_FILES['file']['tmp_name'];
-        }
-        else {
+        } else {
             $values['distribution']['file'] = $distribution->get('Filename');
-            $values['distribution']['format'] = $distribution->get('MediaType');;
+            $values['distribution']['format'] = $distribution->get('MediaType');
+            ;
             $values['distribution']['size'] = $distribution->get('ByteSize');
             $name = $distribution->get('Identifier');
             $filename = NULL;
@@ -332,8 +321,7 @@ class Action_managedataset extends ActionAbstract {
                     $xlrml_update->set('Title', $value);
                     $xlrml_update->update();
                     unset($i18n_distribution_old[array_search($key, $i18n_distribution_old)]);
-                }
-                else {
+                } else {
                     #Add language
                     $xlrml_add = new XlyreRelMetaLangs();
                     $xlrml_add->set('IdNode', $dist_id);
@@ -352,14 +340,12 @@ class Action_managedataset extends ActionAbstract {
 
         if (!($result > 0)) {
             $values['errors'][] = _('Operation could not be successfully completed.');
-        }
-        else {
+        } else {
             $values['messages'] = _('The distribution was uploaded sucesfully.');
         }
-        
+
         $this->sendJSON($values);
     }
-
 
     function deleteDistribution() {
         $values = array();
@@ -369,26 +355,22 @@ class Action_managedataset extends ActionAbstract {
             $result = $dist->delete();
             if ($result != 0) {
                 $values['messages'] = _("The distribution was deleted sucesfully.");
-            }
-            else {
+            } else {
                 $values['errors'][] = _("The distribution could not be delete. Please try again.");
             }
-        }
-        else {
+        } else {
             $values['errors'][] = _("There was a problem conecting with the server. Please try again.");
         }
         $this->sendJSON($values);
     }
 
-
-	function loadResources() {
+    function loadResources() {
         $this->addJs('/modules/xlyre/actions/managedataset/resources/js/xlyreDistribution.js');
         $this->addJs('/modules/xlyre/actions/managedataset/resources/js/XManagedatasetCtrl.js');
         $this->addJs('/modules/xlyre/actions/managedataset/resources/js/init.js');
         $this->addCss('/modules/xlyre/actions/managedataset/resources/css/style.css');
         $this->addCss('/xmd/style/jquery/ximdex_theme/widgets/tagsinput/tagsinput.css');
     }
-
 
     function loadValues(&$values, $idNode = 0) {
         #Default values for selectors
@@ -425,7 +407,7 @@ class Action_managedataset extends ActionAbstract {
                 $dataset['languages_dataset'][$ld['IdLanguage']]['description'] = $ld['Description'];
             }
             $dataset['languages'] = array();
-            for($i=0; $i<sizeof($values['languages']); $i++) {
+            for ($i = 0; $i < sizeof($values['languages']); $i++) {
                 $dataset['languages'][$values['languages'][$i]['IdLanguage']] = in_array($values['languages'][$i]['IdLanguage'], array_keys($dataset['languages_dataset'])) ? $values['languages'][$i]['Name'] : '';
             }
             $dataset['IDParent'] = $dsmeta->getParent();
@@ -455,7 +437,7 @@ class Action_managedataset extends ActionAbstract {
             }
             $relTags = new RelTagsNodes();
             $tags = $relTags->getTags($idNode);
-            
+
             foreach ($tags as $key => $tag) {
                 $namespace = new Namespaces($tag['IdNamespace']);
                 $tags[$key]['namespace'] = $namespace;
@@ -463,13 +445,12 @@ class Action_managedataset extends ActionAbstract {
 
             $values["tags"] = $tags;
             $values['distributions'] = $dstList;
-        }
-        else {
-            $user = new User(XSession::get('userID'));
+        } else {
+            $user = new User(\Ximdex\Utils\Session::get('userID'));
             $dataset['publisher'] = $user->Get('Name');
             $dataset['languages_dataset'] = array();
             $dataset['languages'] = array();
-            for($i=0; $i<sizeof($values['languages']); $i++) {
+            for ($i = 0; $i < sizeof($values['languages']); $i++) {
                 $dataset['languages'][$values['languages'][$i]['IdLanguage']] = '';
                 $dataset['languages_dataset'][$values['languages'][$i]['IdLanguage']] = array('title' => '', 'description' => '');
             }
@@ -486,14 +467,11 @@ class Action_managedataset extends ActionAbstract {
         }
     }
 
-
-
-	private function _getDescription($nodetype) {
-        switch($nodetype){
+    private function _getDescription($nodetype) {
+        switch ($nodetype) {
             case "4001": return "A dataset should be for a single data in several formats.";
         }
     }
-
 
 }
 

@@ -25,7 +25,7 @@
  */
 
 ModulesManager::file('/inc/model/XlyreCatalog.php', 'xlyre');
-ModulesManager::file('/inc/nodetypes/xlyremetadata.inc', 'xlyre');
+ModulesManager::file('/inc/nodetypes/xlyremetadata.php', 'xlyre');
 ModulesManager::file('/inc/nodetypes/structureddocument.inc');
 
 class XlyreOpenDataSetMetadata extends XlyreMetadata{

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  \details &copy; 2011  Open Ximdex Evolution SL [http://www.ximdex.org]
  *
@@ -23,20 +24,23 @@
  *  @author Ximdex DevTeam <dev@ximdex.com>
  *  @version $Revision$
  */
+use Ximdex\Modules\Config;
 
 ModulesManager::file('/inc/model/XlyreCatalog.php', 'xlyre');
 ModulesManager::file('/inc/nodetypes/structureddocument.inc');
 
-class XlyreOpenDataDCAT extends AbstractStructuredDocument{
+class XlyreOpenDataDCAT extends AbstractStructuredDocument {
 
     const IDNODETYPE = 4006;
 
-    function GetPublishedPath($channelID = NULL, $addNodeName=null) {
-
-        if (!Config::exists("PublishPathFormat"))
-            return parent::GetPublishedPath($channelID, $addNodeName);
-        $path = "";
+    function GetPublishedPath($channelID = NULL, $addNodeName = null) {
         $publishPathFormat = Config::getValue("PublishPathFormat");
+
+        if (!$publishPathFormat) {
+            return parent::GetPublishedPath($channelID, $addNodeName);
+        }
+
+        $path = "";
         $idNode = $this->parent->get('IdNode');
         $structuredDocument = new structureddocument($idNode);
         $idLanguage = $structuredDocument->get("IdLanguage");
@@ -44,39 +48,39 @@ class XlyreOpenDataDCAT extends AbstractStructuredDocument{
 
         switch ($publishPathFormat) {
             case 'prefix':
-                # Continue
+            # Continue
             case 'suffix':
-                $path = parent::GetPublishedPath($channelID)."/";
-                if ($addNodeName)   
-                    $path = $path."/".$this->GetPublishedNodeName($channelID);
+                $path = parent::GetPublishedPath($channelID) . "/";
+                if ($addNodeName) {
+                    $path = $path . "/" . $this->GetPublishedNodeName($channelID);
+                }
                 break;
             default:
                 $path = parent::GetPublishedPath($channelID, $addNodeName);
                 break;
-        }       
-        
+        }
+
         return $path;
     }
 
-    function GetPublishedNodeName($idChannel){
-
+    function GetPublishedNodeName($idChannel) {
         $channel = new Channel($idChannel);
 
         $publishableName = "";
 
-        if (Config::exists("PublishPathFormat") && 
-            in_array(Config::getValue("PublishPathFormat"), array("prefix","suffix"))){
-            $publishableName = "dcat.".$channel->get("DefaultExtension");
-        }else{
+        if (in_array(Config::getValue("PublishPathFormat"), array("prefix", "suffix"))) {
+            $publishableName = "dcat." . $channel->get("DefaultExtension");
+        } else {
             $publishableName = parent::GetPublishedNodeName($idChannel);
         }
-        
+
         return $publishableName;
     }
 
-    function getPathToDeep(){
-        if (in_array(Config::getValue("PublishPathFormat"), array("prefix","suffix")))
+    function getPathToDeep() {
+        if (in_array(Config::getValue("PublishPathFormat"), array("prefix", "suffix"))) {
             return 1;
+        }
         return 2;
     }
 
@@ -85,7 +89,7 @@ class XlyreOpenDataDCAT extends AbstractStructuredDocument{
      * Return available channel for DCAT
      * @return  array Channels id
      */
-    public function getChannels(){
+    public function getChannels() {
         //TODO: Change query
         $query = sprintf("SELECT idChannel FROM Channels where name = 'dcat'");
 
