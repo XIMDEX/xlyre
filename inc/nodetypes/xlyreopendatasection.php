@@ -26,6 +26,7 @@
 use Ximdex\Services\NodeType as NodetypeService;
 
 ModulesManager::file('/inc/model/XlyreCatalog.php', 'xlyre');
+ModulesManager::file('/inc/nodetypes/xlyreopendatadcat.php', 'xlyre');
 
 class XlyreOpenDataSection extends SectionNode{
 
