@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  \details &copy; 2011  Open Ximdex Evolution SL [http://www.ximdex.org]
  *
@@ -23,17 +24,15 @@
  *  @author Ximdex DevTeam <dev@ximdex.com>
  *  @version $Revision$
  */
+class XlyreBaseIOConstants {
 
- class XlyreBaseIOConstants{
+    public static $metaTypesArray = array(
+        "XLYREOPENDATASECTION" => "OPENDATASECTION",
+        "XLYREOPENDATASET" => "OPENDATASET",
+        "XLYREOPENDISTRIBUTION" => "OPENDISTRIBUTION",
+        "XLYREOPENDATASECTIONMETADATA" => "XMLDOCUMENTNODE",
+        "XLYREOPENDATASETMETADATA" => "XMLDOCUMENTNODE",
+        "XLYREOPENDATADCAT" => "XMLDOCUMENTNODE"
+    );
 
- 	public static $metaTypesArray = array(
- 			"XLYREOPENDATASECTION" => "OPENDATASECTION",
- 			"XLYREOPENDATASET" => "OPENDATASET",
-            "XLYREOPENDISTRIBUTION" => "OPENDISTRIBUTION",
- 			"XLYREOPENDATASECTIONMETADATA" => "XMLDOCUMENTNODE",
-            "XLYREOPENDATASETMETADATA" => "XMLDOCUMENTNODE",
-            "XLYREOPENDATADCAT" => "XMLDOCUMENTNODE"
- 		);
- }
-
-?>
+}

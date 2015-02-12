@@ -24,7 +24,7 @@
  */
 if (angular.module('ximdex').notRegistred('XLyreManagedatasetCtrl')){
     angular.module('ximdex')
-        .controllerProvider.register('XLyreManagedatasetCtrl', ['$scope', '$attrs', 'xBackend', 'xTranslate', '$timeout', function($scope, $attrs, xBackend, xTranslate, $timeout){
+        .controllerProvider.register('XLyreManagedatasetCtrl', ['$scope', '$attrs', 'xBackend', 'xTranslate', '$timeout', 'xTabs', function($scope, $attrs, xBackend, xTranslate, $timeout, xTabs){
             
             $scope.selectedLanguages = {};
             
@@ -85,7 +85,9 @@ if (angular.module('ximdex').notRegistred('XLyreManagedatasetCtrl')){
                             $scope.method = 'updatedataset';
                             dataset.id = data.dataset.id;
                             
-                            $scope.setActionNode(dataset.id);//Bad practice but needed at the moment to update browser window action
+//                            $scope.setActionNode(dataset.id);//Bad practice but needed at the moment to update browser window action
+                            xTabs.setTabNode($scope.tabId, [{nodeid: dataset.id}]);
+                            
                             
                             dataset.issued = data.dataset.issued;
                             dataset.modified = data.dataset.modified;

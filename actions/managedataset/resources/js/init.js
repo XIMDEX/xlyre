@@ -21,18 +21,16 @@
  *
  *  @author Ximdex DevTeam <dev@ximdex.com>
  *  @version $Revision$
- */  
-//Start angular compile and binding
-X.actionLoaded(function(event, fn, params) {
-    var scope = X.angularTools.initView(params.context, params.tabId);
-    scope.setActionNode = function(nodeId){
-        params.actionView.setNode(nodeId);
-    };
-    $(document).on('nodemodified', function(e, nodeId){
-        if (params.actionView.nodes.length == 1 && params.actionView.nodes[0] === nodeId) {   
-            scope.$destroy();
-            scope = null;
-            params.actionView.reloadAction();
+ */
+
+X.actionLoaded(function (event, fn, params) {
+    var scope = $(params.context).scope();
+    
+    scope.tabId = params.tab.id;
+    
+    $(document).on('nodemodified', function (e, nodeId) {
+        if (params.tab.nodes.length === 1 && params.tab.nodes[0].nodeid === nodeId) {
+            $("#angular-content").scope().reloadTabById(params.tab.id);
         }
-    });    
+    });
 });

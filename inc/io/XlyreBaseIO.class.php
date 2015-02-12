@@ -29,6 +29,9 @@ use Ximdex\Modules\Config;
 ModulesManager::file('/inc/io/BaseIOConstants.php');
 ModulesManager::file('/inc/io/BaseIO.class.php');
 ModulesManager::file('/inc/io/XlyreBaseIOConstants.class.php', "xlyre");
+ModulesManager::file('/inc/nodetypes/xlyreopendatasection.php', 'xlyre');
+ModulesManager::file('/inc/nodetypes/xlyreopendataset.php', 'xlyre');
+ModulesManager::file('/inc/nodetypes/xlyreopendistribution.php', 'xlyre');
 
 /**
  * BaseIO for the Xlyre module.
@@ -49,9 +52,10 @@ class XlyreBaseIO extends BaseIO {
             $metaType = $metaTypesArray[$nodeTypeClass];
         }
         $instance = new Node();
+
         switch ($metaType) {
             case 'OPENDATASECTION':
-                $idNode = $instance->CreateNode($data['NAME'], $data['PARENTID'], XlyreOpenDataSection::IDNODETYPE, NULL, array(false));
+                $idNode = $instance->CreateNode($data['NAME'], $data['PARENTID'], XlyreOpenDataSection::IDNODETYPE, NULL, $data['SUBFOLDERS']);
                 break;
             case 'OPENDATASET':
                 $idNode = $instance->CreateNode($data['NAME'], $data['PARENTID'], XlyreOpenDataSet::IDNODETYPE, NULL, array(false), $data["THEME"], $data["PERIODICITY"], $data["LICENSE"], $data["SPATIAL"], $data["REFERENCE"]);
@@ -73,6 +77,7 @@ class XlyreBaseIO extends BaseIO {
         if (!($idNode > 0)) {
             return ERROR_INCORRECT_DATA;
         }
+
         return $idNode;
     }
 
@@ -80,7 +85,7 @@ class XlyreBaseIO extends BaseIO {
      * Updates an object desribed in data array
      *
      * @param array $data Data of the object to update
-     * @param int $idUser Optional param, if it is not specified, the identifier is obtained from the session user identifier
+     * @param int $nodeTypeClass String to get metatype
      * @return identifier of the updated node or a state specifying why it was not updated
      */
     public function updateNode($data, $nodeTypeClass) {
@@ -99,7 +104,7 @@ class XlyreBaseIO extends BaseIO {
                 $ok = $nodeDataset->update();
                 if ($ok) {
                     $idNode = $nodeDataset->class->updateNode($data["IDNODE"], $data['NAME'], $data["THEME"], $data["PERIODICITY"], $data["LICENSE"], $data["SPATIAL"], $data["REFERENCE"]);
-                    if (!($idNode > 0)) {
+                    if ($idNode <= 0) {
                         return ERROR_INCORRECT_DATA;
                     }
                     return $idNode;

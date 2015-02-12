@@ -26,13 +26,6 @@
  */
 ModulesManager::file('/inc/nodetypes/xlyreopendataset.php', 'xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendatasection.php', 'xlyre');
-ModulesManager::file('/inc/nodetypes/xlyreopendatadcat.php', 'xlyre');
-ModulesManager::file('/inc/nodetypes/xlyreopendatasectionmetadata.php', 'xlyre');
-ModulesManager::file('/inc/nodetypes/xlyreopendatasetmetadata.php', 'xlyre');
-ModulesManager::file('/inc/io/XlyreBaseIOConstants.php', "xlyre");
-ModulesManager::file('/inc/io/XlyreBaseIO.php', "xlyre");
-ModulesManager::file('/inc/model/XlyreCatalog.php', 'xlyre');
-ModulesManager::file('/inc/model/XlyreDataset.php', 'xlyre');
 ModulesManager::file('/actions/workflow_forward/Action_workflow_forward.class.php');
 
 class Action_publish extends Action_workflow_forward {
@@ -49,12 +42,13 @@ class Action_publish extends Action_workflow_forward {
         } elseif ($nt == XlyreOpenDataset::IDNODETYPE) {
             $ok = XlyreOpenDataSet::buildDatasetXml($idNode);
         }
+
         if ($ok) {
             parent::sendToPublish($idNode, $up, $down, $markEnd, $republish, $structure, $deepLevel, $sendNotifications, $notificableUsers, $idState, $texttosend);
         } else {
             $this->messages->add(_('There was an error while publishing nodes!!!'), MSG_TYPE_ERROR);
             $values = array(
-                'action_with_no_return' => 1,
+//                'action_with_no_return' => 1,
                 'messages' => $this->messages->messages,
             );
             $this->sendJSON($values);

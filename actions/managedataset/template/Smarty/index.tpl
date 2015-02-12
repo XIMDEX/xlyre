@@ -124,10 +124,8 @@
             <div class="languages-available"><h3>{t}Languages{/t}</h3>
                 <div class="languages-section"
                     ng-repeat="language in languages">
-                    <input name='languages[]' type='checkbox' id='#/language.IdLanguage/#' class="hidden-focus" 
-                        ng-model="dataset.languages[language.IdLanguage]" 
-                        ng-true-value="#/language.Name/#" 
-                        ng-false-value=""/>
+                    <input name='languages[]' type='checkbox' id="#/language.IdLanguage/#" class="hidden-focus" 
+                        ng-model="dataset.languages[language.IdLanguage]" />
                     <label  for="#/language.IdLanguage/#" class="icon checkbox-label reduced_label">#/language.Name/#</label>
                 </div>
                 <p ng-if="!languages.length">{t}There are no languages associated to this catalog{/t}.</p>

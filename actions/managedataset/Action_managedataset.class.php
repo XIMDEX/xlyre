@@ -30,7 +30,6 @@ ModulesManager::file('/inc/io/XlyreBaseIO.class.php', 'xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendistribution.php', 'xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendataset.php', 'xlyre');
 ModulesManager::file('/inc/nodetypes/xlyreopendatasection.php', 'xlyre');
-ModulesManager::file('/inc/io/XlyreBaseIOConstants.class.php', "xlyre");
 ModulesManager::file('/inc/model/XlyreDistribution.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyreRelMetaLangs.php', 'xlyre');
 ModulesManager::file('/inc/model/XlyreThemes.php', 'xlyre');
@@ -76,6 +75,7 @@ class Action_managedataset extends ActionAbstract {
             $options['dataset']['id'] = $idNode;
         }
         $values['options'] = json_encode($options);
+
         $this->render($values, null, 'default-3.0.tpl');
     }
 
@@ -474,5 +474,3 @@ class Action_managedataset extends ActionAbstract {
     }
 
 }
-
-?>
